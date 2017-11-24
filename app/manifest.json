@@ -14,7 +14,7 @@
       "scripts/background.js"
     ]
   },
-  "permissions": [],
+  "permissions": ["<all_urls>"],
   "options_ui": {
     "page": "options.html",
     "chrome_style": true
