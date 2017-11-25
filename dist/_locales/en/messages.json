@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "SearchAutocomplete",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Quick, keyword based autocomplete for your search engines",
+    "description": "The description of the application"
+  }
+}
