@@ -1,8 +1,21 @@
 import SearchEngine from './SearchEngine.js';
 //import SearchEngineAction from './SearchEngineAction.js';
 
-function SearchHelper (SETTINGS) {
+/**
+ * Pre-parse all settings.
+ * 
+ * @TODO Maybe support engines array later? Would allow support of mulitple keywords.
+ * 
+ * @param {Object} SETTINGS General settings object.
+ * @param {Object} engineMap Keyword-based search engines map.
+ */
+function SearchHelper (SETTINGS, engineMap) {
 	this.SETTINGS = SETTINGS;
+	this.engineMap = engineMap;
+	if (typeof engineMap.default !== 'object') {
+		var firstKeyword = Object.keys(engineMap)[0];
+		this.engineMap.default = this.engineMap[firstKeyword];
+	}
 }
 
 /**
@@ -22,6 +35,43 @@ SearchHelper.prototype.buildSearchUrl = function (engine, action, text) {
 		first = false;
 	}
 	return url;
+}
+
+/**
+ * @typedef {Object} EngineWithTerm
+ * @property {SearchEngine} engine Engine to use.
+ * @property {String} text Transformed search term.
+ */
+
+/**
+ * Find out which engine should be used based on entered text.
+ * 
+ * `sa  something` uses default (first) engine
+ * `sa ` should show you a list of engines (in future)
+ * `sa a` should show you a list of engines with keywords starting with `a`
+ * 
+ * @param {String} text Search term.
+ * @return {EngineWithTerm} Engine with term stripped from the engine keyowrd.
+ */
+SearchHelper.prototype.getEngine = function (text) {
+	let keyword = null;
+	let me = this;
+	text.replace(/^(\S+)\s+(.+)$/, function(a, word, rest){
+		if (word in me.engineMap) {
+			keyword = word;
+			text = rest;
+		}
+	});
+	let engine;
+	if (keyword === null) {
+		engine = this.engineMap.default;
+	} else {
+		engine = this.engineMap[keyword];
+	}
+	return {
+		engine : engine,
+		text : text
+	};
 }
 
 /**
