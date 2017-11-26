@@ -96,7 +96,7 @@ browser.omnibox.onInputEntered.addListener((text, disposition) => {
 		searchTerm: searchTerm, 
 		url: url
 	});
-	// react tab as expected
+	// create or update tab as expected
 	switch (disposition) {
 		case 'currentTab':
 			browser.tabs.update({url});
