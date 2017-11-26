@@ -56,15 +56,18 @@ SearchHelper.prototype.buildSearchUrl = function (engine, action, text) {
 SearchHelper.prototype.getEngine = function (text) {
 	let keyword = null;
 	let me = this;
-	text.replace(/^(\S+)\s+(.+)$/, function(a, word, rest){
-		if (word in me.engineMap) {
+	text.replace(/^(\S*)\s+(.*)$/, function(a, word, rest){
+		if (!word.length) {
+			keyword = 'default';
+			text = rest;
+		} else if (word in me.engineMap) {
 			keyword = word;
 			text = rest;
 		}
 	});
 	let engine;
 	if (keyword === null) {
-		engine = this.engineMap.default;
+		engine = null;
 	} else {
 		engine = this.engineMap[keyword];
 	}

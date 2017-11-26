@@ -56,6 +56,16 @@ browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
 	let engineWithTerm = searchHelper.getEngine(text);
 	let searchTerm = engineWithTerm.text;
 	let engine = engineWithTerm.engine;
+	// no keyword matched
+	if (engine === null) {
+		console.log('no keyword matched');
+		return;
+	}
+	// no phrase typed in yet after the keyword
+	if (!searchTerm.length) {
+		console.log('no phrase typed in yet after the keyword');
+		return;
+	}
 	let action = engine.autocompleteAction;
 	let headers = new Headers({'Accept': action.type});
 	let init = {method: action.method, headers};
@@ -87,13 +97,21 @@ browser.omnibox.onInputEntered.addListener((text, disposition) => {
 		let engineWithTerm = searchHelper.getEngine(text);
 		let searchTerm = engineWithTerm.text;
 		let engine = engineWithTerm.engine;
+		// no valid search to go to
+		if (engine === null || !searchTerm.length) {
+			console.log('no valid search to go to', {
+				text: text,
+				engine: engine,
+				searchTerm: searchTerm
+			});
+			return;
+		}
 		url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
 	}
 	// debug
 	console.log('onInputEntered: ', {
 		text: text, 
 		disposition: disposition, 
-		searchTerm: searchTerm, 
 		url: url
 	});
 	// create or update tab as expected
