@@ -13,11 +13,19 @@
 	<body>
 		<h1>Search Autocomplete (sa)</h1>
 	
-		<p>Type in <code>sa </code>&nbsp;(with space) in the address bar to see a list of your search engines.<p>
-		<p>Type in <code>sa en Some</code> in the address bar to see a list of articles starting with "Some" from English Wikpedia.<p>
-		
-		<p>Note! To access settings go to <code>about:addons</code> and open settings for the Search Autocomplete extension.<p>
-
+		<div data-lang="en">
+			<p>Type in <code>sa </code>&nbsp;(with space) in the address bar to see a list of your search engines.<p>
+			<p>Type in <code>sa en Some</code> in the address bar to see a list of articles starting with "Some" from English Wikpedia.<p>
+			
+			<p>Note! To access settings go to <code>about:addons</code> and open settings for the Search Autocomplete extension.<p>
+		</div>
+		<div data-lang="pl">
+			<p>Wpisz <code>sa </code>&nbsp;(ze spacją) w pasku adres, to zobaczysz listę swoich wyszukiwarek.<p>
+			<p>Wpisz <code>sa pl Coś</code> w pasku adres, to zobaczysz listę artykułów z Polskiej Wikpedii zaczynających się na "Coś".<p>
+			
+			<p>Uwaga! Aby wejść w ustawienia otwórz <code>about:addons</code> i tam przejdż do ustawień rozszerzenia Search Autocomplete.<p>
+		</div>
+	
 		<!-- build:js scripts/popup-vendor.js -->
 		<!-- bower:js -->
 		<!-- endbower -->
@@ -25,6 +33,9 @@
 
 		<!-- build:js scripts/popup.js -->
 		<script src="scripts/popup.js"></script>
+		<!-- endbuild -->
+		<!-- build:js scripts/setupI18n.js -->
+		<script src="scripts/setupI18n.js"></script>
 		<!-- endbuild -->
 	</body>
 </html>
