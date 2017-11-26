@@ -6,5 +6,9 @@
   "appDescription": {
     "message": "Quick, keyword based autocomplete for your search engines",
     "description": "The description of the application"
+  },
+  "searchShortInformation": {
+    "message": "Type in your search engine keyword and then your search terms.",
+    "description": ""
   }
 }
