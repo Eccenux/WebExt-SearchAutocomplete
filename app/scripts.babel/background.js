@@ -46,7 +46,6 @@ let searchHelper = new SearchHelper(SETTINGS, {
  * Default suggestion displayed after typing in `sa`.
  */
 browser.omnibox.setDefaultSuggestion({
-	//description: 'Type in your search engine keyword and then your search terms.'
 	description: browser.i18n.getMessage('searchShortInformation')
 });
 
