@@ -10,6 +10,8 @@
 				"$eslint-stylish"
 			]
 		},
+		// %APPDATA%\Code\User\keybindings.json
+		// "key": "ctrl+shift+t",
 		{
 			"label": "Run tests",
 			"type": "shell",
