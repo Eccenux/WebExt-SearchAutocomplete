@@ -22,6 +22,13 @@
 				"reveal": "always",
 				"panel": "new"
 			}
+		},
+		{
+			"type": "gulp",
+			"task": "clean",
+			"problemMatcher": [
+				"$eslint-stylish"
+			]
 		}
 	]
 }
