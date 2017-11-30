@@ -8,38 +8,24 @@ const SETTINGS = {
 }
 
 /**
-	Example engine.
+	Default engines.
 	
-	Roughly compatible with `OpenSearchDescription`.
+	Syntax for defining engines is roughly compatible with `OpenSearchDescription`.
 */
-const enWikiEngine = {
-	keywords : ['en'],
-	baseUrl : 'https://en.wikipedia.org/',
-	openAction: {
-		url : '{baseUrl}',
-		method : 'GET',
-		data : {
-			search : '{searchTerms}',
-			sourceid: 'Mozilla-search'
-		}
-	},
-	autocompleteAction: {
-		url : '{baseUrl}w/api.php',
-		method : 'GET',
-		type : 'application/x-suggestions+json',
-		data : {
-			action : 'opensearch',
-			search : '{searchTerms}'
-		}
-	}
-}
+import wikiTemplateEngine from './engines/wiki-template';
+import enWikiEngine from './engines/wiki-en';
+import plWikiEngine from './engines/wiki-pl';
+
+Object.assign(enWikiEngine, wikiTemplateEngine);
+Object.assign(plWikiEngine, wikiTemplateEngine);
 
 //
 // Omnibox setup
 //
 import SearchHelper from './inc/SearchHelper.js';
 let searchHelper = new SearchHelper(SETTINGS, {
-	'en' : enWikiEngine
+	'en' : enWikiEngine,
+	'pl' : plWikiEngine
 });
 
 /**

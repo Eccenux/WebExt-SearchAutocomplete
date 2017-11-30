@@ -1,0 +1,19 @@
+{
+	"openAction" : {
+		"url" : "{baseUrl}",
+		"method" : "GET",
+		"data" : {
+			"search" : "{searchTerms}",
+			"sourceid": "Mozilla-search"
+		}
+	},
+	"autocompleteAction": {
+		"url" : "{baseUrl}w/api.php",
+		"method" : "GET",
+		"type" : "application/x-suggestions+json",
+		"data" : {
+			"action" : "opensearch",
+			"search" : "{searchTerms}"
+		}
+	}
+}

@@ -5,6 +5,18 @@
  * Main settings.
  */
 
+var _wikiTemplate = require('./engines/wiki-template');
+
+var _wikiTemplate2 = _interopRequireDefault(_wikiTemplate);
+
+var _wikiEn = require('./engines/wiki-en');
+
+var _wikiEn2 = _interopRequireDefault(_wikiEn);
+
+var _wikiPl = require('./engines/wiki-pl');
+
+var _wikiPl2 = _interopRequireDefault(_wikiPl);
+
 var _SearchHelper = require('./inc/SearchHelper.js');
 
 var _SearchHelper2 = _interopRequireDefault(_SearchHelper);
@@ -15,37 +27,22 @@ var SETTINGS = {
 	MAX_SUGGESTIONS: 6
 
 	/**
- 	Example engine.
+ 	Default engines.
  	
- 	Roughly compatible with `OpenSearchDescription`.
+ 	Syntax for defining engines is roughly compatible with `OpenSearchDescription`.
  */
-};var enWikiEngine = {
-	keywords: ['en'],
-	baseUrl: 'https://en.wikipedia.org/',
-	openAction: {
-		url: '{baseUrl}',
-		method: 'GET',
-		data: {
-			search: '{searchTerms}',
-			sourceid: 'Mozilla-search'
-		}
-	},
-	autocompleteAction: {
-		url: '{baseUrl}w/api.php',
-		method: 'GET',
-		type: 'application/x-suggestions+json',
-		data: {
-			action: 'opensearch',
-			search: '{searchTerms}'
-		}
-	}
-
-	//
-	// Omnibox setup
-	//
 };
+
+Object.assign(_wikiEn2.default, _wikiTemplate2.default);
+Object.assign(_wikiPl2.default, _wikiTemplate2.default);
+
+//
+// Omnibox setup
+//
+
 var searchHelper = new _SearchHelper2.default(SETTINGS, {
-	'en': enWikiEngine
+	'en': _wikiEn2.default,
+	'pl': _wikiPl2.default
 });
 
 /**
@@ -127,7 +124,40 @@ browser.omnibox.onInputEntered.addListener(function (text, disposition) {
 	}
 });
 
-},{"./inc/SearchHelper.js":4}],2:[function(require,module,exports){
+},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":7}],2:[function(require,module,exports){
+module.exports={
+	"keywords" : ["en"],
+	"baseUrl" : "https://en.wikipedia.org/"
+}
+
+},{}],3:[function(require,module,exports){
+module.exports={
+	"keywords" : ["pl"],
+	"baseUrl" : "https://pl.wikipedia.org/"
+}
+
+},{}],4:[function(require,module,exports){
+module.exports={
+	"openAction" : {
+		"url" : "{baseUrl}",
+		"method" : "GET",
+		"data" : {
+			"search" : "{searchTerms}",
+			"sourceid": "Mozilla-search"
+		}
+	},
+	"autocompleteAction": {
+		"url" : "{baseUrl}w/api.php",
+		"method" : "GET",
+		"type" : "application/x-suggestions+json",
+		"data" : {
+			"action" : "opensearch",
+			"search" : "{searchTerms}"
+		}
+	}
+}
+
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -156,7 +186,7 @@ function SearchEngine(engine) {
 	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction);
 }
 
-},{"./SearchEngineAction.js":3}],3:[function(require,module,exports){
+},{"./SearchEngineAction.js":6}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -185,7 +215,7 @@ function SearchEngineAction(action) {
 	}
 }
 
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -341,5 +371,5 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 
 exports.default = SearchHelper;
 
-},{"./SearchEngine.js":2}]},{},[1])
+},{"./SearchEngine.js":5}]},{},[1])
 
