@@ -23,10 +23,10 @@ Object.assign(plWikiEngine, wikiTemplateEngine);
 // Omnibox setup
 //
 import SearchHelper from './inc/SearchHelper.js';
-let searchHelper = new SearchHelper(SETTINGS, {
-	'en' : enWikiEngine,
-	'pl' : plWikiEngine
-});
+let searchHelper = new SearchHelper(SETTINGS, [
+	enWikiEngine,
+	plWikiEngine
+]);
 
 /**
  * Default suggestion displayed after typing in `sa`.

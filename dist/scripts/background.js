@@ -40,10 +40,7 @@ Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 // Omnibox setup
 //
 
-var searchHelper = new _SearchHelper2.default(SETTINGS, {
-	'en': _wikiEn2.default,
-	'pl': _wikiPl2.default
-});
+var searchHelper = new _SearchHelper2.default(SETTINGS, [_wikiEn2.default, _wikiPl2.default]);
 
 /**
  * Default suggestion displayed after typing in `sa`.
