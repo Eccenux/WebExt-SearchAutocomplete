@@ -196,17 +196,29 @@ describe('SearchHelper', function () {
 		);
 				
 		it('Should build a map of engines', function () {
-			let engine, engineWithTerm;
+			let engineWithTerm;
+
 			engineWithTerm = arraySearchHelper.getEngine('a abc');
-			engine = engineWithTerm.engine;
-			assert.equal(engine.baseUrl, engineA.baseUrl, 'Should choose the A engine');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineA.baseUrl, 'Should choose the A engine');
+
 			engineWithTerm = arraySearchHelper.getEngine('b abc');
-			engine = engineWithTerm.engine;
-			assert.equal(engine.baseUrl, engineB.baseUrl, 'Should choose the B engine');
-		});
-		it('Should still support a map of engines', function () {
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineB.baseUrl, 'Should choose the B engine');
 		});
 		it('Should support multiple keywords for an engine', function () {
+			let engineWithTerm;
+
+			let keywords = engineA.keywords.concat(engineB.keywords);
+
+			for (let i = 0; i < keywords.length; i++) {
+				let key = keywords[i];
+				engineWithTerm = arraySearchHelper.getEngine(`${key} abc`);
+				assert.isNotNull(engineWithTerm.engine, 'An engine must be availble for each keyowrd');
+				assert.equal(engineWithTerm.text, 'abc', 'The term should be abc');
+			}
+		});
+		it('Should still support a map of engines', function () {
 		});
 	});	
 });
