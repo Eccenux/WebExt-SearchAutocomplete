@@ -181,11 +181,15 @@ describe('SearchHelper', function () {
 		let engineB = JSON.parse(JSON.stringify(engineExample));	// clone
 		engineB.baseUrl = 'http://b.localhost/';
 		engineB.keywords = ['b', 'bb', 'bbb'];
+		let engineSingle = JSON.parse(JSON.stringify(engineExample));	// clone
+		engineSingle.baseUrl = 'http://single.localhost/';
+		engineSingle.keyword = 'single';
 
 		let arraySearchHelper = new SearchHelper(SETTINGS,
 			[
 				engineA,
-				engineB
+				engineB,
+				engineSingle
 			]
 		);
 		let mapSearchHelper = new SearchHelper(SETTINGS,
@@ -205,6 +209,13 @@ describe('SearchHelper', function () {
 			engineWithTerm = arraySearchHelper.getEngine('b abc');
 			assert.isNotNull(engineWithTerm.engine);
 			assert.equal(engineWithTerm.engine.baseUrl, engineB.baseUrl, 'Should choose the B engine');
+		});
+		it('Should support keyword prop', function () {
+			let engineWithTerm;
+
+			engineWithTerm = arraySearchHelper.getEngine('single abc');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineSingle.baseUrl, 'Should choose the Single engine');
 		});
 		it('Should support multiple keywords for an engine', function () {
 			let engineWithTerm;
