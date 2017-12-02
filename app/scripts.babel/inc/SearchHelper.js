@@ -19,8 +19,8 @@ function SearchHelper (SETTINGS, engines) {
 		this.engineMap = engines;
 	}
 	// figure out default (unless explictly defined)
-	if (typeof engineMap.default !== 'object') {
-		var firstKeyword = Object.keys(engineMap)[0];
+	if (typeof this.engineMap.default !== 'object') {
+		var firstKeyword = Object.keys(this.engineMap)[0];
 		this.engineMap.default = this.engineMap[firstKeyword];
 	}
 }

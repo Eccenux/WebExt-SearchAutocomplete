@@ -238,16 +238,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @TODO Maybe support engines array later? Would allow support of mulitple keywords.
  * 
  * @param {Object} SETTINGS General settings object.
- * @param {Object} engineMap Keyword-based search engines map.
+ * @param {Object|Array} engines Keyword-based search engines map
+ * OR an array of search engines with `keywords` property.
  */
-function SearchHelper(SETTINGS, engineMap) {
+function SearchHelper(SETTINGS, engines) {
 	this.SETTINGS = SETTINGS;
-	this.engineMap = engineMap;
-	if (_typeof(engineMap.default) !== 'object') {
-		var firstKeyword = Object.keys(engineMap)[0];
+	// parse engines to engine map
+	if (Array.isArray(engines)) {
+		this.engineMap = this.buildEngineMap(engines);
+	} else {
+		this.engineMap = engines;
+	}
+	// figure out default (unless explictly defined)
+	if (_typeof(this.engineMap.default) !== 'object') {
+		var firstKeyword = Object.keys(this.engineMap)[0];
 		this.engineMap.default = this.engineMap[firstKeyword];
 	}
 }
+
+/**
+ * Builds a keyword-based search engines map.
+ * @param {Array} engines An array of search engines with `keywords` property.
+ */
+SearchHelper.prototype.buildEngineMap = function (engines) {
+	var engineMap = {};
+	for (var i = 0; i < engines.length; i++) {
+		var engine = engines[i];
+		var keywords = engine.keywords;
+		for (var k = 0; k < keywords.length; k++) {
+			var key = keywords[k];
+			engineMap[key] = engine;
+		}
+	}
+	return engineMap;
+};
 
 /**
  * Build search URL for the text.
