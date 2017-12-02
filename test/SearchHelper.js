@@ -1,7 +1,18 @@
 'use strict';
 
-// any engine (not important form most testing)
-var engineExample = {
+const assert = require('chai').assert;
+
+/**
+ * Main settings.
+ */
+const SETTINGS = {
+	MAX_SUGGESTIONS : 6
+}
+
+/**
+ * Example engine(s).
+ */
+let engineExample = {
 	baseUrl : 'http://localhost/',
 	openAction : {
 		url : '{baseUrl}',
@@ -12,21 +23,19 @@ var engineExample = {
 		data : {}
 	}
 };
-var engineEg = JSON.parse(JSON.stringify(engineExample));	// clone
+let engineEg = JSON.parse(JSON.stringify(engineExample));	// clone
 engineEg.baseUrl = 'http://eg.localhost/';
 
+/**
+ * Init basic search helper for testing
+ */
 import SearchHelper from '../app/scripts.babel/inc/SearchHelper.js';
-//var SearchHelper = require('../app/scripts.babel/inc/SearchHelper');
-var searchHelper = new SearchHelper(
-	{
-		MAX_SUGGESTIONS : 6
-	},
+let searchHelper = new SearchHelper(SETTINGS,
 	{
 		example : engineExample,
 		eg : engineEg
 	}
 );
-var assert = require('chai').assert;
 
 describe('SearchHelper', function () {
 	
@@ -164,4 +173,40 @@ describe('SearchHelper', function () {
 			assert.equal(term, 'a', 'Should be a charcter');
 		});
 	});
+
+	describe('Test building an engine map', function () {
+		let engineA = JSON.parse(JSON.stringify(engineExample));	// clone
+		engineA.baseUrl = 'http://a.localhost/';
+		engineA.keywords = ['a', 'ab', 'abc'];
+		let engineB = JSON.parse(JSON.stringify(engineExample));	// clone
+		engineB.baseUrl = 'http://b.localhost/';
+		engineB.keywords = ['b', 'bb', 'bbb'];
+
+		let arraySearchHelper = new SearchHelper(SETTINGS,
+			[
+				engineA,
+				engineB
+			]
+		);
+		let mapSearchHelper = new SearchHelper(SETTINGS,
+			{
+				a : engineA,
+				b : engineB
+			}
+		);
+				
+		it('Should build a map of engines', function () {
+			let engine, engineWithTerm;
+			engineWithTerm = arraySearchHelper.getEngine('a abc');
+			engine = engineWithTerm.engine;
+			assert.equal(engine.baseUrl, engineA.baseUrl, 'Should choose the A engine');
+			engineWithTerm = arraySearchHelper.getEngine('b abc');
+			engine = engineWithTerm.engine;
+			assert.equal(engine.baseUrl, engineB.baseUrl, 'Should choose the B engine');
+		});
+		it('Should still support a map of engines', function () {
+		});
+		it('Should support multiple keywords for an engine', function () {
+		});
+	});	
 });
