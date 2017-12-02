@@ -190,8 +190,8 @@ describe('SearchHelper', function () {
 		);
 		let mapSearchHelper = new SearchHelper(SETTINGS,
 			{
-				a : engineA,
-				b : engineB
+				axx : engineA,
+				bxx : engineB
 			}
 		);
 				
@@ -219,6 +219,15 @@ describe('SearchHelper', function () {
 			}
 		});
 		it('Should still support a map of engines', function () {
+			let engineWithTerm;
+
+			engineWithTerm = mapSearchHelper.getEngine('axx abc');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineA.baseUrl, 'Should choose the A engine');
+
+			engineWithTerm = mapSearchHelper.getEngine('bxx abc');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineB.baseUrl, 'Should choose the B engine');
 		});
 	});	
 });
