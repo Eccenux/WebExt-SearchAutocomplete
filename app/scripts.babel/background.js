@@ -19,97 +19,112 @@ import plWikiEngine from './engines/wiki-pl';
 Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
+browser.storage.local.get('engines')
+.then(function(engines){
+	if (Array.isArray(engines)) {
+		prepareOmnibox(engines);
+	} else {
+		prepareOmnibox([
+			enWikiEngine,
+			plWikiEngine
+		]);
+	}
+})
+
 //
 // Omnibox setup
 //
 import SearchHelper from './inc/SearchHelper.js';
-let searchHelper = new SearchHelper(SETTINGS, [
-	enWikiEngine,
-	plWikiEngine
-]);
 
 /**
- * Default suggestion displayed after typing in `sa`.
+ * Prepare omnibox for autocomplete.
  */
-browser.omnibox.setDefaultSuggestion({
-	description: browser.i18n.getMessage('searchShortInformation')
-});
+function prepareOmnibox(engines) {
+	let searchHelper = new SearchHelper(SETTINGS, engines);
 
-/**
- * Reaction for newly entered phrase.
- */
-browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
-	let engineWithTerm = searchHelper.getEngine(text);
-	let searchTerm = engineWithTerm.text;
-	let engine = engineWithTerm.engine;
-	// no keyword matched
-	if (engine === null) {
-		console.log('no keyword matched');
-		return;
-	}
-	// no phrase typed in yet after the keyword
-	if (!searchTerm.length) {
-		console.log('no phrase typed in yet after the keyword');
-		return;
-	}
-	let action = engine.autocompleteAction;
-	let headers = new Headers({'Accept': action.type});
-	let init = {method: action.method, headers};
-	let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
-	console.log(
-		'searchTerm:', searchTerm,
-		'url:', url,
-		'engine:', engine
-	);
-	let request = new Request(url, init);
-	
-	fetch(request)
-		.then(function (response){
-			return searchHelper.createSuggestionsFromResponse(engine, response);
-		})
-		.then(addSuggestions)
-	;
-});
+	/**
+	 * Default suggestion displayed after typing in `sa`.
+	 */
+	browser.omnibox.setDefaultSuggestion({
+		description: browser.i18n.getMessage('searchShortInformation')
+	});
 
-/**
- * React to choosen phrase or suggestion.
- */
-browser.omnibox.onInputEntered.addListener((text, disposition) => {
-	console.log('onInputEntered: ', text, disposition);
-	// if suggestion was choosen then the text should contain a go-to URL
-	let url = text;
-	// suggestion was not choosen, must build URL
-	if (text.search(/^https?:/) !== 0) {
+	/**
+	 * Reaction for newly entered phrase.
+	 */
+	browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
 		let engineWithTerm = searchHelper.getEngine(text);
 		let searchTerm = engineWithTerm.text;
 		let engine = engineWithTerm.engine;
-		// no valid search to go to
-		if (engine === null || !searchTerm.length) {
-			console.log('no valid search to go to', {
-				text: text,
-				engine: engine,
-				searchTerm: searchTerm
-			});
+		// no keyword matched
+		if (engine === null) {
+			console.log('no keyword matched');
 			return;
 		}
-		url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
-	}
-	// debug
-	console.log('onInputEntered: ', {
-		text: text, 
-		disposition: disposition, 
-		url: url
+		// no phrase typed in yet after the keyword
+		if (!searchTerm.length) {
+			console.log('no phrase typed in yet after the keyword');
+			return;
+		}
+		let action = engine.autocompleteAction;
+		let headers = new Headers({'Accept': action.type});
+		let init = {method: action.method, headers};
+		let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
+		console.log(
+			'searchTerm:', searchTerm,
+			'url:', url,
+			'engine:', engine
+		);
+		let request = new Request(url, init);
+		
+		fetch(request)
+			.then(function (response){
+				return searchHelper.createSuggestionsFromResponse(engine, response);
+			})
+			.then(addSuggestions)
+		;
 	});
-	// create or update tab as expected
-	switch (disposition) {
-		case 'currentTab':
-			browser.tabs.update({url});
-			break;
-		case 'newForegroundTab':
-			browser.tabs.create({url});
-			break;
-		case 'newBackgroundTab':
-			browser.tabs.create({url, active: false});
-			break;
-	}
-});
+
+	/**
+	 * React to choosen phrase or suggestion.
+	 */
+	browser.omnibox.onInputEntered.addListener((text, disposition) => {
+		console.log('onInputEntered: ', text, disposition);
+		// if suggestion was choosen then the text should contain a go-to URL
+		let url = text;
+		// suggestion was not choosen, must build URL
+		if (text.search(/^https?:/) !== 0) {
+			let engineWithTerm = searchHelper.getEngine(text);
+			let searchTerm = engineWithTerm.text;
+			let engine = engineWithTerm.engine;
+			// no valid search to go to
+			if (engine === null || !searchTerm.length) {
+				console.log('no valid search to go to', {
+					text: text,
+					engine: engine,
+					searchTerm: searchTerm
+				});
+				return;
+			}
+			url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
+		}
+		// debug
+		console.log('onInputEntered: ', {
+			text: text, 
+			disposition: disposition, 
+			url: url
+		});
+		// create or update tab as expected
+		switch (disposition) {
+			case 'currentTab':
+				browser.tabs.update({url});
+				break;
+			case 'newForegroundTab':
+				browser.tabs.create({url});
+				break;
+			case 'newBackgroundTab':
+				browser.tabs.create({url, active: false});
+				break;
+		}
+	});
+}
