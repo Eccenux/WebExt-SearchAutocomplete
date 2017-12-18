@@ -96,6 +96,7 @@ gulp.task('chromeManifest', () => {
 gulp.task('babel', () => {
 		const files = [
 				'background.js',
+				'options.js',
 				'setupI18n.js',
 				'chromereload.js'
 		];
