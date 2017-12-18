@@ -21,14 +21,15 @@ Object.assign(plWikiEngine, wikiTemplateEngine);
 
 browser.storage.local.get('engines')
 .then(function(engines){
-	if (Array.isArray(engines)) {
-		prepareOmnibox(engines);
-	} else {
-		prepareOmnibox([
+	if (!Array.isArray(engines)) {
+		engines = [
 			enWikiEngine,
 			plWikiEngine
-		]);
+		];
+		browser.storage.local.set({'engines':engines});
 	}
+	prepareOmnibox(engines);
+
 })
 
 //
