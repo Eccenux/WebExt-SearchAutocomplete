@@ -20,13 +20,16 @@ Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
 browser.storage.local.get('engines')
-.then(function(engines){
-	if (!Array.isArray(engines)) {
+.then(function(result){
+	let engines = [];
+	if (!('engines' in result) || !Array.isArray(result.engines)) {
 		engines = [
 			enWikiEngine,
 			plWikiEngine
 		];
 		browser.storage.local.set({'engines':engines});
+	} else {
+		engines = result.engines;
 	}
 	prepareOmnibox(engines);
 

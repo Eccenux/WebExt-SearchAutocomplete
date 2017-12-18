@@ -36,12 +36,15 @@ var SETTINGS = {
 Object.assign(_wikiEn2.default, _wikiTemplate2.default);
 Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
-browser.storage.local.get('engines').then(function (engines) {
-	if (Array.isArray(engines)) {
-		prepareOmnibox(engines);
+browser.storage.local.get('engines').then(function (result) {
+	var engines = [];
+	if (!('engines' in result) || !Array.isArray(result.engines)) {
+		engines = [_wikiEn2.default, _wikiPl2.default];
+		browser.storage.local.set({ 'engines': engines });
 	} else {
-		prepareOmnibox([_wikiEn2.default, _wikiPl2.default]);
+		engines = result.engines;
 	}
+	prepareOmnibox(engines);
 });
 
 //
