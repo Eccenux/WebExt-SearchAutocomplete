@@ -1,8 +1,10 @@
 import SearchEngineAction from './SearchEngineAction.js';
 
-export function SearchEngine(engine) {
+function SearchEngine(engine) {
 	this.keywords = [];
-	if (typeof engine.keywords === 'string') {
+	if (typeof engine.keyword === 'string') {
+		this.keywords.push(engine.keyword);
+	} else if (typeof engine.keywords === 'string') {
 		this.keywords.push(engine.keywords);
 	} else {
 		this.keywords = engine.keywords;
@@ -14,3 +16,5 @@ export function SearchEngine(engine) {
 	this.openAction = new SearchEngineAction(engine.openAction);
 	this.autocompleteAction = new SearchEngineAction(engine.autocompleteAction);
 }
+
+export default SearchEngine;

@@ -1,4 +1,4 @@
-export function SearchEngineAction(action) {
+function SearchEngineAction(action) {
 	this.url = '';
 	if (typeof action.url === 'string') {
 		this.url = action.url;
@@ -16,3 +16,5 @@ export function SearchEngineAction(action) {
 		this.data = action.data;
 	}
 }
+
+export default SearchEngineAction;

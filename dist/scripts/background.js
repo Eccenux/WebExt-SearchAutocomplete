@@ -177,7 +177,6 @@ module.exports={
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.SearchEngine = SearchEngine;
 
 var _SearchEngineAction = require('./SearchEngineAction.js');
 
@@ -187,7 +186,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function SearchEngine(engine) {
 	this.keywords = [];
-	if (typeof engine.keywords === 'string') {
+	if (typeof engine.keyword === 'string') {
+		this.keywords.push(engine.keyword);
+	} else if (typeof engine.keywords === 'string') {
 		this.keywords.push(engine.keywords);
 	} else {
 		this.keywords = engine.keywords;
@@ -200,6 +201,8 @@ function SearchEngine(engine) {
 	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction);
 }
 
+exports.default = SearchEngine;
+
 },{"./SearchEngineAction.js":6}],6:[function(require,module,exports){
 'use strict';
 
@@ -209,7 +212,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-exports.SearchEngineAction = SearchEngineAction;
 function SearchEngineAction(action) {
 	this.url = '';
 	if (typeof action.url === 'string') {
@@ -228,6 +230,8 @@ function SearchEngineAction(action) {
 		this.data = action.data;
 	}
 }
+
+exports.default = SearchEngineAction;
 
 },{}],7:[function(require,module,exports){
 'use strict';
@@ -277,8 +281,8 @@ function SearchHelper(SETTINGS, engines) {
 SearchHelper.prototype.buildEngineMap = function (engines) {
 	var engineMap = {};
 	for (var i = 0; i < engines.length; i++) {
-		var engine = engines[i];
-		var keywords = 'keyword' in engine ? [engine.keyword] : engine.keywords;
+		var engine = new _SearchEngine2.default(engines[i]);
+		var keywords = engine.keywords;
 		for (var k = 0; k < keywords.length; k++) {
 			var key = keywords[k];
 			engineMap[key] = engine;

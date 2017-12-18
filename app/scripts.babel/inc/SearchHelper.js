@@ -32,8 +32,8 @@ function SearchHelper (SETTINGS, engines) {
 SearchHelper.prototype.buildEngineMap = function (engines) {
 	let engineMap = {};
 	for (let i = 0; i < engines.length; i++) {
-		var engine = engines[i];
-		var keywords = ('keyword' in engine) ? [engine.keyword] : engine.keywords;
+		var engine = new SearchEngine(engines[i]);
+		var keywords =engine.keywords;
 		for (let k = 0; k < keywords.length; k++) {
 			var key = keywords[k];
 			engineMap[key] = engine;
