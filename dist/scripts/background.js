@@ -193,10 +193,19 @@ function SearchEngine(engine) {
 	} else {
 		this.keywords = engine.keywords;
 	}
+
 	this.baseUrl = '';
 	if (typeof engine.baseUrl === 'string') {
 		this.baseUrl = engine.baseUrl;
 	}
+
+	this.title = '';
+	if (typeof engine.title === 'string') {
+		this.title = engine.title;
+	} else {
+		this.title = engine.baseUrl;
+	}
+
 	this.openAction = new _SearchEngineAction2.default(engine.openAction);
 	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction);
 }
