@@ -14,16 +14,13 @@ if (typeof browser != 'undefined') {
 		console.log('failReason', failReason);
 	})
 } else {
-	let engineExample = {
+	prepareEngines([{
 		keyword : 'example',
-		baseUrl : 'http://localhost/',
-		openAction : {},
-		autocompleteAction : {}
-	};		
-	let engineEg = JSON.parse(JSON.stringify(engineExample));	// clone
-	engineEg.baseUrl = 'http://eg.localhost/';
-	engineEg.keyword = 'eg';
-	prepareEngines([engineExample,engineEg]);
+		baseUrl : 'http://localhost/'
+	},{
+		keyword : 'eg',
+		baseUrl : 'http://eg.localhost/'
+	}]);
 }
 
 /**

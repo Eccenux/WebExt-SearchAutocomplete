@@ -21,9 +21,9 @@ function SearchEngine(engine) {
 	} else {
 		this.title = engine.baseUrl;
 	}
-	
-	this.openAction = new SearchEngineAction(engine.openAction);
-	this.autocompleteAction = new SearchEngineAction(engine.autocompleteAction);
+
+	this.openAction = new SearchEngineAction(engine.openAction || {});
+	this.autocompleteAction = new SearchEngineAction(engine.autocompleteAction || {});
 }
 
 export default SearchEngine;
