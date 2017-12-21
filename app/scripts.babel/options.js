@@ -55,12 +55,21 @@ function prepareEngines(engines) {
 function editEngine(engine) {
 	console.log(engine);
 	currentEngine.update(engine);
+	app.EngineController.$apply();
 }
-
 
 window.currentEngine = new SearchEngineModel(new SearchEngine({
 	title : 'Just a test',
 	keyword : 't',
 	baseUrl : 'http://test.localhost/'
 }));
-ko.applyBindings(currentEngine);
+
+window.app = {};
+angular
+	.module('app', [])
+	.controller('EngineController', function($scope) {
+		app.EngineController = $scope;
+
+		$scope.engine = currentEngine;
+	})
+;

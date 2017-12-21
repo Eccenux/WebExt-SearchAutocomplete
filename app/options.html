@@ -7,9 +7,9 @@
 		<!-- build:css styles/options.css -->
 		<link href="styles/options.css" rel="stylesheet">
 		<!-- endbuild -->
-		<script src="lib/knockout.min.js"></script>
+		<script src="lib/angular.min.js"></script>
 	</head>
-	<body>
+	<body ng-app="app">
 		<h1>
 			<span data-lang="en">Search engines</span>
 			<span data-lang="pl">Wyszukiwarki</span>
@@ -18,52 +18,52 @@
 		<ul id="engines-container">
 		</ul>
 
-		<form id="engine-editor">
+		<form id="engine-editor" ng-controller="EngineController">
 			<p>
 				<label>
 					<span data-lang="en">Title (name)</span>
 					<span data-lang="pl">Tytuł (nazwa)</span>
-					<input type="text" data-bind="value: title" style="width:15em">
+					<input type="text" ng-model="engine.title" style="width:15em">
 				</label>
 				<label>
 					<span data-lang="en">Keyword(s)</span>
 					<span data-lang="pl">Słowo kluczowe</span>
-					<input type="text" data-bind="value: keywords" style="width:5em">
+					<input type="text" ng-model="engine.keywords" style="width:5em">
 				</label>
 			</p>
 			<p>
 				<label>
 					<span data-lang="en">Base URL</span>
 					<span data-lang="pl">Bazowy URL</span>
-					<input type="text" data-bind="value: baseUrl" style="width:25em">
+					<input type="text" ng-model="engine.baseUrl" style="width:25em">
 				</label>
 			</p>
-			<div data-bind="foreach: actions">
+			<div ng-repeat="action in engine.actions">
 				<fieldset>
-					<legend data-bind="text: name"></legend>
+					<legend>{{ action.name }}</legend>
 					<label>
 						<span data-lang="en">URL</span>
 						<span data-lang="pl">URL</span>
-						<input type="text" data-bind="value: url" style="width:20em">
+						<input type="text" ng-model="action.url" style="width:20em">
 					</label>
 					<label>
 						<span data-lang="en">Method</span>
 						<span data-lang="pl">Metoda</span>
-						<input type="text" data-bind="value: method" style="width:5em">
+						<input type="text" ng-model="action.method" style="width:5em">
 					</label>
 					<label>
 						<span data-lang="en">MIME type</span>
 						<span data-lang="pl">Typ MIME</span>
-						<input type="text" data-bind="value: type" style="width:20em">
+						<input type="text" ng-model="action.type" style="width:20em">
 					</label>
 					<p>
 						<span data-lang="en">Data (key:value)</span>
 						<span data-lang="pl">Dane (nazwa:wartość)</span>
 					</p>
-					<div data-bind="foreach: data">
+					<div ng-repeat="data in action.data">
 						<p>
-							<input type="text" data-bind="value: key">
-							<input type="text" data-bind="value: value">
+							<input type="text" ng-model="data.key">
+							<input type="text" ng-model="data.value">
 						</p>
 					</div>
 				</fieldset>

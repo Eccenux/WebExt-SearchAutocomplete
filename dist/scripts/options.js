@@ -71,6 +71,7 @@ function prepareEngines(engines) {
 function editEngine(engine) {
 	console.log(engine);
 	currentEngine.update(engine);
+	app.EngineController.$apply();
 }
 
 window.currentEngine = new _SearchEngineModel2.default(new _SearchEngine2.default({
@@ -78,7 +79,13 @@ window.currentEngine = new _SearchEngineModel2.default(new _SearchEngine2.defaul
 	keyword: 't',
 	baseUrl: 'http://test.localhost/'
 }));
-ko.applyBindings(currentEngine);
+
+window.app = {};
+angular.module('app', []).controller('EngineController', function ($scope) {
+	app.EngineController = $scope;
+
+	$scope.engine = currentEngine;
+});
 
 },{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchEngine.js":5,"./inc/SearchEngineModel.js":7}],2:[function(require,module,exports){
 module.exports={
@@ -198,10 +205,10 @@ Object.defineProperty(exports, "__esModule", {
  * @param {SearchEngine} engine Optional initial engine.
  */
 function SearchEngineModel(engine) {
-	this.keywords = ko.observable('');
-	this.baseUrl = ko.observable('');
-	this.title = ko.observable('');
-	this.actions = ko.observableArray();
+	this.keywords = '';
+	this.baseUrl = '';
+	this.title = '';
+	this.actions = [];
 	if (engine) {
 		this.update(engine);
 	}
@@ -212,10 +219,10 @@ function SearchEngineModel(engine) {
  * @param {SearchEngine} engine 
  */
 SearchEngineModel.prototype.update = function (engine) {
-	this.keywords(engine.keywords.join(','));
-	this.baseUrl(engine.baseUrl);
-	this.title(engine.title);
-	this.actions.removeAll();
+	this.keywords = engine.keywords.join(',');
+	this.baseUrl = engine.baseUrl;
+	this.title = engine.title;
+	this.actions.length = 0;
 	this.addAction('open', engine.openAction);
 	this.addAction('autocomplete', engine.autocompleteAction);
 };
@@ -239,7 +246,7 @@ SearchEngineModel.prototype.addAction = function (name, action) {
 		url: action.url,
 		method: action.method,
 		type: action.type,
-		data: ko.observableArray(data)
+		data: data
 	});
 };
 
