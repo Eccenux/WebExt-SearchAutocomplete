@@ -1,11 +1,13 @@
-/*
 body {
 	font: message-box;
 	padding: 1em;
 	font-size: 100%;
 }
 
-h1 {
-	font-size: 100%;
+
+input {
+	border: 1px solid grey;
+	padding: .5em;
+	margin: .5em;
+	box-sizing: border-box;
 }
-*/

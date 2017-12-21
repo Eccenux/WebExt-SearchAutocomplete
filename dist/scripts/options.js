@@ -5,8 +5,28 @@ var _SearchEngine = require('./inc/SearchEngine.js');
 
 var _SearchEngine2 = _interopRequireDefault(_SearchEngine);
 
+var _SearchEngineModel = require('./inc/SearchEngineModel.js');
+
+var _SearchEngineModel2 = _interopRequireDefault(_SearchEngineModel);
+
+var _wikiTemplate = require('./engines/wiki-template');
+
+var _wikiTemplate2 = _interopRequireDefault(_wikiTemplate);
+
+var _wikiEn = require('./engines/wiki-en');
+
+var _wikiEn2 = _interopRequireDefault(_wikiEn);
+
+var _wikiPl = require('./engines/wiki-pl');
+
+var _wikiPl2 = _interopRequireDefault(_wikiPl);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+Object.assign(_wikiEn2.default, _wikiTemplate2.default);
+Object.assign(_wikiPl2.default, _wikiTemplate2.default);
+
+// load from storage
 if (typeof browser != 'undefined') {
 	browser.storage.local.get('engines').then(function (result) {
 		if (!('engines' in result) || !Array.isArray(result.engines)) {
@@ -17,23 +37,9 @@ if (typeof browser != 'undefined') {
 	}, function (failReason) {
 		console.log('failReason', failReason);
 	});
+	// in-browser testing examples
 } else {
-	var engineExample = {
-		keyword: 'example',
-		baseUrl: 'http://localhost/',
-		openAction: {
-			url: '{baseUrl}',
-			data: {}
-		},
-		autocompleteAction: {
-			url: '{baseUrl}',
-			data: {}
-		}
-	};
-	var engineEg = JSON.parse(JSON.stringify(engineExample)); // clone
-	engineEg.baseUrl = 'http://eg.localhost/';
-	engineEg.keyword = 'eg';
-	prepareEngines([engineExample, engineEg]);
+	prepareEngines([_wikiEn2.default, _wikiPl2.default]);
 }
 
 /**
@@ -49,11 +55,67 @@ function prepareEngines(engines) {
 		el.engine = engine;
 
 		el.textContent = '[' + engine.keywords.join(',') + '] ' + engine.title;
+		// edit
+		var button = document.createElement('a');
+		button.addEventListener('click', function () {
+			var engine = this.parentNode.engine;
+			editEngine(engine);
+		});
+		button.textContent = '✏️';
+		el.appendChild(button);
+		// append
 		container.appendChild(el);
 	}
 }
 
-},{"./inc/SearchEngine.js":2}],2:[function(require,module,exports){
+function editEngine(engine) {
+	console.log(engine);
+	currentEngine.update(engine);
+}
+
+window.currentEngine = new _SearchEngineModel2.default(new _SearchEngine2.default({
+	title: 'Just a test',
+	keyword: 't',
+	baseUrl: 'http://test.localhost/'
+}));
+ko.applyBindings(currentEngine);
+
+},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchEngine.js":5,"./inc/SearchEngineModel.js":7}],2:[function(require,module,exports){
+module.exports={
+	"title" : "English Wikipedia",
+	"keywords" : ["en"],
+	"baseUrl" : "https://en.wikipedia.org/"
+}
+
+},{}],3:[function(require,module,exports){
+module.exports={
+	"title" : "Polska Wikipedia",
+	"keywords" : ["pl"],
+	"baseUrl" : "https://pl.wikipedia.org/"
+}
+
+},{}],4:[function(require,module,exports){
+module.exports={
+	"openAction" : {
+		"url" : "{baseUrl}",
+		"method" : "GET",
+		"data" : {
+			"search" : "{searchTerms}",
+			"sourceid": "Mozilla-search"
+		}
+	},
+	"autocompleteAction": {
+		"url" : "{baseUrl}w/api.php",
+		"method" : "GET",
+		"type" : "application/x-suggestions+json",
+		"data" : {
+			"action" : "opensearch",
+			"search" : "{searchTerms}"
+		}
+	}
+}
+
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -88,13 +150,13 @@ function SearchEngine(engine) {
 		this.title = engine.baseUrl;
 	}
 
-	this.openAction = new _SearchEngineAction2.default(engine.openAction);
-	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction);
+	this.openAction = new _SearchEngineAction2.default(engine.openAction || {});
+	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction || {});
 }
 
 exports.default = SearchEngine;
 
-},{"./SearchEngineAction.js":3}],3:[function(require,module,exports){
+},{"./SearchEngineAction.js":6}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -123,6 +185,65 @@ function SearchEngineAction(action) {
 }
 
 exports.default = SearchEngineAction;
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+/**
+ * Observable search engine model.
+ * 
+ * @param {SearchEngine} engine Optional initial engine.
+ */
+function SearchEngineModel(engine) {
+	this.keywords = ko.observable('');
+	this.baseUrl = ko.observable('');
+	this.title = ko.observable('');
+	this.actions = ko.observableArray();
+	if (engine) {
+		this.update(engine);
+	}
+};
+/**
+ * Update the engine model.
+ * 
+ * @param {SearchEngine} engine 
+ */
+SearchEngineModel.prototype.update = function (engine) {
+	this.keywords(engine.keywords.join(','));
+	this.baseUrl(engine.baseUrl);
+	this.title(engine.title);
+	this.actions.removeAll();
+	this.addAction('open', engine.openAction);
+	this.addAction('autocomplete', engine.autocompleteAction);
+};
+
+/**
+ * Add action to collection.
+ * 
+ * @param {String} name Name of the action to display.
+ * @param {SearchEngineAction} action 
+ */
+SearchEngineModel.prototype.addAction = function (name, action) {
+	var data = [];
+	for (var key in action.data) {
+		data.push({
+			key: key,
+			value: action.data[key]
+		});
+	}
+	this.actions.push({
+		name: name,
+		url: action.url,
+		method: action.method,
+		type: action.type,
+		data: ko.observableArray(data)
+	});
+};
+
+exports.default = SearchEngineModel;
 
 },{}]},{},[1])
 

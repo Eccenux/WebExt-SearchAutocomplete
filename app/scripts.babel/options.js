@@ -1,7 +1,15 @@
 'use strict';
 
 import SearchEngine from './inc/SearchEngine.js';
+import SearchEngineModel from './inc/SearchEngineModel.js';
 
+import wikiTemplateEngine from './engines/wiki-template';
+import enWikiEngine from './engines/wiki-en';
+import plWikiEngine from './engines/wiki-pl';
+Object.assign(enWikiEngine, wikiTemplateEngine);
+Object.assign(plWikiEngine, wikiTemplateEngine);
+
+// load from storage
 if (typeof browser != 'undefined') {
 	browser.storage.local.get('engines')
 	.then(function(result){
@@ -13,14 +21,9 @@ if (typeof browser != 'undefined') {
 	}, function(failReason) {
 		console.log('failReason', failReason);
 	})
+// in-browser testing examples
 } else {
-	prepareEngines([{
-		keyword : 'example',
-		baseUrl : 'http://localhost/'
-	},{
-		keyword : 'eg',
-		baseUrl : 'http://eg.localhost/'
-	}]);
+	prepareEngines([enWikiEngine, plWikiEngine]);
 }
 
 /**
@@ -36,6 +39,28 @@ function prepareEngines(engines) {
 		el.engine = engine;
 		
 		el.textContent = `[${engine.keywords.join(',')}] ${engine.title}`;
+		// edit
+		let button = document.createElement('a');
+		button.addEventListener('click', function(){
+			let engine = this.parentNode.engine;
+			editEngine(engine);
+		});
+		button.textContent = '✏️';
+		el.appendChild(button);
+		// append
 		container.appendChild(el);
 	}
 }
+
+function editEngine(engine) {
+	console.log(engine);
+	currentEngine.update(engine);
+}
+
+
+window.currentEngine = new SearchEngineModel(new SearchEngine({
+	title : 'Just a test',
+	keyword : 't',
+	baseUrl : 'http://test.localhost/'
+}));
+ko.applyBindings(currentEngine);

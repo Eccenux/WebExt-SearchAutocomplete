@@ -140,12 +140,14 @@ function prepareOmnibox(engines) {
 
 },{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":7}],2:[function(require,module,exports){
 module.exports={
+	"title" : "English Wikipedia",
 	"keywords" : ["en"],
 	"baseUrl" : "https://en.wikipedia.org/"
 }
 
 },{}],3:[function(require,module,exports){
 module.exports={
+	"title" : "Polska Wikipedia",
 	"keywords" : ["pl"],
 	"baseUrl" : "https://pl.wikipedia.org/"
 }
@@ -206,8 +208,8 @@ function SearchEngine(engine) {
 		this.title = engine.baseUrl;
 	}
 
-	this.openAction = new _SearchEngineAction2.default(engine.openAction);
-	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction);
+	this.openAction = new _SearchEngineAction2.default(engine.openAction || {});
+	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction || {});
 }
 
 exports.default = SearchEngine;
