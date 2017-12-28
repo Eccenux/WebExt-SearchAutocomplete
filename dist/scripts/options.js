@@ -47,18 +47,18 @@ if (typeof browser != 'undefined') {
  */
 function prepareEngines(engines) {
 	console.log(engines);
-	var container = document.getElementById('engines-container');
-	for (var e = 0; e < engines.length; e++) {
-		var engine = new _SearchEngine2.default(engines[e]);
+	let container = document.getElementById('engines-container');
+	for (let e = 0; e < engines.length; e++) {
+		let engine = new _SearchEngine2.default(engines[e]);
 
-		var el = document.createElement('li');
+		let el = document.createElement('li');
 		el.engine = engine;
 
-		el.textContent = '[' + engine.keywords.join(',') + '] ' + engine.title;
+		el.textContent = `[${engine.keywords.join(',')}] ${engine.title}`;
 		// edit
-		var button = document.createElement('a');
+		let button = document.createElement('a');
 		button.addEventListener('click', function () {
-			var engine = this.parentNode.engine;
+			let engine = this.parentNode.engine;
 			editEngine(engine);
 		});
 		button.textContent = '✏️';
@@ -169,9 +169,6 @@ exports.default = SearchEngine;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 function SearchEngineAction(action) {
 	this.url = '';
 	if (typeof action.url === 'string') {
@@ -186,7 +183,7 @@ function SearchEngineAction(action) {
 		this.type = action.type;
 	}
 	this.data = {};
-	if (_typeof(action.data) === 'object') {
+	if (typeof action.data === 'object') {
 		this.data = action.data;
 	}
 }
@@ -234,7 +231,7 @@ SearchEngineModel.prototype.update = function (engine) {
  * @param {SearchEngineAction} action 
  */
 SearchEngineModel.prototype.addAction = function (name, action) {
-	var data = [];
+	let data = [];
 	for (var key in action.data) {
 		data.push({
 			key: key,

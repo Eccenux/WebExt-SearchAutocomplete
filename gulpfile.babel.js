@@ -7,6 +7,7 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
 import runSequence from 'run-sequence';
 import {stream as wiredep} from 'wiredep';
+import fs from 'fs';
 
 const $ = gulpLoadPlugins();
 
@@ -96,24 +97,27 @@ gulp.task('chromeManifest', () => {
 });
 
 gulp.task('babel', () => {
-		const files = [
-				'background.js',
-				'options.js',
-				'setupI18n.js',
-				'chromereload.js'
-		];
-		
-		const tasks = files.map(file => (
-				browserify({
-					entries: `./app/scripts.babel/${file}`,
-					debug: true
-				}).transform('babelify', { presets: ['es2015'] })
-					.bundle()
-					.pipe(source(file))
-					.pipe(gulp.dest('app/scripts'))
-		));
-		
-		return es.merge.apply(null, tasks);
+	const files = [
+			'background.js',
+			'options.js',
+			'setupI18n.js',
+			'chromereload.js'
+	];
+	
+	const babelrc = JSON.parse(fs.readFileSync('.babelrc', 'utf8'));
+	
+	const tasks = files.map(file => (
+		browserify({
+			entries: `./app/scripts.babel/${file}`,
+			debug: true
+		})
+		.transform('babelify', babelrc)
+		.bundle()
+		.pipe(source(file))
+		.pipe(gulp.dest('app/scripts'))
+	));
+	
+	return es.merge.apply(null, tasks);
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));

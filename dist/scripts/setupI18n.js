@@ -7,7 +7,7 @@
  * Must be included when HTML is ready.
  */
 // en-US -> en
-var lang = typeof browser != 'undefined' ? browser.i18n.getUILanguage().replace(/[-_]\w+$/, '') : 'pl';
+let lang = typeof browser != 'undefined' ? browser.i18n.getUILanguage().replace(/[-_]\w+$/, '') : 'pl';
 
 // remove all elements marked with language attribute that is different then current
 document.querySelectorAll('[data-lang]').forEach(function (el) {

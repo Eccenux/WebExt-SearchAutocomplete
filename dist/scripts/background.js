@@ -23,7 +23,7 @@ var _SearchHelper2 = _interopRequireDefault(_SearchHelper);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var SETTINGS = {
+const SETTINGS = {
 	MAX_SUGGESTIONS: 6
 
 	/**
@@ -37,7 +37,7 @@ Object.assign(_wikiEn2.default, _wikiTemplate2.default);
 Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
 browser.storage.local.get('engines').then(function (result) {
-	var engines = [];
+	let engines = [];
 	if (!('engines' in result) || !Array.isArray(result.engines)) {
 		engines = [_wikiEn2.default, _wikiPl2.default];
 		browser.storage.local.set({ 'engines': engines });
@@ -56,7 +56,7 @@ browser.storage.local.get('engines').then(function (result) {
  * Prepare omnibox for autocomplete.
  */
 function prepareOmnibox(engines) {
-	var searchHelper = new _SearchHelper2.default(SETTINGS, engines);
+	let searchHelper = new _SearchHelper2.default(SETTINGS, engines);
 
 	/**
   * Default suggestion displayed after typing in `sa`.
@@ -68,10 +68,10 @@ function prepareOmnibox(engines) {
 	/**
   * Reaction for newly entered phrase.
   */
-	browser.omnibox.onInputChanged.addListener(function (text, addSuggestions) {
-		var engineWithTerm = searchHelper.getEngine(text);
-		var searchTerm = engineWithTerm.text;
-		var engine = engineWithTerm.engine;
+	browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
+		let engineWithTerm = searchHelper.getEngine(text);
+		let searchTerm = engineWithTerm.text;
+		let engine = engineWithTerm.engine;
 		// no keyword matched
 		if (engine === null) {
 			console.log('no keyword matched');
@@ -82,12 +82,12 @@ function prepareOmnibox(engines) {
 			console.log('no phrase typed in yet after the keyword');
 			return;
 		}
-		var action = engine.autocompleteAction;
-		var headers = new Headers({ 'Accept': action.type });
-		var init = { method: action.method, headers: headers };
-		var url = searchHelper.buildSearchUrl(engine, action, searchTerm);
+		let action = engine.autocompleteAction;
+		let headers = new Headers({ 'Accept': action.type });
+		let init = { method: action.method, headers };
+		let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
 		console.log('searchTerm:', searchTerm, 'url:', url, 'engine:', engine);
-		var request = new Request(url, init);
+		let request = new Request(url, init);
 
 		fetch(request).then(function (response) {
 			return searchHelper.createSuggestionsFromResponse(engine, response);
@@ -97,15 +97,15 @@ function prepareOmnibox(engines) {
 	/**
   * React to choosen phrase or suggestion.
   */
-	browser.omnibox.onInputEntered.addListener(function (text, disposition) {
+	browser.omnibox.onInputEntered.addListener((text, disposition) => {
 		console.log('onInputEntered: ', text, disposition);
 		// if suggestion was choosen then the text should contain a go-to URL
-		var url = text;
+		let url = text;
 		// suggestion was not choosen, must build URL
 		if (text.search(/^https?:/) !== 0) {
-			var engineWithTerm = searchHelper.getEngine(text);
-			var searchTerm = engineWithTerm.text;
-			var engine = engineWithTerm.engine;
+			let engineWithTerm = searchHelper.getEngine(text);
+			let searchTerm = engineWithTerm.text;
+			let engine = engineWithTerm.engine;
 			// no valid search to go to
 			if (engine === null || !searchTerm.length) {
 				console.log('no valid search to go to', {
@@ -126,13 +126,13 @@ function prepareOmnibox(engines) {
 		// create or update tab as expected
 		switch (disposition) {
 			case 'currentTab':
-				browser.tabs.update({ url: url });
+				browser.tabs.update({ url });
 				break;
 			case 'newForegroundTab':
-				browser.tabs.create({ url: url });
+				browser.tabs.create({ url });
 				break;
 			case 'newBackgroundTab':
-				browser.tabs.create({ url: url, active: false });
+				browser.tabs.create({ url, active: false });
 				break;
 		}
 	});
@@ -220,9 +220,6 @@ exports.default = SearchEngine;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 function SearchEngineAction(action) {
 	this.url = '';
 	if (typeof action.url === 'string') {
@@ -237,7 +234,7 @@ function SearchEngineAction(action) {
 		this.type = action.type;
 	}
 	this.data = {};
-	if (_typeof(action.data) === 'object') {
+	if (typeof action.data === 'object') {
 		this.data = action.data;
 	}
 }
@@ -250,8 +247,6 @@ exports.default = SearchEngineAction;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _SearchEngine = require('./SearchEngine.js');
 
@@ -279,7 +274,7 @@ function SearchHelper(SETTINGS, engines) {
 		this.engineMap = engines;
 	}
 	// figure out default (unless explictly defined)
-	if (_typeof(this.engineMap.default) !== 'object') {
+	if (typeof this.engineMap.default !== 'object') {
 		var firstKeyword = Object.keys(this.engineMap)[0];
 		this.engineMap.default = this.engineMap[firstKeyword];
 	}
@@ -290,11 +285,11 @@ function SearchHelper(SETTINGS, engines) {
  * @param {Array} engines An array of search engines with `keywords` property.
  */
 SearchHelper.prototype.buildEngineMap = function (engines) {
-	var engineMap = {};
-	for (var i = 0; i < engines.length; i++) {
+	let engineMap = {};
+	for (let i = 0; i < engines.length; i++) {
 		var engine = new _SearchEngine2.default(engines[i]);
 		var keywords = engine.keywords;
-		for (var k = 0; k < keywords.length; k++) {
+		for (let k = 0; k < keywords.length; k++) {
 			var key = keywords[k];
 			engineMap[key] = engine;
 		}
@@ -310,12 +305,12 @@ SearchHelper.prototype.buildEngineMap = function (engines) {
  * @param {String} text Search term.
  */
 SearchHelper.prototype.buildSearchUrl = function (engine, action, text) {
-	var url = action.url.replace('{baseUrl}', engine.baseUrl);
-	var first = true;
-	for (var key in action.data) {
-		var value = action.data[key].replace('{searchTerms}', text);
+	let url = action.url.replace('{baseUrl}', engine.baseUrl);
+	let first = true;
+	for (let key in action.data) {
+		let value = action.data[key].replace('{searchTerms}', text);
 		url += first ? '?' : '&';
-		url += key + '=' + encodeURIComponent(value);
+		url += `${key}=` + encodeURIComponent(value);
 		first = false;
 	}
 	return url;
@@ -338,8 +333,8 @@ SearchHelper.prototype.buildSearchUrl = function (engine, action, text) {
  * @return {EngineWithTerm} Engine with term stripped from the engine keyowrd.
  */
 SearchHelper.prototype.getEngine = function (text) {
-	var keyword = null;
-	var me = this;
+	let keyword = null;
+	let me = this;
 	text.replace(/^(\S*)\s+(.*)$/, function (a, word, rest) {
 		if (!word.length) {
 			keyword = 'default';
@@ -349,7 +344,7 @@ SearchHelper.prototype.getEngine = function (text) {
 			text = rest;
 		}
 	});
-	var engine = void 0;
+	let engine;
 	if (keyword === null) {
 		engine = null;
 	} else {
@@ -368,44 +363,42 @@ SearchHelper.prototype.getEngine = function (text) {
  * @param {Object} response The search engine response.
  */
 SearchHelper.prototype.createSuggestionsFromResponse = function (engine, response) {
-	var _this = this;
-
-	return new Promise(function (resolve) {
-		var suggestions = [];
-		var suggestionsOnEmptyResults = [{
+	return new Promise(resolve => {
+		let suggestions = [];
+		let suggestionsOnEmptyResults = [{
 			content: engine.baseUrl,
 			description: 'No results found'
 		}];
-		response.json().then(function (json) {
+		response.json().then(json => {
 			console.log('response:', json);
 			if (!json.length) {
 				return resolve(suggestionsOnEmptyResults);
 			}
 
-			var max = _this.SETTINGS.MAX_SUGGESTIONS;
+			let max = this.SETTINGS.MAX_SUGGESTIONS;
 
 			// for Wikipedia:
 			// json[0] = search term
 			// json[1] = [...titles...]
 			// json[2] = [...descriptions...]
 			// json[3] = [...direct urls...]
-			var titles = json[1];
-			var descriptions = json[2];
-			var urls = json[3];
+			let titles = json[1];
+			let descriptions = json[2];
+			let urls = json[3];
 
 			if (titles.length < 1) {
 				return resolve(suggestionsOnEmptyResults);
 			}
 
-			var count = Math.min(titles.length, max);
-			for (var i = 0; i < count; i++) {
+			let count = Math.min(titles.length, max);
+			for (let i = 0; i < count; i++) {
 				// gather data
-				var title = titles[i];
-				var description = title;
+				let title = titles[i];
+				let description = title;
 				if (descriptions && typeof descriptions[i] === 'string') {
-					description += ' -- ' + descriptions[i];
+					description += ` -- ${descriptions[i]}`;
 				}
-				var url = '';
+				let url = '';
 				if (urls && typeof urls[i] === 'string') {
 					url = urls[i];
 				} else {
