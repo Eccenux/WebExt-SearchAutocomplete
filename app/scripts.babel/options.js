@@ -10,26 +10,26 @@ Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
 // load from storage
-if (typeof browser != 'undefined') {
-	browser.storage.local.get('engines')
-	.then(function(result){
-		if (!('engines' in result) || !Array.isArray(result.engines)) {
-			console.warn('Engines are not an array!', result);
-		} else {
-			prepareEngines(result.engines)
-		}
-	}, function(failReason) {
-		console.log('failReason', failReason);
-	})
-// in-browser testing examples
-} else {
-	setTimeout(function(){
+function loadEngines() {
+	if (typeof browser != 'undefined') {
+		browser.storage.local.get('engines')
+		.then(function(result){
+			if (!('engines' in result) || !Array.isArray(result.engines)) {
+				console.warn('Engines are not an array!', result);
+			} else {
+				prepareEngines(result.engines)
+			}
+		}, function(failReason) {
+			console.log('failReason', failReason);
+		})
+	// in-browser testing examples
+	} else {
 		prepareEngines([enWikiEngine, plWikiEngine, {
 			title : 'Just a test',
 			keyword : 't',
 			baseUrl : 'http://test.localhost/'
 		}]);
-	}, 100);
+	}
 }
 
 /**
@@ -40,10 +40,9 @@ function prepareEngines(engines) {
 	app.EngineController.engines.length = 0;
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
-		// add
 		app.EngineController.engines.push(engine);
 	}
-	app.EngineController.$apply();
+	//app.EngineController.$apply();
 }
 
 function editEngine(engine) {
@@ -61,5 +60,7 @@ angular
 		$scope.currentEngine = new SearchEngineModel();
 		$scope.engines = [];
 		$scope.editEngine = editEngine;
+
+		loadEngines();
 	})
 ;
