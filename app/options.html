@@ -9,36 +9,40 @@
 		<!-- endbuild -->
 		<script src="lib/angular.min.js"></script>
 	</head>
-	<body ng-app="app">
+	<body ng-app="app" ng-controller="EngineController">
 		<h1>
 			<span data-lang="en">Search engines</span>
 			<span data-lang="pl">Wyszukiwarki</span>
 		</h1>
 	
 		<ul id="engines-container">
+			<li ng-repeat="engine in engines">
+				[{{ engine.keywords.join(',') }}] {{ engine.title }}
+				<button ng-click="editEngine(engine)">✏️</button>
+			</li>
 		</ul>
-
-		<form id="engine-editor" ng-controller="EngineController">
+			
+		<form id="engine-editor">
 			<p>
 				<label>
 					<span data-lang="en">Title (name)</span>
 					<span data-lang="pl">Tytuł (nazwa)</span>
-					<input type="text" ng-model="engine.title" style="width:15em">
+					<input type="text" ng-model="currentEngine.title" style="width:15em">
 				</label>
 				<label>
 					<span data-lang="en">Keyword(s)</span>
 					<span data-lang="pl">Słowo kluczowe</span>
-					<input type="text" ng-model="engine.keywords" style="width:5em">
+					<input type="text" ng-model="currentEngine.keywords" style="width:5em">
 				</label>
 			</p>
 			<p>
 				<label>
 					<span data-lang="en">Base URL</span>
 					<span data-lang="pl">Bazowy URL</span>
-					<input type="text" ng-model="engine.baseUrl" style="width:25em">
+					<input type="text" ng-model="currentEngine.baseUrl" style="width:25em">
 				</label>
 			</p>
-			<div ng-repeat="action in engine.actions">
+			<div ng-repeat="action in currentEngine.actions">
 				<fieldset>
 					<legend>{{ action.name }}</legend>
 					<label>
