@@ -70,11 +70,16 @@
 						<span data-lang="en">Data (key:value)</span>
 						<span data-lang="pl">Dane (nazwa:wartość)</span>
 					</p>
-					<div ng-repeat="data in action.data">
-						<p>
+					<div>
+						<p ng-repeat="data in action.data">
 							<input type="text" ng-model="data.key">
 							<input type="text" ng-model="data.value">
+							<button ng-click="removeData(action, $index)">❌</button>
 						</p>
+						<button ng-click="addData(action)">
+							<span data-lang="en">Add</span>
+							<span data-lang="pl">Dodaj</span>
+						</button>
 					</div>
 				</fieldset>
 			</div>

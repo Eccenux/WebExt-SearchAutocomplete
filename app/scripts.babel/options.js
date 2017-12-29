@@ -64,7 +64,7 @@ function editEngine(engine) {
  */
 function saveEngine(currentEngine) {
 	console.log('saved:', currentEngine.id, currentEngine);
-	let engine = new SearchEngine(currentEngine);
+	let engine = new SearchEngine(currentEngine.getEngine());
 	engine.id = currentEngine.id;
 	app.EngineController.engines[engine.id] = engine;
 	//app.EngineController.$apply();
@@ -80,6 +80,12 @@ angular
 		$scope.engines = [];
 		$scope.editEngine = editEngine;
 		$scope.saveEngine = saveEngine;
+		$scope.addData = function(action){
+			action.data.push({key:'', value:''});
+		};
+		$scope.removeData = function(action, index){
+			action.data.splice(index, 1);
+		};
 
 		loadEngines();
 	})

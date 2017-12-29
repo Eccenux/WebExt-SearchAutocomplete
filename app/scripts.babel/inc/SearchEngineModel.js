@@ -29,6 +29,32 @@ SearchEngineModel.prototype.update = function(engine) {
 }
 
 /**
+ * Recreate engine definition from the model.
+ */
+SearchEngineModel.prototype.getEngine = function() {
+	let engine = {};
+	engine.id = this.id;
+	engine.keywords = this.keywords;
+	engine.baseUrl = this.baseUrl;
+	engine.title = this.title;
+	for (let a = 0; a < this.actions.length; a++) {
+		const action = this.actions[a];
+		let data = {};
+		for (let d = 0; d < action.data.length; d++) {
+			const dat = action.data[d];
+			data[dat.key] = dat.value;
+		}
+		engine[`${action.name}Action`] = {
+			url: action.url,
+			method: action.method,
+			type: action.type,
+			data: data
+		};
+	}
+	return engine;
+}
+
+/**
  * Add action to collection.
  * 
  * @param {String} name Name of the action to display.
