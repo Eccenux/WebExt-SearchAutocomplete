@@ -52,8 +52,8 @@ function prepareEngines(engines) {
  * @param {SearchEngine} engine 
  */
 function editEngine(engine, index) {
-	console.log(engine);
 	engine.id = index;
+	console.log(engine);
 	app.EngineController.currentEngine.update(engine);
 	//app.EngineController.$apply();
 }
@@ -93,6 +93,15 @@ function saveEngine(currentEngine) {
 	//app.EngineController.$apply();
 }
 
+/**
+ * Force saving as a new engine.
+ * @param {SearchEngineModel} currentEngine 
+ */
+function saveEngineCopy(currentEngine) {
+	currentEngine.id = null;
+	saveEngine(currentEngine);
+}
+
 window.app = {};
 angular
 	.module('app', [])
@@ -103,6 +112,7 @@ angular
 		$scope.engines = [];
 		$scope.editEngine = editEngine;
 		$scope.saveEngine = saveEngine;
+		$scope.saveEngineCopy = saveEngineCopy;
 		$scope.addData = function(action){
 			action.data.push({key:'', value:''});
 		};
