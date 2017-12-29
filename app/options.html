@@ -18,7 +18,7 @@
 		<ul id="engines-container">
 			<li ng-repeat="engine in engines">
 				[{{ engine.keywords.join(',') }}] {{ engine.title }}
-				<button ng-click="editEngine(engine)">✏️</button>
+				<button ng-click="editEngine(engine, $index)">✏️</button>
 				<button ng-click="removeEngine(engine, $index)">❌</button>
 			</li>
 		</ul>

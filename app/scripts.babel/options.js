@@ -42,7 +42,6 @@ function prepareEngines(engines) {
 	app.EngineController.engines.length = 0;
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
-		engine.id = e;
 		app.EngineController.engines.push(engine);
 	}
 	//app.EngineController.$apply();
@@ -52,8 +51,9 @@ function prepareEngines(engines) {
  * Load engine for editing.
  * @param {SearchEngine} engine 
  */
-function editEngine(engine) {
+function editEngine(engine, index) {
 	console.log(engine);
+	engine.id = index;
 	app.EngineController.currentEngine.update(engine);
 	//app.EngineController.$apply();
 }
@@ -83,8 +83,13 @@ function addEngine() {
 function saveEngine(currentEngine) {
 	console.log('saved:', currentEngine.id, currentEngine);
 	let engine = new SearchEngine(currentEngine.getEngine());
-	engine.id = currentEngine.id;
-	app.EngineController.engines[engine.id] = engine;
+	if (typeof currentEngine.id === 'number') {
+		engine.id = currentEngine.id;
+		app.EngineController.engines[engine.id] = engine;
+	} else {
+		engine.id = app.EngineController.engines.length;
+		app.EngineController.engines.push(engine);
+	}
 	//app.EngineController.$apply();
 }
 
