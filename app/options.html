@@ -19,8 +19,13 @@
 			<li ng-repeat="engine in engines">
 				[{{ engine.keywords.join(',') }}] {{ engine.title }}
 				<button ng-click="editEngine(engine)">✏️</button>
+				<button ng-click="removeEngine(engine, $index)">❌</button>
 			</li>
 		</ul>
+		<button ng-click="addEngine()">
+			<span data-lang="en">New engine</span>
+			<span data-lang="pl">Nowa wyszukiwarka</span>
+		</button>
 			
 		<form id="engine-editor">
 			<p class="buttons">

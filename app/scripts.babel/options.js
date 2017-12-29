@@ -57,6 +57,24 @@ function editEngine(engine) {
 	app.EngineController.currentEngine.update(engine);
 	//app.EngineController.$apply();
 }
+/**
+ * Prepare new engine editor.
+ */
+function addEngine() {
+	let engine = new SearchEngine({
+		title : '',
+		baseUrl : 'http://',
+		openAction : {
+			url : '{baseUrl}',
+			data : {}
+		},
+		autocompleteAction : {
+			url : '{baseUrl}',
+			data : {}
+		}
+	});
+	app.EngineController.currentEngine.update(engine);
+};
 
 /**
  * Save changes to engine.
@@ -85,6 +103,10 @@ angular
 		};
 		$scope.removeData = function(action, index){
 			action.data.splice(index, 1);
+		};
+		$scope.addEngine = addEngine;
+		$scope.removeEngine = function(engine, index){
+			$scope.engines.splice(index, 1);
 		};
 
 		loadEngines();
