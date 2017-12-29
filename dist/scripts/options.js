@@ -26,65 +26,62 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.assign(_wikiEn2.default, _wikiTemplate2.default);
 Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
-// load from storage
-if (typeof browser != 'undefined') {
-	browser.storage.local.get('engines').then(function (result) {
-		if (!('engines' in result) || !Array.isArray(result.engines)) {
-			console.warn('Engines are not an array!', result);
-		} else {
-			prepareEngines(result.engines);
-		}
-	}, function (failReason) {
-		console.log('failReason', failReason);
-	});
-	// in-browser testing examples
-} else {
-	prepareEngines([_wikiEn2.default, _wikiPl2.default]);
-}
-
 /**
- * Prepare options managment.
+ * Load engines from storage.
  */
-function prepareEngines(engines) {
-	console.log(engines);
-	let container = document.getElementById('engines-container');
-	for (let e = 0; e < engines.length; e++) {
-		let engine = new _SearchEngine2.default(engines[e]);
-
-		let el = document.createElement('li');
-		el.engine = engine;
-
-		el.textContent = `[${engine.keywords.join(',')}] ${engine.title}`;
-		// edit
-		let button = document.createElement('a');
-		button.addEventListener('click', function () {
-			let engine = this.parentNode.engine;
-			editEngine(engine);
+function loadEngines() {
+	if (typeof browser != 'undefined') {
+		browser.storage.local.get('engines').then(function (result) {
+			if (!('engines' in result) || !Array.isArray(result.engines)) {
+				console.warn('Engines are not an array!', result);
+			} else {
+				prepareEngines(result.engines);
+			}
+		}, function (failReason) {
+			console.log('failReason', failReason);
 		});
-		button.textContent = '✏️';
-		el.appendChild(button);
-		// append
-		container.appendChild(el);
+		// in-browser testing examples
+	} else {
+		prepareEngines([_wikiEn2.default, _wikiPl2.default, {
+			title: 'Just a test',
+			keyword: 't',
+			baseUrl: 'http://test.localhost/'
+		}]);
 	}
 }
 
-function editEngine(engine) {
-	console.log(engine);
-	currentEngine.update(engine);
-	app.EngineController.$apply();
+/**
+ * Prepare a list of engines.
+ */
+function prepareEngines(engines) {
+	console.log(engines);
+	app.EngineController.engines.length = 0;
+	for (let e = 0; e < engines.length; e++) {
+		let engine = new _SearchEngine2.default(engines[e]);
+		app.EngineController.engines.push(engine);
+	}
+	//app.EngineController.$apply();
 }
 
-window.currentEngine = new _SearchEngineModel2.default(new _SearchEngine2.default({
-	title: 'Just a test',
-	keyword: 't',
-	baseUrl: 'http://test.localhost/'
-}));
+/**
+ * Load engine for editing.
+ * @param {SearchEngine} engine 
+ */
+function editEngine(engine) {
+	console.log(engine);
+	app.EngineController.currentEngine.update(engine);
+	//app.EngineController.$apply();
+}
 
 window.app = {};
 angular.module('app', []).controller('EngineController', function ($scope) {
 	app.EngineController = $scope;
 
-	$scope.engine = currentEngine;
+	$scope.currentEngine = new _SearchEngineModel2.default();
+	$scope.engines = [];
+	$scope.editEngine = editEngine;
+
+	loadEngines();
 });
 
 },{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchEngine.js":5,"./inc/SearchEngineModel.js":7}],2:[function(require,module,exports){

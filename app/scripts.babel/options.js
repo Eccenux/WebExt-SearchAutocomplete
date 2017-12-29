@@ -9,7 +9,9 @@ import plWikiEngine from './engines/wiki-pl';
 Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
-// load from storage
+/**
+ * Load engines from storage.
+ */
 function loadEngines() {
 	if (typeof browser != 'undefined') {
 		browser.storage.local.get('engines')
@@ -33,7 +35,7 @@ function loadEngines() {
 }
 
 /**
- * Prepare options managment.
+ * Prepare a list of engines.
  */
 function prepareEngines(engines) {
 	console.log(engines);
@@ -45,6 +47,10 @@ function prepareEngines(engines) {
 	//app.EngineController.$apply();
 }
 
+/**
+ * Load engine for editing.
+ * @param {SearchEngine} engine 
+ */
 function editEngine(engine) {
 	console.log(engine);
 	app.EngineController.currentEngine.update(engine);
