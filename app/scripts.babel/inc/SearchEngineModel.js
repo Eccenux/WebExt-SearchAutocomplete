@@ -4,6 +4,7 @@
  * @param {SearchEngine} engine Optional initial engine.
  */
 function SearchEngineModel(engine) {
+    this.id = null;
     this.keywords = '';
     this.baseUrl = '';
 	this.title = '';
@@ -18,6 +19,7 @@ function SearchEngineModel(engine) {
  * @param {SearchEngine} engine 
  */
 SearchEngineModel.prototype.update = function(engine) {
+	this.id = engine.id;
     this.keywords = engine.keywords.join(',');
     this.baseUrl = engine.baseUrl;
 	this.title = engine.title;

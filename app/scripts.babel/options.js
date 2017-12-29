@@ -42,6 +42,7 @@ function prepareEngines(engines) {
 	app.EngineController.engines.length = 0;
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
+		engine.id = e;
 		app.EngineController.engines.push(engine);
 	}
 	//app.EngineController.$apply();
@@ -57,6 +58,18 @@ function editEngine(engine) {
 	//app.EngineController.$apply();
 }
 
+/**
+ * Save changes to engine.
+ * @param {SearchEngineModel} currentEngine 
+ */
+function saveEngine(currentEngine) {
+	console.log('saved:', currentEngine.id, currentEngine);
+	let engine = new SearchEngine(currentEngine);
+	engine.id = currentEngine.id;
+	app.EngineController.engines[engine.id] = engine;
+	//app.EngineController.$apply();
+}
+
 window.app = {};
 angular
 	.module('app', [])
@@ -66,6 +79,7 @@ angular
 		$scope.currentEngine = new SearchEngineModel();
 		$scope.engines = [];
 		$scope.editEngine = editEngine;
+		$scope.saveEngine = saveEngine;
 
 		loadEngines();
 	})
