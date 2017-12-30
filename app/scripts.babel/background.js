@@ -19,6 +19,9 @@ import plWikiEngine from './engines/wiki-pl';
 Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
+//
+// Initialize settings from storage (or defaults)
+//
 browser.storage.local.get('engines')
 .then(function(result){
 	let engines = [];
@@ -32,7 +35,6 @@ browser.storage.local.get('engines')
 		engines = result.engines;
 	}
 	prepareOmnibox(engines);
-
 })
 
 //
@@ -46,6 +48,17 @@ import SearchHelper from './inc/SearchHelper.js';
 function prepareOmnibox(engines) {
 	let searchHelper = new SearchHelper(SETTINGS, engines);
 
+	//
+	// Reload settings when storage changes
+	//
+	browser.storage.onChanged.addListener(function(values, storageType) {
+		console.log('storage.onChanged:', storageType, values);
+		if (storageType === 'local' && 'engines' in values) {
+			let engines = values.engines.newValue;
+			searchHelper.updateEngines(engines);
+		}
+	})
+	
 	/**
 	 * Default suggestion displayed after typing in `sa`.
 	 */

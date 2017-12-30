@@ -36,6 +36,9 @@ const SETTINGS = {
 Object.assign(_wikiEn2.default, _wikiTemplate2.default);
 Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
+//
+// Initialize settings from storage (or defaults)
+//
 browser.storage.local.get('engines').then(function (result) {
 	let engines = [];
 	if (!('engines' in result) || !Array.isArray(result.engines)) {
@@ -57,6 +60,17 @@ browser.storage.local.get('engines').then(function (result) {
  */
 function prepareOmnibox(engines) {
 	let searchHelper = new _SearchHelper2.default(SETTINGS, engines);
+
+	//
+	// Reload settings when storage changes
+	//
+	browser.storage.onChanged.addListener(function (values, storageType) {
+		console.log('storage.onChanged:', storageType, values);
+		if (storageType === 'local' && 'engines' in values) {
+			let engines = values.engines.newValue;
+			searchHelper.updateEngines(engines);
+		}
+	});
 
 	/**
   * Default suggestion displayed after typing in `sa`.
@@ -272,6 +286,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function SearchHelper(SETTINGS, engines) {
 	this.SETTINGS = SETTINGS;
+	this.updateEngines(engines);
+}
+
+/**
+ * Re-parse engine settings.
+ * 
+ * @param {Object|Array} engines Keyword-based search engines map
+ */
+SearchHelper.prototype.updateEngines = function (engines) {
 	// parse engines to engine map
 	if (Array.isArray(engines)) {
 		this.engineMap = this.buildEngineMap(engines);
@@ -283,7 +306,7 @@ function SearchHelper(SETTINGS, engines) {
 		var firstKeyword = Object.keys(this.engineMap)[0];
 		this.engineMap.default = this.engineMap[firstKeyword];
 	}
-}
+};
 
 /**
  * Builds a keyword-based search engines map.

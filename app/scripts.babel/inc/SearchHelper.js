@@ -12,6 +12,15 @@ import SearchEngine from './SearchEngine.js';
  */
 function SearchHelper (SETTINGS, engines) {
 	this.SETTINGS = SETTINGS;
+	this.updateEngines(engines);
+}
+
+/**
+ * (Re)parse engine settings.
+ * 
+ * @param {Object|Array} engines Keyword-based search engines map
+ */
+SearchHelper.prototype.updateEngines = function (engines) {
 	// parse engines to engine map
 	if (Array.isArray(engines)) {
 		this.engineMap = this.buildEngineMap(engines);
