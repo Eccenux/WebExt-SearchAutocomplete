@@ -10,6 +10,16 @@ Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
 /**
+ * Get I18n string.
+ * 
+ * Also a mock for in-browser testing.
+ * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
+ */
+let getI18n = (typeof browser != 'undefined') ? browser.i18n.getMessage : function(messageName) {
+	return messageName;
+};
+
+/**
  * Load engines from storage.
  */
 function loadEngines() {
@@ -38,7 +48,7 @@ function loadEngines() {
  * Prepare a list of engines.
  */
 function prepareEngines(engines) {
-	console.log(engines);
+	console.log('prepareEngines: ', engines);
 	app.EngineController.engines.length = 0;
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
@@ -52,8 +62,8 @@ function prepareEngines(engines) {
  * @param {SearchEngine} engine 
  */
 function editEngine(engine, index) {
+	console.log('editEngine: ', engine, index);
 	engine.id = index;
-	console.log(engine);
 	app.EngineController.currentEngine.update(engine);
 	//app.EngineController.$apply();
 }
@@ -102,6 +112,25 @@ function saveEngineCopy(currentEngine) {
 	saveEngine(currentEngine);
 }
 
+/**
+ * Store changes into browser memory
+ */
+function storeChanges() {
+	if (confirm(getI18n('options.confirmPermanentStorage'))) {
+		browser.storage.local.set({
+			'engines': app.EngineController.engines
+		});
+	}
+}
+/**
+ * Undo all changes and reload from storage
+ */
+function undoChanges() {
+	if (confirm(getI18n('options.confirmReloadFromStorage'))) {
+		loadEngines();
+	}
+}
+
 window.app = {};
 angular
 	.module('app', [])
@@ -110,15 +139,21 @@ angular
 
 		$scope.currentEngine = new SearchEngineModel();
 		$scope.engines = [];
+
 		$scope.editEngine = editEngine;
 		$scope.saveEngine = saveEngine;
 		$scope.saveEngineCopy = saveEngineCopy;
+
+		$scope.storeChanges = storeChanges;
+		$scope.undoChanges = undoChanges;
+
 		$scope.addData = function(action){
 			action.data.push({key:'', value:''});
 		};
 		$scope.removeData = function(action, index){
 			action.data.splice(index, 1);
 		};
+
 		$scope.addEngine = addEngine;
 		$scope.removeEngine = function(engine, index){
 			$scope.engines.splice(index, 1);
