@@ -290,7 +290,7 @@ function SearchHelper(SETTINGS, engines) {
 }
 
 /**
- * Re-parse engine settings.
+ * (Re)parse engine settings.
  * 
  * @param {Object|Array} engines Keyword-based search engines map
  */
