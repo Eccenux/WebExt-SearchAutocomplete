@@ -27,6 +27,16 @@ Object.assign(_wikiEn2.default, _wikiTemplate2.default);
 Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
 /**
+ * Get I18n string.
+ * 
+ * Also a mock for in-browser testing.
+ * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
+ */
+let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
+	return messageName;
+};
+
+/**
  * Load engines from storage.
  */
 function loadEngines() {
@@ -54,23 +64,90 @@ function loadEngines() {
  * Prepare a list of engines.
  */
 function prepareEngines(engines) {
-	console.log(engines);
+	console.log('prepareEngines: ', engines);
 	app.EngineController.engines.length = 0;
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new _SearchEngine2.default(engines[e]);
 		app.EngineController.engines.push(engine);
 	}
-	//app.EngineController.$apply();
+	// seem to be required when working with FF (probably due to using promises when loading data)
+	if (typeof browser != 'undefined') {
+		app.EngineController.$apply();
+	}
 }
 
 /**
  * Load engine for editing.
  * @param {SearchEngine} engine 
  */
-function editEngine(engine) {
-	console.log(engine);
+function editEngine(engine, index) {
+	console.log('editEngine: ', engine, index);
+	engine.id = index;
 	app.EngineController.currentEngine.update(engine);
 	//app.EngineController.$apply();
+}
+/**
+ * Prepare new engine editor.
+ */
+function addEngine() {
+	let engine = new _SearchEngine2.default({
+		title: '',
+		baseUrl: 'http://',
+		openAction: {
+			url: '{baseUrl}',
+			data: {}
+		},
+		autocompleteAction: {
+			url: '{baseUrl}',
+			data: {}
+		}
+	});
+	app.EngineController.currentEngine.update(engine);
+};
+
+/**
+ * Save changes to engine.
+ * @param {SearchEngineModel} currentEngine 
+ */
+function saveEngine(currentEngine) {
+	console.log('saved:', currentEngine.id, currentEngine);
+	let engine = new _SearchEngine2.default(currentEngine.getEngine());
+	if (typeof currentEngine.id === 'number') {
+		engine.id = currentEngine.id;
+		app.EngineController.engines[engine.id] = engine;
+	} else {
+		engine.id = app.EngineController.engines.length;
+		app.EngineController.engines.push(engine);
+	}
+	//app.EngineController.$apply();
+}
+
+/**
+ * Force saving as a new engine.
+ * @param {SearchEngineModel} currentEngine 
+ */
+function saveEngineCopy(currentEngine) {
+	currentEngine.id = null;
+	saveEngine(currentEngine);
+}
+
+/**
+ * Store changes into browser memory
+ */
+function storeChanges() {
+	if (confirm(getI18n('options.confirmPermanentStorage'))) {
+		browser.storage.local.set({
+			'engines': app.EngineController.engines
+		});
+	}
+}
+/**
+ * Undo all changes and reload from storage
+ */
+function undoChanges() {
+	if (confirm(getI18n('options.confirmReloadFromStorage'))) {
+		loadEngines();
+	}
 }
 
 window.app = {};
@@ -79,7 +156,25 @@ angular.module('app', []).controller('EngineController', function ($scope) {
 
 	$scope.currentEngine = new _SearchEngineModel2.default();
 	$scope.engines = [];
+
 	$scope.editEngine = editEngine;
+	$scope.saveEngine = saveEngine;
+	$scope.saveEngineCopy = saveEngineCopy;
+
+	$scope.storeChanges = storeChanges;
+	$scope.undoChanges = undoChanges;
+
+	$scope.addData = function (action) {
+		action.data.push({ key: '', value: '' });
+	};
+	$scope.removeData = function (action, index) {
+		action.data.splice(index, 1);
+	};
+
+	$scope.addEngine = addEngine;
+	$scope.removeEngine = function (engine, index) {
+		$scope.engines.splice(index, 1);
+	};
 
 	loadEngines();
 });
@@ -137,9 +232,14 @@ function SearchEngine(engine) {
 	if (typeof engine.keyword === 'string') {
 		this.keywords.push(engine.keyword);
 	} else if (typeof engine.keywords === 'string') {
-		this.keywords.push(engine.keywords);
+		if (engine.keywords.search(',')) {
+			let keywords = engine.keywords.replace(/\s+/g, '');
+			this.keywords = keywords.split(',');
+		} else {
+			this.keywords.push(engine.keywords);
+		}
 	} else {
-		this.keywords = engine.keywords;
+		this.keywords = [].concat(engine.keywords);
 	}
 
 	this.baseUrl = '';
@@ -199,6 +299,7 @@ Object.defineProperty(exports, "__esModule", {
  * @param {SearchEngine} engine Optional initial engine.
  */
 function SearchEngineModel(engine) {
+	this.id = null;
 	this.keywords = '';
 	this.baseUrl = '';
 	this.title = '';
@@ -213,12 +314,39 @@ function SearchEngineModel(engine) {
  * @param {SearchEngine} engine 
  */
 SearchEngineModel.prototype.update = function (engine) {
+	this.id = engine.id;
 	this.keywords = engine.keywords.join(',');
 	this.baseUrl = engine.baseUrl;
 	this.title = engine.title;
 	this.actions.length = 0;
 	this.addAction('open', engine.openAction);
 	this.addAction('autocomplete', engine.autocompleteAction);
+};
+
+/**
+ * Recreate engine definition from the model.
+ */
+SearchEngineModel.prototype.getEngine = function () {
+	let engine = {};
+	engine.id = this.id;
+	engine.keywords = this.keywords;
+	engine.baseUrl = this.baseUrl;
+	engine.title = this.title;
+	for (let a = 0; a < this.actions.length; a++) {
+		const action = this.actions[a];
+		let data = {};
+		for (let d = 0; d < action.data.length; d++) {
+			const dat = action.data[d];
+			data[dat.key] = dat.value;
+		}
+		engine[`${action.name}Action`] = {
+			url: action.url,
+			method: action.method,
+			type: action.type,
+			data: data
+		};
+	}
+	return engine;
 };
 
 /**

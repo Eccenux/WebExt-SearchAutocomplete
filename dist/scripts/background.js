@@ -191,9 +191,14 @@ function SearchEngine(engine) {
 	if (typeof engine.keyword === 'string') {
 		this.keywords.push(engine.keyword);
 	} else if (typeof engine.keywords === 'string') {
-		this.keywords.push(engine.keywords);
+		if (engine.keywords.search(',')) {
+			let keywords = engine.keywords.replace(/\s+/g, '');
+			this.keywords = keywords.split(',');
+		} else {
+			this.keywords.push(engine.keywords);
+		}
 	} else {
-		this.keywords = engine.keywords;
+		this.keywords = [].concat(engine.keywords);
 	}
 
 	this.baseUrl = '';

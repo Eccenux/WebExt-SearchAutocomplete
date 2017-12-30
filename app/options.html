@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-csp="no-unsafe-eval">
 	<head>
 		<meta charset="UTF-8">
 		<!-- build:css styles/options-vendor.css -->
@@ -28,21 +28,23 @@
 				<button ng-click="removeEngine(engine, $index)">❌</button>
 			</li>
 		</ul>
-		<button ng-click="addEngine()">
-			<i class="fas fa-plus"></i>
-			<span data-lang="en">New engine</span>
-			<span data-lang="pl">Nowa wyszukiwarka</span>
-		</button>
-		<button ng-click="storeChanges()">
-			<i class="fas fa-archive"></i>
-			<span data-lang="en">Store changes permanently</span>
-			<span data-lang="pl">Trwale zachowaj zmiany</span>
-		</button>
-		<button ng-click="undoChanges()">
-			<i class="fas fa-undo"></i>
-			<span data-lang="en">Undo changes</span>
-			<span data-lang="pl">Wycofaj zmiany</span>
-		</button>
+		<p class="buttons">
+			<button ng-click="addEngine()">
+				<i class="fas fa-plus"></i>
+				<span data-lang="en">New engine</span>
+				<span data-lang="pl">Nowa wyszukiwarka</span>
+			</button>
+			<button ng-click="storeChanges()">
+				<i class="fas fa-archive"></i>
+				<span data-lang="en">Store changes permanently</span>
+				<span data-lang="pl">Trwale zachowaj zmiany</span>
+			</button>
+			<button ng-click="undoChanges()">
+				<i class="fas fa-undo"></i>
+				<span data-lang="en">Undo changes</span>
+				<span data-lang="pl">Wycofaj zmiany</span>
+			</button>
+		</p>
 
 		<form id="engine-editor">
 			<p class="buttons">

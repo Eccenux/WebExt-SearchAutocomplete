@@ -1,14 +1,22 @@
 {
-  "appName": {
-    "message": "SearchAutocomplete",
-    "description": "The name of the application"
-  },
-  "appDescription": {
-    "message": "Szybkie wyszukiwanie z podpowiedziami za pomocą krótkich słów kluczowych.",
-    "description": "The description of the application"
-  },
-  "searchShortInformation": {
-    "message": "Wpisz słowo kluczowe wyszukiwarki, a potem swoje zapytanie.",
-    "description": ""
-  }
+	"appName": {
+		"message": "SearchAutocomplete",
+		"description": "The name of the application"
+	},
+	"appDescription": {
+		"message": "Szybkie wyszukiwanie z podpowiedziami za pomocą krótkich słów kluczowych.",
+		"description": "The description of the application"
+	},
+	"searchShortInformation": {
+		"message": "Wpisz słowo kluczowe wyszukiwarki, a potem swoje zapytanie.",
+		"description": ""
+	},
+	"options.confirmPermanentStorage": {
+		"message": "Czy na pewno chcesz zachować zmian? Zapis zmian będzie trwały.",
+		"description": ""
+	},
+	"options.confirmReloadFromStorage": {
+		"message": "Czy na pewno chcesz wycofać zmiany i wczytać poprzednie dane? Uwaga! Wszystkie wykonane teraz zmiany przepadną.",
+		"description": ""
+	}
 }

@@ -1,14 +1,22 @@
 {
-  "appName": {
-    "message": "SearchAutocomplete",
-    "description": "The name of the application"
-  },
-  "appDescription": {
-    "message": "Quick, keyword based autocomplete for your search engines",
-    "description": "The description of the application"
-  },
-  "searchShortInformation": {
-    "message": "Type in your search engine keyword and then your search terms.",
-    "description": ""
-  }
+	"appName": {
+		"message": "SearchAutocomplete",
+		"description": "The name of the application"
+	},
+	"appDescription": {
+		"message": "Quick, keyword based autocomplete for your search engines",
+		"description": "The description of the application"
+	},
+	"searchShortInformation": {
+		"message": "Type in your search engine keyword and then your search terms.",
+		"description": ""
+	},
+	"options.confirmPermanentStorage": {
+		"message": "Are you sure you want to save all changes? This is a permanent change.",
+		"description": ""
+	},
+	"options.confirmReloadFromStorage": {
+		"message": "Are you sure you want to undo all changes and reload from storage? Note! All your changes will be lost.",
+		"description": ""
+	}
 }

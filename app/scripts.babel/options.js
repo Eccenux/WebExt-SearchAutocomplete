@@ -54,7 +54,10 @@ function prepareEngines(engines) {
 		let engine = new SearchEngine(engines[e]);
 		app.EngineController.engines.push(engine);
 	}
-	//app.EngineController.$apply();
+	// seem to be required when working with FF (probably due to using promises when loading data)
+	if (typeof browser != 'undefined') {
+		app.EngineController.$apply();
+	}
 }
 
 /**
