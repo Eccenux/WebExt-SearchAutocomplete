@@ -18,5 +18,50 @@
 	"options.confirmReloadFromStorage": {
 		"message": "Are you sure you want to undo all changes and reload from storage? Note! All your changes will be lost.",
 		"description": ""
-	}
+	},
+    "options.Search_engines": {
+        "message": "Search engines"
+    },
+    "options.Note_All_changes_are_temporary_until_you_store_them": {
+        "message": "Note! All changes are temporary until you store them."
+    },
+    "options.New_engine": {
+        "message": "New engine"
+    },
+    "options.Store_changes_permanently": {
+        "message": "Store changes permanently"
+    },
+    "options.Undo_changes": {
+        "message": "Undo changes"
+    },
+    "options.Save": {
+        "message": "Save"
+    },
+    "options.Save_a_copy": {
+        "message": "Save a copy"
+    },
+    "options.Title_name": {
+        "message": "Title (name)"
+    },
+    "options.Keyword_s": {
+        "message": "Keyword(s)"
+    },
+    "options.Base_URL": {
+        "message": "Base URL"
+    },
+    "options.URL": {
+        "message": "URL"
+    },
+    "options.Method": {
+        "message": "Method"
+    },
+    "options.MIME_type": {
+        "message": "MIME type"
+    },
+    "options.Data_key_value": {
+        "message": "Data (key:value)"
+    },
+    "options.Add": {
+        "message": "Add"
+    }
 }

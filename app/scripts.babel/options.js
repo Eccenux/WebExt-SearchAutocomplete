@@ -16,7 +16,7 @@ Object.assign(plWikiEngine, wikiTemplateEngine);
  * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
  */
 let getI18n = (typeof browser != 'undefined') ? browser.i18n.getMessage : function(messageName) {
-	return messageName;
+	return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
 };
 
 /**
@@ -29,7 +29,7 @@ function loadEngines() {
 			if (!('engines' in result) || !Array.isArray(result.engines)) {
 				console.warn('Engines are not an array!', result);
 			} else {
-				prepareEngines(result.engines)
+				prepareEngines(result.engines);
 			}
 		}, function(failReason) {
 			console.log('failReason', failReason);
@@ -137,6 +137,11 @@ function undoChanges() {
 window.app = {};
 angular
 	.module('app', [])
+	.filter('i18n', function() {
+		return function(input) {
+			return getI18n(input);
+		};
+	})
 	.controller('EngineController', function($scope) {
 		app.EngineController = $scope;
 

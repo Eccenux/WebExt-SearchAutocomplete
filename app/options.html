@@ -11,15 +11,9 @@
 		<link rel="stylesheet" href="lib/font-awesome/css/fontawesome-all.min.css">
 	</head>
 	<body ng-app="app" ng-controller="EngineController">
-		<h1>
-			<span data-lang="en">Search engines</span>
-			<span data-lang="pl">Wyszukiwarki</span>
-		</h1>
+		<h1 data-i18n-key="options.Search_engines"></h1>
 
-		<p>
-			<span data-lang="en">Note! All changes are temporary until you store them.</span>
-			<span data-lang="pl">Uwaga! Wszystkie zmiany są tymczasowe do czasu zachowania zmian.</span>
-		</p>
+		<p data-i18n-key="options.Note_All_changes_are_temporary_until_you_store_them"></p>
 		
 		<ul id="engines-container">
 			<li ng-repeat="engine in engines">
@@ -31,18 +25,15 @@
 		<p class="buttons">
 			<button ng-click="addEngine()">
 				<i class="fas fa-plus"></i>
-				<span data-lang="en">New engine</span>
-				<span data-lang="pl">Nowa wyszukiwarka</span>
+				{{ "options.New_engine" | i18n }}
 			</button>
 			<button ng-click="storeChanges()">
 				<i class="fas fa-archive"></i>
-				<span data-lang="en">Store changes permanently</span>
-				<span data-lang="pl">Trwale zachowaj zmiany</span>
+				{{ "options.Store_changes_permanently" | i18n }}
 			</button>
 			<button ng-click="undoChanges()">
 				<i class="fas fa-undo"></i>
-				<span data-lang="en">Undo changes</span>
-				<span data-lang="pl">Wycofaj zmiany</span>
+				{{ "options.Undo_changes" | i18n }}
 			</button>
 		</p>
 
@@ -50,31 +41,26 @@
 			<p class="buttons">
 				<button ng-click="saveEngine(currentEngine)">
 					<i class="far fa-save"></i>
-					<span data-lang="en">Save</span>
-					<span data-lang="pl">Zapisz</span>
+					{{ "options.Save" | i18n }}
 				</button>
 				<button ng-click="saveEngineCopy(currentEngine)">
 					<i class="far fa-copy"></i>
-					<span data-lang="en">Save a copy</span>
-					<span data-lang="pl">Zapisz kopię</span>
+					{{ "options.Save_a_copy" | i18n }}
 				</button>
 			</p>
 			<p>
 				<label>
-					<span data-lang="en">Title (name)</span>
-					<span data-lang="pl">Tytuł (nazwa)</span>
+					{{ "options.Title_name" | i18n }}
 					<input type="text" ng-model="currentEngine.title" style="width:15em">
 				</label>
 				<label>
-					<span data-lang="en">Keyword(s)</span>
-					<span data-lang="pl">Słowo kluczowe</span>
+					{{ "options.Keyword_s" | i18n }}
 					<input type="text" ng-model="currentEngine.keywords" style="width:5em">
 				</label>
 			</p>
 			<p>
 				<label>
-					<span data-lang="en">Base URL</span>
-					<span data-lang="pl">Bazowy URL</span>
+					{{ "options.Base_URL" | i18n }}
 					<input type="text" ng-model="currentEngine.baseUrl" style="width:25em">
 				</label>
 			</p>
@@ -82,23 +68,19 @@
 				<fieldset>
 					<legend>{{ action.name }}</legend>
 					<label>
-						<span data-lang="en">URL</span>
-						<span data-lang="pl">URL</span>
+						{{ "options.URL" | i18n }}
 						<input type="text" ng-model="action.url" style="width:20em">
 					</label>
 					<label>
-						<span data-lang="en">Method</span>
-						<span data-lang="pl">Metoda</span>
+						{{ "options.Method" | i18n }}
 						<input type="text" ng-model="action.method" style="width:5em">
 					</label>
 					<label>
-						<span data-lang="en">MIME type</span>
-						<span data-lang="pl">Typ MIME</span>
+						{{ "options.MIME_type" | i18n }}
 						<input type="text" ng-model="action.type" style="width:20em">
 					</label>
 					<p>
-						<span data-lang="en">Data (key:value)</span>
-						<span data-lang="pl">Dane (nazwa:wartość)</span>
+						{{ "options.Data_key_value" | i18n }}
 					</p>
 					<div>
 						<p ng-repeat="data in action.data">
@@ -108,8 +90,7 @@
 						</p>
 						<button ng-click="addData(action)">
 							<i class="fas fa-plus"></i>
-							<span data-lang="en">Add</span>
-							<span data-lang="pl">Dodaj</span>
+							{{ "options.Add" | i18n }}
 						</button>
 					</div>
 				</fieldset>

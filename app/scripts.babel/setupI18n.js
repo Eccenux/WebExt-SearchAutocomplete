@@ -13,22 +13,25 @@ document.querySelectorAll('[data-lang]').forEach(function(el){
 	}
 })
 
-// maybe later...
-/*
+/**
+ * Get I18n string.
+ * 
+ * Also a mock for in-browser testing.
+ * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
+ */
+let getI18n = (typeof browser != 'undefined') ? browser.i18n.getMessage : function(messageName) {
+	return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+};
+
 // other HTML content not setup in controllers
-$('*[data-i18n-key]').each(function()
+document.querySelectorAll('*[data-i18n-key]').forEach(function(el)
 {
-	var key = $(el).attr('data-i18n-key');
-	if ($(el).attr('type') == 'button')
-	{
-		$(el).val($mJ.i18n.get(key));
-	}
-	else
-	{
-		$(el).html($mJ.i18n.get(key));
-	}
+	var key = el.getAttribute('data-i18n-key');
+	el.textContent = getI18n(key);
 });
 
+// maybe later...
+/*
 // atributes (note - for input button data-i18n-key is automatically put in it's value)
 $('*[data-i18n-key-attribute]').each(function()
 {

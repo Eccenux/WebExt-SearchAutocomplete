@@ -33,7 +33,7 @@ Object.assign(_wikiPl2.default, _wikiTemplate2.default);
  * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
  */
 let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
-	return messageName;
+	return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
 };
 
 /**
@@ -151,7 +151,11 @@ function undoChanges() {
 }
 
 window.app = {};
-angular.module('app', []).controller('EngineController', function ($scope) {
+angular.module('app', []).filter('i18n', function () {
+	return function (input) {
+		return getI18n(input);
+	};
+}).controller('EngineController', function ($scope) {
 	app.EngineController = $scope;
 
 	$scope.currentEngine = new _SearchEngineModel2.default();
