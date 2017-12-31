@@ -8,13 +8,13 @@
 		"description": "The description of the application"
 	},
 	"searchShortInformation": {
-		"message": "Wpisz słowo kluczowe wyszukiwarki, a potem swoje zapytanie.",
+		"message": "Wpisz słowo kluczowe wyszukiwarki, a potem swoje zapytanie."
 	},
 	"options.confirmPermanentStorage": {
-		"message": "Czy na pewno chcesz zachować zmian? Zapis zmian będzie trwały.",
+		"message": "Czy na pewno chcesz zachować zmian? Zapis zmian będzie trwały."
 	},
 	"options.confirmReloadFromStorage": {
-		"message": "Czy na pewno chcesz wycofać zmiany i wczytać poprzednie dane? Uwaga! Wszystkie wykonane teraz zmiany przepadną.",
+		"message": "Czy na pewno chcesz wycofać zmiany i wczytać poprzednie dane? Uwaga! Wszystkie wykonane teraz zmiany przepadną."
 	},
     "options.confirmImport": {
         "message": "Czy na pewno chcesz zaimportować te dane? Wszystkie wykonane teraz zmiany przepadną.\n\nUwaga! Po załadowaniu i tak musisz zachować zmiany, aby były trwałe."
