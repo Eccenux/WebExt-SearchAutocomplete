@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-csp="no-unsafe-eval">
+	<head>
+		<meta charset="UTF-8">
+		<!-- build:css styles/options-vendor.css -->
+		<!-- endbuild -->
+		<!-- build:css styles/options.css -->
+		<link href="styles/options.css" rel="stylesheet">
+		<!-- endbuild -->
+		<script src="lib/angular.min.js"></script>
+		<link rel="stylesheet" href="lib/font-awesome/css/fontawesome-all.min.css">
+	</head>
+	<body ng-app="app" ng-controller="EngineController">
+		<h1>
+			{{ getI18n("options.Search_engines") }}
+		</h1>
+
+		<p>
+			{{ getI18n("options.Note_All_changes_are_temporary_until_you_store_them") }}
+		</p>
+		
+		<ul id="engines-container">
+			<li ng-repeat="engine in engines">
+				[{{ engine.keywords.join(',') }}] {{ engine.title }}
+				<button ng-click="editEngine(engine, $index)">✏️</button>
+				<button ng-click="removeEngine(engine, $index)">❌</button>
+			</li>
+		</ul>
+		<p class="buttons">
+			<button ng-click="addEngine()">
+				<i class="fas fa-plus"></i>
+				{{ getI18n("options.New_engine") }}
+			</button>
+			<button ng-click="storeChanges()">
+				<i class="fas fa-archive"></i>
+				{{ getI18n("options.Store_changes_permanently") }}
+			</button>
+			<button ng-click="undoChanges()">
+				<i class="fas fa-undo"></i>
+				{{ getI18n("options.Undo_changes") }}
+			</button>
+		</p>
+
+		<form id="engine-editor">
+			<p class="buttons">
+				<button ng-click="saveEngine(currentEngine)">
+					<i class="far fa-save"></i>
+					{{ getI18n("options.Save") }}
+				</button>
+				<button ng-click="saveEngineCopy(currentEngine)">
+					<i class="far fa-copy"></i>
+					{{ getI18n("options.Save_a_copy") }}
+				</button>
+			</p>
+			<p>
+				<label>
+					{{ getI18n("options.Title_name") }}
+					<input type="text" ng-model="currentEngine.title" style="width:15em">
+				</label>
+				<label>
+					{{ getI18n("options.Keyword_s") }}
+					<input type="text" ng-model="currentEngine.keywords" style="width:5em">
+				</label>
+			</p>
+			<p>
+				<label>
+					{{ getI18n("options.Base_URL") }}
+					<input type="text" ng-model="currentEngine.baseUrl" style="width:25em">
+				</label>
+			</p>
+			<div ng-repeat="action in currentEngine.actions">
+				<fieldset>
+					<legend>{{ action.name }}</legend>
+					<label>
+						{{ getI18n("options.URL") }}
+						<input type="text" ng-model="action.url" style="width:20em">
+					</label>
+					<label>
+						{{ getI18n("options.Method") }}
+						<input type="text" ng-model="action.method" style="width:5em">
+					</label>
+					<label>
+						{{ getI18n("options.MIME_type") }}
+						<input type="text" ng-model="action.type" style="width:20em">
+					</label>
+					<p>
+						{{ getI18n("options.Data_key_value") }}
+					</p>
+					<div>
+						<p ng-repeat="data in action.data">
+							<input type="text" ng-model="data.key">
+							<input type="text" ng-model="data.value">
+							<button ng-click="removeData(action, $index)">❌</button>
+						</p>
+						<button ng-click="addData(action)">
+							<i class="fas fa-plus"></i>
+							{{ getI18n("options.Add") }}
+						</button>
+					</div>
+				</fieldset>
+			</div>
+		</form>
+
+		<!-- build:js scripts/options.js -->
+		<script src="scripts/options.js"></script>
+		<!-- endbuild -->
+		<!-- build:js scripts/setupI18n.js -->
+		<script src="scripts/setupI18n.js"></script>
+		<!-- endbuild -->
+	</body>
+</html>

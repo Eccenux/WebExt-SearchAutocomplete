@@ -1,0 +1,47 @@
+{
+    "options.Search_engines": {
+        "message": "Wyszukiwarki"
+    },
+    "options.Note_All_changes_are_temporary_until_you_store_them": {
+        "message": "Uwaga! Wszystkie zmiany są tymczasowe do czasu zachowania zmian."
+    },
+    "options.New_engine": {
+        "message": "Nowa wyszukiwarka"
+    },
+    "options.Store_changes_permanently": {
+        "message": "Trwale zachowaj zmiany"
+    },
+    "options.Undo_changes": {
+        "message": "Wycofaj zmiany"
+    },
+    "options.Save": {
+        "message": "Zapisz"
+    },
+    "options.Save_a_copy": {
+        "message": "Zapisz kopię"
+    },
+    "options.Title_name": {
+        "message": "Tytuł (nazwa)"
+    },
+    "options.Keyword_s": {
+        "message": "Słowo kluczowe"
+    },
+    "options.Base_URL": {
+        "message": "Bazowy URL"
+    },
+    "options.URL": {
+        "message": "URL"
+    },
+    "options.Method": {
+        "message": "Metoda"
+    },
+    "options.MIME_type": {
+        "message": "Typ MIME"
+    },
+    "options.Data_key_value": {
+        "message": "Dane (nazwa:wartość)"
+    },
+    "options.Add": {
+        "message": "Dodaj"
+    }
+}
