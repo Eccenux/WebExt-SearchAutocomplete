@@ -34,7 +34,7 @@
 			</button>
 		</p>
 
-		<form id="engine-editor">
+		<form id="engine-editor" class="editor-container">
 			<p class="buttons">
 				<button ng-click="saveEngine(currentEngine)">
 					<i class="far fa-save"></i>
@@ -98,6 +98,31 @@
 			</div>
 		</form>
 
+		<p class="buttons">
+			<button ng-click="exportEngines()">
+				<i class="fas fa-sign-out-alt"></i>
+				{{ "options.Export_engines" | i18n }}
+			</button>
+			<button ng-click="prepareImport()">
+				<i class="fas fa-sign-in-alt"></i>
+				{{ "options.Import_engines" | i18n }}
+			</button>
+		</p>
+		<form id="export-import" class="editor-container">
+			<p class="buttons">
+				<button ng-click="importEngines()">
+					<i class="fas fa-sign-in-alt"></i>
+					{{ "options.Import" | i18n }}
+				</button>
+				<button ng-click="closeExportImport()">
+					<i class="fas fa-undo"></i>
+					{{ "options.Close" | i18n }}
+				</button>
+			</p>
+			<p data-i18n-key="options.Note_No_validation_is_provided_Data_corruption_may_require_reset"></p>
+			<textarea ng-model="enginesDump"></textarea>
+		</form>
+		
 		<script src="scripts/options.js"></script>
 		<script src="scripts/setupI18n.js"></script>
 	</body>

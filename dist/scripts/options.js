@@ -27,6 +27,7 @@ Object.assign(_wikiEn2.default, _wikiTemplate2.default);
 Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
 const engineEditor = document.getElementById('engine-editor');
+const exportImportEditor = document.getElementById('export-import');
 
 /**
  * Get I18n string.
@@ -49,6 +50,8 @@ function loadEngines() {
 			} else {
 				prepareEngines(result.engines);
 			}
+			// seem to be required here (probably due to using promises when loading data)
+			app.EngineController.$apply();
 		}, function (failReason) {
 			console.log('failReason', failReason);
 		});
@@ -72,10 +75,6 @@ function prepareEngines(engines) {
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new _SearchEngine2.default(engines[e]);
 		app.EngineController.engines.push(engine);
-	}
-	// seem to be required when working with FF (probably due to using promises when loading data)
-	if (typeof browser != 'undefined') {
-		app.EngineController.$apply();
 	}
 }
 
@@ -189,6 +188,40 @@ angular.module('app', []).filter('i18n', function () {
 	$scope.undoEngineChanges = function () {
 		engineEditor.style.display = 'none';
 	};
+
+	function exportFilter(key, value) {
+		// Filtering out properties
+		if (key.startsWith('$$')) {
+			return undefined;
+		}
+		return value;
+	}
+	$scope.exportEngines = function () {
+		$scope.enginesDump = JSON.stringify($scope.engines, exportFilter, '\t');
+		exportImportEditor.style.display = 'block';
+	};
+	$scope.prepareImport = function () {
+		$scope.enginesDump = '';
+		exportImportEditor.style.display = 'block';
+	};
+	$scope.importEngines = function () {
+		if (confirm(getI18n('options.confirmImport'))) {
+			let engines;
+			try {
+				engines = JSON.parse($scope.enginesDump);
+			} catch (error) {
+				console.warn('Import failure:', error.message);
+				alert(getI18n('options.Import_failure'));
+				return;
+			}
+			prepareEngines(engines);
+			exportImportEditor.style.display = 'none';
+		}
+	};
+	$scope.closeExportImport = function () {
+		exportImportEditor.style.display = 'none';
+	};
+
 	loadEngines();
 });
 

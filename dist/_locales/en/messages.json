@@ -8,16 +8,16 @@
 		"description": "The description of the application"
 	},
 	"searchShortInformation": {
-		"message": "Type in your search engine keyword and then your search terms.",
-		"description": ""
+		"message": "Type in your search engine keyword and then your search terms."
 	},
 	"options.confirmPermanentStorage": {
-		"message": "Are you sure you want to save all changes? This is a permanent change.",
-		"description": ""
+		"message": "Are you sure you want to save all changes? This is a permanent change."
 	},
 	"options.confirmReloadFromStorage": {
-		"message": "Are you sure you want to undo all changes and reload from storage? Note! All your changes will be lost.",
-		"description": ""
+		"message": "Are you sure you want to undo all changes and reload from storage? Note! All your changes will be lost."
+	},
+    "options.confirmImport": {
+        "message": "Are you sure you want to import this data? All your changes will be lost.\n\nNote! You will still need to store changes to make them permanent."
 	},
     "options.Search_engines": {
         "message": "Search engines"
@@ -66,5 +66,23 @@
     },
     "options.Cancel": {
         "message": "Cancel"
-    }
+	},
+    "options.Close": {
+        "message": "Close"
+	},
+	"options.Note_No_validation_is_provided_Data_corruption_may_require_reset": {
+        "message": "Note! No validation is provided. When data is corrupted you may be forced to reset all options."
+	},
+	"options.Import_failure": {
+        "message": "Import failed. Make sure syntax is correct."
+    },
+	"options.Export_engines": {
+        "message": "Export engines"
+	},
+	"options.Import_engines": {
+        "message": "Import engines"
+	},
+    "options.Import": {
+        "message": "Import"
+	}
 }

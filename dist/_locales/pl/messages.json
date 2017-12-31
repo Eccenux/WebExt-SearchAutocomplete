@@ -9,15 +9,15 @@
 	},
 	"searchShortInformation": {
 		"message": "Wpisz słowo kluczowe wyszukiwarki, a potem swoje zapytanie.",
-		"description": ""
 	},
 	"options.confirmPermanentStorage": {
 		"message": "Czy na pewno chcesz zachować zmian? Zapis zmian będzie trwały.",
-		"description": ""
 	},
 	"options.confirmReloadFromStorage": {
 		"message": "Czy na pewno chcesz wycofać zmiany i wczytać poprzednie dane? Uwaga! Wszystkie wykonane teraz zmiany przepadną.",
-		"description": ""
+	},
+    "options.confirmImport": {
+        "message": "Czy na pewno chcesz zaimportować te dane? Wszystkie wykonane teraz zmiany przepadną.\n\nUwaga! Po załadowaniu i tak musisz zachować zmiany, aby były trwałe."
 	},
     "options.Search_engines": {
         "message": "Wyszukiwarki"
@@ -66,5 +66,23 @@
     },
     "options.Cancel": {
         "message": "Anuluj"
-    }
+	},
+    "options.Close": {
+        "message": "Zamknij"
+	},
+	"options.Note_No_validation_is_provided_Data_corruption_may_require_reset": {
+        "message": "Uwaga! Importowane dane nie są sprawdzane. W wypadku wprowadzenia nieprawidłowych danych może być konieczny reset ustawień tego dodatku."
+	},
+	"options.Import_failure": {
+        "message": "Import nie powiódł się. Sprawdź poprawność składni."
+    },
+	"options.Export_engines": {
+        "message": "Eksport wyszukiwarek"
+	},
+	"options.Import_engines": {
+        "message": "Import wyszukiwarek"
+    },
+    "options.Import": {
+        "message": "Importuj"
+	}
 }
