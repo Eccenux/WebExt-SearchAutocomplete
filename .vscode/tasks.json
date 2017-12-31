@@ -10,6 +10,18 @@
 				"$eslint-stylish"
 			]
 		},
+		// Tasks -> Run Task...
+		{
+			"type": "gulp",
+			"task": "package",
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
 		// %APPDATA%\Code\User\keybindings.json
 		// "key": "ctrl+shift+t",
 		{
