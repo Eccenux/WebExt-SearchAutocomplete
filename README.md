@@ -2,6 +2,8 @@
 
 This WebExtension aims to give you quick, keyword based autocomplete for your search engines. Making your address bar an effective tool again ;-). Should be a good replacement for Omnibar add-on (that worked until FF 56).
 
+Installation through AMA page: https://addons.mozilla.org/pl/firefox/addon/searchautocomplete/
+
 Default search engines
 ----------------------
 
