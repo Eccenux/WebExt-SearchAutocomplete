@@ -1,6 +1,6 @@
 {
 	"name": "__MSG_appName__",
-	"version": "0.2.1",
+	"version": "0.2.3",
 	"manifest_version": 2,
 	"description": "__MSG_appDescription__",
 	"icons": {
@@ -13,6 +13,12 @@
 			"scripts/chromereload.js",
 			"scripts/background.js"
 		]
+	},
+	"applications": {
+		"gecko": {
+			"id": "search-autocomplete@enux.pl",
+			"strict_min_version": "46.0"
+		}
 	},
 	"permissions": [
 		"<all_urls>",
