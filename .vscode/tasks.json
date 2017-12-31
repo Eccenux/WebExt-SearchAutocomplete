@@ -4,23 +4,29 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"group": "build",
 			"type": "gulp",
 			"task": "build",
 			"problemMatcher": [
 				"$eslint-stylish"
 			]
 		},
+		{
+			"group": "build",
+			"type": "gulp",
+			"task": "watch",
+			"problemMatcher": [
+				"$eslint-stylish"
+			]
+		},
 		// Tasks -> Run Task...
 		{
+			"group": "build",
 			"type": "gulp",
 			"task": "package",
 			"problemMatcher": [
 				"$eslint-stylish"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
+			]
 		},
 		// %APPDATA%\Code\User\keybindings.json
 		// "key": "ctrl+shift+t",
@@ -38,6 +44,7 @@
 			}
 		},
 		{
+			"group": "build",
 			"type": "gulp",
 			"task": "clean",
 			"problemMatcher": [
