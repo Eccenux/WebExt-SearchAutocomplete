@@ -63,5 +63,8 @@
     },
     "options.Add": {
         "message": "Dodaj"
+    },
+    "options.Cancel": {
+        "message": "Anuluj"
     }
 }

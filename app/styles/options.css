@@ -4,10 +4,18 @@ body {
 	font-size: 100%;
 }
 
-
 input {
 	border: 1px solid grey;
 	padding: .5em;
 	margin: .5em;
 	box-sizing: border-box;
+}
+
+#engine-editor {
+	border: 1px solid grey;
+	padding: 1em;
+	display: none;
+}
+#engine-editor p:first-child {
+	margin-top: 0;
 }

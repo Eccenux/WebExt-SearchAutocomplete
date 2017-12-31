@@ -9,6 +9,8 @@ import plWikiEngine from './engines/wiki-pl';
 Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
+const engineEditor = document.getElementById('engine-editor');
+
 /**
  * Get I18n string.
  * 
@@ -49,6 +51,7 @@ function loadEngines() {
  */
 function prepareEngines(engines) {
 	console.log('prepareEngines: ', engines);
+	engineEditor.style.display = 'none';
 	app.EngineController.engines.length = 0;
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
@@ -69,6 +72,7 @@ function editEngine(engine, index) {
 	engine.id = index;
 	app.EngineController.currentEngine.update(engine);
 	//app.EngineController.$apply();
+	engineEditor.style.display = 'block';
 }
 /**
  * Prepare new engine editor.
@@ -87,6 +91,7 @@ function addEngine() {
 		}
 	});
 	app.EngineController.currentEngine.update(engine);
+	engineEditor.style.display = 'block';
 };
 
 /**
@@ -104,6 +109,7 @@ function saveEngine(currentEngine) {
 		app.EngineController.engines.push(engine);
 	}
 	//app.EngineController.$apply();
+	engineEditor.style.display = 'none';
 }
 
 /**
@@ -113,6 +119,7 @@ function saveEngine(currentEngine) {
 function saveEngineCopy(currentEngine) {
 	currentEngine.id = null;
 	saveEngine(currentEngine);
+	engineEditor.style.display = 'none';
 }
 
 /**
@@ -166,7 +173,9 @@ angular
 		$scope.removeEngine = function(engine, index){
 			$scope.engines.splice(index, 1);
 		};
-
+		$scope.undoEngineChanges = function(){
+			engineEditor.style.display = 'none';
+		};
 		loadEngines();
 	})
 ;
