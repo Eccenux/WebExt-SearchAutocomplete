@@ -52,7 +52,7 @@
 			<p>
 				<label>
 					{{ "options.Title_name" | i18n }}
-					<input type="text" ng-model="currentEngine.title" style="width:15em">
+					<input type="text" ng-model="currentEngine.title" style="width:15em; max-width:100%">
 				</label>
 				<label>
 					{{ "options.Keyword_s" | i18n }}
@@ -62,7 +62,7 @@
 			<p>
 				<label>
 					{{ "options.Base_URL" | i18n }}
-					<input type="text" ng-model="currentEngine.baseUrl" style="width:25em">
+					<input type="text" ng-model="currentEngine.baseUrl" style="width:25em; max-width:100%">
 				</label>
 			</p>
 			<div ng-repeat="action in currentEngine.actions">
@@ -70,7 +70,7 @@
 					<legend>{{ action.name }}</legend>
 					<label>
 						{{ "options.URL" | i18n }}
-						<input type="text" ng-model="action.url" style="width:20em">
+						<input type="text" ng-model="action.url" style="width:20em; max-width:100%">
 					</label>
 					<label>
 						{{ "options.Method" | i18n }}
@@ -78,7 +78,7 @@
 					</label>
 					<label>
 						{{ "options.MIME_type" | i18n }}
-						<input type="text" ng-model="action.type" style="width:20em">
+						<input type="text" ng-model="action.type" style="width:20em; max-width:100%">
 					</label>
 					<p>
 						{{ "options.Data_key_value" | i18n }}
