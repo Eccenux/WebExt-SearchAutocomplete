@@ -117,6 +117,7 @@ SearchHelper.prototype.getEngine = function (text) {
  * @param {Object} response The search engine response.
  */
 SearchHelper.prototype.createSuggestionsFromResponse = function (engine, response) {
+	let me = this;
 	return new Promise(resolve => {
 		let suggestions = [];
 		let suggestionsOnEmptyResults = [{
@@ -156,7 +157,7 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 				if (urls && typeof urls[i] === 'string') {
 					url = urls[i];
 				} else {
-					url = buildSearchUrl(engine, engine.openAction, title);
+					url = me.buildSearchUrl(engine, engine.openAction, title);
 				}
 				// add suggestion
 				suggestions.push({
