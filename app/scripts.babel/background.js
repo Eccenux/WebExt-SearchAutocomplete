@@ -115,12 +115,17 @@ function prepareOmnibox(engines) {
 			let searchTerm = engineWithTerm.text;
 			let engine = engineWithTerm.engine;
 			// no valid search to go to
-			if (engine === null || !searchTerm.length) {
-				console.log('no valid search to go to', {
-					text: text,
-					engine: engine,
-					searchTerm: searchTerm
-				});
+			if (engine === null) {
+				// open options for `sa ` and `sa options`
+				if (!searchTerm.length || searchTerm==='options') {
+					openOptions();
+				} else {
+					console.log('no valid search to go to', {
+						text: text,
+						engine: engine,
+						searchTerm: searchTerm
+					});
+				}
 				return;
 			}
 			url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
@@ -144,4 +149,20 @@ function prepareOmnibox(engines) {
 				break;
 		}
 	});
+}
+
+/**
+ * Open options for this add-on.
+ */
+function openOptions() {
+	function onOpened() {
+		console.log('Options page opened');
+	}
+
+	function onError(error) {
+		console.log(`Error: ${error}`);
+	}
+
+	var opening = browser.runtime.openOptionsPage();
+	opening.then(onOpened, onError);
 }
