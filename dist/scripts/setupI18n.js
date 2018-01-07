@@ -1,6 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+var _I18nHelper = require('./inc/I18nHelper');
+
 /**
  * Setup i18n in HTML.
  * 
@@ -16,20 +18,10 @@ document.querySelectorAll('[data-lang]').forEach(function (el) {
 	}
 });
 
-/**
- * Get I18n string.
- * 
- * Also a mock for in-browser testing.
- * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
- */
-let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
-	return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
-};
-
 // other HTML content not setup in controllers
 document.querySelectorAll('*[data-i18n-key]').forEach(function (el) {
 	var key = el.getAttribute('data-i18n-key');
-	el.textContent = getI18n(key);
+	el.textContent = (0, _I18nHelper.getI18n)(key);
 });
 
 // maybe later...
@@ -45,6 +37,24 @@ $('*[data-i18n-key-attribute]').each(function()
 	el.setAttribute(attribute, content);
 });
 */
+
+},{"./inc/I18nHelper":2}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Get I18n string.
+ * 
+ * Also a mock for in-browser testing.
+ * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
+ */
+let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
+  return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+};
+
+exports.getI18n = getI18n;
 
 },{}]},{},[1])
 

@@ -10,6 +10,9 @@
 	"searchShortInformation": {
 		"message": "Type in your search engine keyword and then your search terms."
 	},
+	"searchHelper.No_Results_Found": {
+		"message": "No results found."
+	},
 	"options.confirmPermanentStorage": {
 		"message": "Are you sure you want to save all changes? This is a permanent change."
 	},

@@ -21,6 +21,8 @@ var _wikiPl = require('./engines/wiki-pl');
 
 var _wikiPl2 = _interopRequireDefault(_wikiPl);
 
+var _I18nHelper = require('./inc/I18nHelper');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_wikiEn2.default, _wikiTemplate2.default);
@@ -28,16 +30,6 @@ Object.assign(_wikiPl2.default, _wikiTemplate2.default);
 
 const engineEditor = document.getElementById('engine-editor');
 const exportImportEditor = document.getElementById('export-import');
-
-/**
- * Get I18n string.
- * 
- * Also a mock for in-browser testing.
- * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
- */
-let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
-	return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
-};
 
 /**
  * Load engines from storage.
@@ -141,7 +133,7 @@ function saveEngineCopy(currentEngine) {
  * Store changes into browser memory
  */
 function storeChanges() {
-	if (confirm(getI18n('options.confirmPermanentStorage'))) {
+	if (confirm((0, _I18nHelper.getI18n)('options.confirmPermanentStorage'))) {
 		browser.storage.local.set({
 			'engines': app.EngineController.engines
 		});
@@ -151,7 +143,7 @@ function storeChanges() {
  * Undo all changes and reload from storage
  */
 function undoChanges() {
-	if (confirm(getI18n('options.confirmReloadFromStorage'))) {
+	if (confirm((0, _I18nHelper.getI18n)('options.confirmReloadFromStorage'))) {
 		loadEngines();
 	}
 }
@@ -159,7 +151,7 @@ function undoChanges() {
 window.app = {};
 angular.module('app', []).filter('i18n', function () {
 	return function (input) {
-		return getI18n(input);
+		return (0, _I18nHelper.getI18n)(input);
 	};
 }).controller('EngineController', function ($scope) {
 	app.EngineController = $scope;
@@ -205,13 +197,13 @@ angular.module('app', []).filter('i18n', function () {
 		exportImportEditor.style.display = 'block';
 	};
 	$scope.importEngines = function () {
-		if (confirm(getI18n('options.confirmImport'))) {
+		if (confirm((0, _I18nHelper.getI18n)('options.confirmImport'))) {
 			let engines;
 			try {
 				engines = JSON.parse($scope.enginesDump);
 			} catch (error) {
 				console.warn('Import failure:', error.message);
-				alert(getI18n('options.Import_failure'));
+				alert((0, _I18nHelper.getI18n)('options.Import_failure'));
 				return;
 			}
 			prepareEngines(engines);
@@ -225,7 +217,7 @@ angular.module('app', []).filter('i18n', function () {
 	loadEngines();
 });
 
-},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchEngine.js":5,"./inc/SearchEngineModel.js":7}],2:[function(require,module,exports){
+},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/I18nHelper":5,"./inc/SearchEngine.js":6,"./inc/SearchEngineModel.js":8}],2:[function(require,module,exports){
 module.exports={
 	"title" : "English Wikipedia",
 	"keywords" : ["en"],
@@ -261,6 +253,24 @@ module.exports={
 }
 
 },{}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Get I18n string.
+ * 
+ * Also a mock for in-browser testing.
+ * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
+ */
+let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
+  return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+};
+
+exports.getI18n = getI18n;
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -306,7 +316,7 @@ function SearchEngine(engine) {
 
 exports.default = SearchEngine;
 
-},{"./SearchEngineAction.js":6}],6:[function(require,module,exports){
+},{"./SearchEngineAction.js":7}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -333,7 +343,7 @@ function SearchEngineAction(action) {
 
 exports.default = SearchEngineAction;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

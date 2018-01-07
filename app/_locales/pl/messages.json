@@ -10,6 +10,9 @@
 	"searchShortInformation": {
 		"message": "Wpisz słowo kluczowe wyszukiwarki, a potem swoje zapytanie."
 	},
+	"searchHelper.No_Results_Found": {
+		"message": "Brak wyników wyszukiwania."
+	},
 	"options.confirmPermanentStorage": {
 		"message": "Czy na pewno chcesz zachować zmian? Zapis zmian będzie trwały."
 	},

@@ -86,9 +86,10 @@ function prepareOmnibox(engines) {
 		let engineWithTerm = searchHelper.getEngine(text);
 		let searchTerm = engineWithTerm.text;
 		let engine = engineWithTerm.engine;
-		// no keyword matched
+		// no keyword matched yet - running search engines autocomplete
 		if (engine === null) {
 			console.log('no keyword matched');
+			addSuggestions(searchHelper.createEnginesSuggestions(searchTerm));
 			return;
 		}
 		// no phrase typed in yet after the keyword
@@ -121,12 +122,17 @@ function prepareOmnibox(engines) {
 			let searchTerm = engineWithTerm.text;
 			let engine = engineWithTerm.engine;
 			// no valid search to go to
-			if (engine === null || !searchTerm.length) {
-				console.log('no valid search to go to', {
-					text: text,
-					engine: engine,
-					searchTerm: searchTerm
-				});
+			if (engine === null) {
+				// open options for `sa ` and `sa options`
+				if (!searchTerm.length || searchTerm === 'options') {
+					openOptions();
+				} else {
+					console.log('no valid search to go to', {
+						text: text,
+						engine: engine,
+						searchTerm: searchTerm
+					});
+				}
 				return;
 			}
 			url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
@@ -152,7 +158,23 @@ function prepareOmnibox(engines) {
 	});
 }
 
-},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":7}],2:[function(require,module,exports){
+/**
+ * Open options for this add-on.
+ */
+function openOptions() {
+	function onOpened() {
+		console.log('Options page opened');
+	}
+
+	function onError(error) {
+		console.log(`Error: ${error}`);
+	}
+
+	var opening = browser.runtime.openOptionsPage();
+	opening.then(onOpened, onError);
+}
+
+},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":8}],2:[function(require,module,exports){
 module.exports={
 	"title" : "English Wikipedia",
 	"keywords" : ["en"],
@@ -188,6 +210,24 @@ module.exports={
 }
 
 },{}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Get I18n string.
+ * 
+ * Also a mock for in-browser testing.
+ * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
+ */
+let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
+  return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+};
+
+exports.getI18n = getI18n;
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -233,7 +273,7 @@ function SearchEngine(engine) {
 
 exports.default = SearchEngine;
 
-},{"./SearchEngineAction.js":6}],6:[function(require,module,exports){
+},{"./SearchEngineAction.js":7}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -260,7 +300,7 @@ function SearchEngineAction(action) {
 
 exports.default = SearchEngineAction;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -270,6 +310,8 @@ Object.defineProperty(exports, "__esModule", {
 var _SearchEngine = require('./SearchEngine.js');
 
 var _SearchEngine2 = _interopRequireDefault(_SearchEngine);
+
+var _I18nHelper = require('./I18nHelper');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -385,6 +427,69 @@ SearchHelper.prototype.getEngine = function (text) {
 };
 
 /**
+ * Get engines matching the term.
+ * 
+ * @param {String} text Search term.
+ */
+SearchHelper.prototype.getEngines = function (text) {
+	// list all engines by default
+	if (typeof text !== 'string' || !text.length) {
+		let engines = [];
+		for (const key in this.engineMap) {
+			if (key !== 'default') {
+				const engine = this.engineMap[key];
+				engines.push(engine);
+			}
+		}
+		return engines;
+	}
+	let engines = [];
+	for (const key in this.engineMap) {
+		if (key.startsWith(text)) {
+			const engine = this.engineMap[key];
+			engines.push(engine);
+		}
+	}
+	return engines;
+};
+
+/**
+ * Create engines suggestions array.
+ * 
+ * @param {String} text Search term.
+ */
+SearchHelper.prototype.createEnginesSuggestions = function (text) {
+	let me = this;
+	let suggestions = [];
+	let suggestionsOnEmptyResults = [{
+		content: '',
+		description: (0, _I18nHelper.getI18n)('searchHelper.No_Results_Found')
+	}];
+
+	let engines = me.getEngines(text);
+	console.log('engines:', engines);
+	if (engines.length < 1) {
+		return suggestionsOnEmptyResults;
+	}
+
+	let max = me.SETTINGS.MAX_SUGGESTIONS;
+	let count = Math.min(engines.length, max);
+	for (let i = 0; i < count; i++) {
+		let engine = engines[i];
+		// gather data
+		let description = engine.title;
+		let url = engine.keywords[0];
+		// add suggestion
+		suggestions.push({
+			content: url,
+			description: description
+		});
+	}
+	console.log('suggestions:', suggestions);
+	return suggestions;
+};
+
+/**
  * Create suggestions array from response.
  * 
  * @param {SearchEngine} engine Engine used.
@@ -396,7 +501,7 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 		let suggestions = [];
 		let suggestionsOnEmptyResults = [{
 			content: engine.baseUrl,
-			description: 'No results found'
+			description: (0, _I18nHelper.getI18n)('searchHelper.No_Results_Found')
 		}];
 		response.json().then(json => {
 			console.log('response:', json);
@@ -404,7 +509,7 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 				return resolve(suggestionsOnEmptyResults);
 			}
 
-			let max = this.SETTINGS.MAX_SUGGESTIONS;
+			let max = me.SETTINGS.MAX_SUGGESTIONS;
 
 			// for Wikipedia:
 			// json[0] = search term
@@ -446,5 +551,5 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 
 exports.default = SearchHelper;
 
-},{"./SearchEngine.js":5}]},{},[1])
+},{"./I18nHelper":5,"./SearchEngine.js":6}]},{},[1])
 

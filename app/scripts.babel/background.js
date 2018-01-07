@@ -73,9 +73,10 @@ function prepareOmnibox(engines) {
 		let engineWithTerm = searchHelper.getEngine(text);
 		let searchTerm = engineWithTerm.text;
 		let engine = engineWithTerm.engine;
-		// no keyword matched
+		// no keyword matched yet - running search engines autocomplete
 		if (engine === null) {
 			console.log('no keyword matched');
+			addSuggestions(searchHelper.createEnginesSuggestions(searchTerm));
 			return;
 		}
 		// no phrase typed in yet after the keyword

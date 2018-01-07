@@ -241,4 +241,81 @@ describe('SearchHelper', function () {
 			assert.equal(engineWithTerm.engine.baseUrl, engineB.baseUrl, 'Should choose the B engine');
 		});
 	});	
+
+	describe('Test engines autocomplete', function () {
+		let keywords = [
+			'xyz',
+			'abc',
+			'abcd',
+			'abcdef',
+			'defabc',
+		];
+		let expectedAbcEngines = 3;
+
+		// prepare engines
+		function createEngine(keyword) {
+			let engine = JSON.parse(JSON.stringify(engineExample));	// clone
+			engine.title = `${keyword}`;
+			engine.keywords = [keyword];
+			return engine;
+		}
+		let expectedEngines = {};
+		for (let i = 0; i < keywords.length; i++) {
+			const keyword = keywords[i];
+			expectedEngines[keyword] = createEngine(keyword);
+		}
+
+		let searchHelper = new SearchHelper(SETTINGS, expectedEngines);
+
+		// this test is more about checking if preparing engines works as expected
+		it('Should build a map of engines', function () {
+			for (let i = 0; i < keywords.length; i++) {
+				const keyword = keywords[i];
+				const expectedEngine = expectedEngines[keywords[i]];
+				let engineWithTerm = searchHelper.getEngine(keyword + ' abc');
+				assert.isNotNull(engineWithTerm.engine);
+				assert.equal(engineWithTerm.engine.title, expectedEngine.title, `Should choose the ${keyword} engine`);
+			}
+		});
+		it('Should list all engines for empty term', function () {
+			let engines = searchHelper.getEngines('');
+			assert.isArray(engines);
+			assert.equal(engines.length, keywords.length);
+		});
+		it('Should list all engines by default', function () {
+			let engines = searchHelper.getEngines();
+			assert.isArray(engines);
+			assert.equal(engines.length, keywords.length);
+		});
+		it('Should find engine by letter', function () {
+			// `xyz` is special beacuse no other engine keyword contains `x`.
+			let engines = searchHelper.getEngines('x');
+			assert.isArray(engines);
+			assert.equal(engines.length, 1);
+			let engine = engines[0];
+			assert.equal(engine.title, expectedEngines['xyz'].title);
+		});	
+		it('Should find engine by keyword', function () {
+			// `xyz` is special beacuse no other engine keyword contains `x`.
+			let engines = searchHelper.getEngines('xyz');
+			assert.isArray(engines);
+			assert.equal(engines.length, 1);
+			let engine = engines[0];
+			assert.equal(engine.title, expectedEngines['xyz'].title);
+		});	
+		it('Should not find any engines fo non existant', function () {
+			let engines;
+			engines = searchHelper.getEngines('@');
+			assert.isArray(engines);
+			assert.equal(engines.length, 0, 'Should not find engine for non existant character');
+			engines = searchHelper.getEngines('xxx');
+			assert.isArray(engines);
+			assert.equal(engines.length, 0, 'Should not find engine for non existant phrase');
+		});	
+		it('Should find all abc engines', function () {
+			let engines = searchHelper.getEngines('abc');
+			assert.isArray(engines);
+			assert.equal(engines.length, expectedAbcEngines);
+		});	
+	});	
 });

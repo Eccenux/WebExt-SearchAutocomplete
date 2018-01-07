@@ -1,4 +1,5 @@
 import SearchEngine from './SearchEngine.js';
+import { getI18n } from './I18nHelper';
 //import SearchEngineAction from './SearchEngineAction.js';
 
 /**
@@ -111,6 +112,69 @@ SearchHelper.prototype.getEngine = function (text) {
 }
 
 /**
+ * Get engines matching the term.
+ * 
+ * @param {String} text Search term.
+ */
+SearchHelper.prototype.getEngines = function (text) {
+	// list all engines by default
+	if (typeof text !== 'string' || !text.length) {
+		let engines = [];
+		for (const key in this.engineMap) {
+			if (key !== 'default') {
+				const engine = this.engineMap[key];
+				engines.push(engine)
+			}
+		}
+		return engines;
+	}
+	let engines = [];
+	for (const key in this.engineMap) {
+		if (key.startsWith(text)) {
+			const engine = this.engineMap[key];
+			engines.push(engine)
+		}
+	}
+	return engines;
+};
+
+/**
+ * Create engines suggestions array.
+ * 
+ * @param {String} text Search term.
+ */
+SearchHelper.prototype.createEnginesSuggestions = function (text) {
+	let me = this;
+	let suggestions = [];
+	let suggestionsOnEmptyResults = [{
+		content: '',
+		description: getI18n('searchHelper.No_Results_Found')
+	}];
+
+	let engines = me.getEngines(text);
+	console.log('engines:', engines);
+	if (engines.length < 1) {
+		return suggestionsOnEmptyResults;
+	}
+
+	let max = me.SETTINGS.MAX_SUGGESTIONS;
+	let count = Math.min(engines.length, max);
+	for (let i = 0; i < count; i++) {
+		let engine = engines[i];
+		// gather data
+		let description = engine.title;
+		let url = engine.keywords[0];
+		// add suggestion
+		suggestions.push({
+			content: url,
+			description: description,
+		});
+	}
+	console.log('suggestions:', suggestions);
+	return suggestions;
+};
+
+/**
  * Create suggestions array from response.
  * 
  * @param {SearchEngine} engine Engine used.
@@ -122,7 +186,7 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 		let suggestions = [];
 		let suggestionsOnEmptyResults = [{
 			content: engine.baseUrl,
-			description: 'No results found'
+			description: getI18n('searchHelper.No_Results_Found')
 		}];
 		response.json().then(json => {
 			console.log('response:', json);
@@ -130,7 +194,7 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 				return resolve(suggestionsOnEmptyResults);
 			}
 			
-			let max = this.SETTINGS.MAX_SUGGESTIONS;
+			let max = me.SETTINGS.MAX_SUGGESTIONS;
 
 			// for Wikipedia:
 			// json[0] = search term

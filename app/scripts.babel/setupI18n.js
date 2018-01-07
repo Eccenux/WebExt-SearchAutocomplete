@@ -13,15 +13,7 @@ document.querySelectorAll('[data-lang]').forEach(function(el){
 	}
 })
 
-/**
- * Get I18n string.
- * 
- * Also a mock for in-browser testing.
- * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
- */
-let getI18n = (typeof browser != 'undefined') ? browser.i18n.getMessage : function(messageName) {
-	return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
-};
+import {getI18n} from './inc/I18nHelper';
 
 // other HTML content not setup in controllers
 document.querySelectorAll('*[data-i18n-key]').forEach(function(el)
