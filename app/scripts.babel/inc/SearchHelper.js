@@ -118,7 +118,7 @@ SearchHelper.prototype.getEngine = function (text) {
  */
 SearchHelper.prototype.getEngines = function (text) {
 	// list all engines by default
-	if (typeof text !== 'string' || !text.length) {
+	if (typeof text !== 'string' || !text.length || text === '*') {
 		let engines = [];
 		for (const key in this.engineMap) {
 			if (key !== 'default') {

@@ -282,6 +282,11 @@ describe('SearchHelper', function () {
 			assert.isArray(engines);
 			assert.equal(engines.length, keywords.length);
 		});
+		it('Should list all engines for a star', function () {
+			let engines = searchHelper.getEngines('*');
+			assert.isArray(engines);
+			assert.equal(engines.length, keywords.length);
+		});
 		it('Should list all engines by default', function () {
 			let engines = searchHelper.getEngines();
 			assert.isArray(engines);
