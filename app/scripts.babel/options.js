@@ -133,74 +133,78 @@ function undoChanges() {
 }
 
 window.app = {};
-angular
-	.module('app', [])
-	.filter('i18n', function() {
+window.angularApp = angular.module('app', []);
+window.angularApp.filter('i18n', function() {
 		return function(input) {
 			return getI18n(input);
 		};
 	})
-	.controller('EngineController', function($scope) {
-		app.EngineController = $scope;
-
-		$scope.currentEngine = new SearchEngineModel();
-		$scope.engines = [];
-
-		$scope.editEngine = editEngine;
-		$scope.saveEngine = saveEngine;
-		$scope.saveEngineCopy = saveEngineCopy;
-
-		$scope.storeChanges = storeChanges;
-		$scope.undoChanges = undoChanges;
-
-		$scope.addData = function(action){
-			action.data.push({key:'', value:''});
-		};
-		$scope.removeData = function(action, index){
-			action.data.splice(index, 1);
-		};
-
-		$scope.addEngine = addEngine;
-		$scope.removeEngine = function(engine, index){
-			$scope.engines.splice(index, 1);
-		};
-		$scope.undoEngineChanges = function(){
-			engineEditor.style.display = 'none';
-		};
-		
-		function exportFilter(key, value) {
-			// Filtering out properties
-			if (key.startsWith('$$')) {
-			  return undefined;
-			}
-			return value;
-		}
-		$scope.exportEngines = function(){
-			$scope.enginesDump = JSON.stringify($scope.engines, exportFilter, '\t');
-			exportImportEditor.style.display = 'block';
-		};
-		$scope.prepareImport = function(){
-			$scope.enginesDump = '';
-			exportImportEditor.style.display = 'block';
-		};
-		$scope.importEngines = function(){
-			if (confirm(getI18n('options.confirmImport'))) {
-				let engines;
-				try {
-					engines = JSON.parse($scope.enginesDump);
-				} catch (error) {
-					console.warn('Import failure:', error.message);
-					alert(getI18n('options.Import_failure'));
-					return;
-				}
-				prepareEngines(engines);
-				exportImportEditor.style.display = 'none';
-			}
-		};
-		$scope.closeExportImport = function(){
-			exportImportEditor.style.display = 'none';
-		};
-
-		loadEngines();
-	})
 ;
+
+window.angularApp.controller('EngineController', function($scope) {
+	app.EngineController = $scope;
+
+	$scope.currentEngine = new SearchEngineModel();
+	$scope.engines = [];
+
+	$scope.editEngine = editEngine;
+	$scope.saveEngine = saveEngine;
+	$scope.saveEngineCopy = saveEngineCopy;
+
+	$scope.storeChanges = storeChanges;
+	$scope.undoChanges = undoChanges;
+
+	$scope.addData = function(action){
+		action.data.push({key:'', value:''});
+	};
+	$scope.removeData = function(action, index){
+		action.data.splice(index, 1);
+	};
+
+	$scope.addEngine = addEngine;
+	$scope.removeEngine = function(engine, index){
+		$scope.engines.splice(index, 1);
+	};
+	$scope.undoEngineChanges = function(){
+		engineEditor.style.display = 'none';
+	};
+	
+	function exportFilter(key, value) {
+		// Filtering out properties
+		if (key.startsWith('$$')) {
+		  return undefined;
+		}
+		return value;
+	}
+	$scope.exportEngines = function(){
+		$scope.enginesDump = JSON.stringify($scope.engines, exportFilter, '\t');
+		exportImportEditor.style.display = 'block';
+	};
+	$scope.prepareImport = function(){
+		$scope.enginesDump = '';
+		exportImportEditor.style.display = 'block';
+	};
+	$scope.importEngines = function(){
+		if (confirm(getI18n('options.confirmImport'))) {
+			let engines;
+			try {
+				engines = JSON.parse($scope.enginesDump);
+			} catch (error) {
+				console.warn('Import failure:', error.message);
+				alert(getI18n('options.Import_failure'));
+				return;
+			}
+			prepareEngines(engines);
+			exportImportEditor.style.display = 'none';
+		}
+	};
+	$scope.closeExportImport = function(){
+		exportImportEditor.style.display = 'none';
+	};
+
+	loadEngines();
+});
+
+window.angularApp.controller('CredentialController', function($scope) {
+	app.CredentialController = $scope;
+});
