@@ -85,8 +85,16 @@ function prepareOmnibox(engines) {
 			return;
 		}
 		let action = engine.autocompleteAction;
-		let headers = new Headers({'Accept': action.type});
-		let init = {method: action.method, headers};
+		let username = 'tester';
+		let password = '123';
+		let headers = new Headers({
+			'Accept': action.type,
+			'Authorization': 'Basic ' + btoa(username + ':' + password)
+		});
+		let init = {
+			method: action.method,
+			headers: headers
+		};
 		let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
 		console.log(
 			'searchTerm:', searchTerm,
@@ -97,7 +105,11 @@ function prepareOmnibox(engines) {
 		
 		fetch(request)
 			.then(function (response){
-				return searchHelper.createSuggestionsFromResponse(engine, response);
+				if (response.status === 200) {
+					return searchHelper.createSuggestionsFromResponse(engine, response);
+				} else {
+					console.error(`Failed with code ${response.status}: ${response.body}`);
+				}
 			})
 			.then(addSuggestions)
 		;
