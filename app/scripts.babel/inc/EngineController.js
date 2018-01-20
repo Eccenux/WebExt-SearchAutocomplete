@@ -1,18 +1,18 @@
 'use strict';
 
-import SearchEngine from './inc/SearchEngine.js';
-import SearchEngineModel from './inc/SearchEngineModel.js';
+import SearchEngine from './SearchEngine.js';
+import SearchEngineModel from './SearchEngineModel.js';
 
-import wikiTemplateEngine from './engines/wiki-template';
-import enWikiEngine from './engines/wiki-en';
-import plWikiEngine from './engines/wiki-pl';
+import wikiTemplateEngine from '../engines/wiki-template';
+import enWikiEngine from '../engines/wiki-en';
+import plWikiEngine from '../engines/wiki-pl';
 Object.assign(enWikiEngine, wikiTemplateEngine);
 Object.assign(plWikiEngine, wikiTemplateEngine);
 
 const engineEditor = document.getElementById('engine-editor');
 const exportImportEditor = document.getElementById('export-import');
 
-import {getI18n} from './inc/I18nHelper';
+import {getI18n} from '../inc/I18nHelper';
 
 /**
  * Load engines from storage.
@@ -132,16 +132,7 @@ function undoChanges() {
 	}
 }
 
-window.app = {};
-window.angularApp = angular.module('app', []);
-window.angularApp.filter('i18n', function() {
-		return function(input) {
-			return getI18n(input);
-		};
-	})
-;
-
-window.angularApp.controller('EngineController', function($scope) {
+function initEngineController($scope) {
 	app.EngineController = $scope;
 
 	$scope.currentEngine = new SearchEngineModel();
@@ -203,8 +194,8 @@ window.angularApp.controller('EngineController', function($scope) {
 	};
 
 	loadEngines();
-});
+}
 
-window.angularApp.controller('CredentialController', function($scope) {
-	app.CredentialController = $scope;
-});
+export {
+	initEngineController,
+};
