@@ -5,7 +5,7 @@
 			{
 				"targets": {
 					"browsers": [
-						"Firefox >= 56",
+						"Firefox >= 52",
 						"last 4 Chrome versions"
 					]
 				}
