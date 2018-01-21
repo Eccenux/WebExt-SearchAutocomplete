@@ -19,73 +19,97 @@
 	"options.confirmReloadFromStorage": {
 		"message": "Czy na pewno chcesz wycofać zmiany i wczytać poprzednie dane? Uwaga! Wszystkie wykonane teraz zmiany przepadną."
 	},
-    "options.confirmImport": {
-        "message": "Czy na pewno chcesz zaimportować te dane? Wszystkie wykonane teraz zmiany przepadną.\n\nUwaga! Po załadowaniu i tak musisz zachować zmiany, aby były trwałe."
+	"options.confirmImport": {
+		"message": "Czy na pewno chcesz zaimportować te dane? Wszystkie wykonane teraz zmiany przepadną.\n\nUwaga! Po załadowaniu i tak musisz zachować zmiany, aby były trwałe."
 	},
-    "options.Search_engines": {
-        "message": "Wyszukiwarki"
-    },
-    "options.Note_All_changes_are_temporary_until_you_store_them": {
-        "message": "Uwaga! Wszystkie zmiany są tymczasowe do czasu zachowania zmian."
-    },
-    "options.New_engine": {
-        "message": "Nowa wyszukiwarka"
-    },
-    "options.Store_changes_permanently": {
-        "message": "Trwale zachowaj zmiany"
-    },
-    "options.Undo_changes": {
-        "message": "Wycofaj zmiany"
-    },
-    "options.Save": {
-        "message": "Zapisz"
-    },
-    "options.Save_a_copy": {
-        "message": "Zapisz kopię"
-    },
-    "options.Title_name": {
-        "message": "Tytuł (nazwa)"
-    },
-    "options.Keyword_s": {
-        "message": "Słowo kluczowe"
-    },
-    "options.Base_URL": {
-        "message": "Bazowy URL"
-    },
-    "options.URL": {
-        "message": "URL"
-    },
-    "options.Method": {
-        "message": "Metoda"
-    },
-    "options.MIME_type": {
-        "message": "Typ MIME"
-    },
-    "options.Data_key_value": {
-        "message": "Dane (nazwa:wartość)"
-    },
-    "options.Add": {
-        "message": "Dodaj"
-    },
-    "options.Cancel": {
-        "message": "Anuluj"
+	"options.Search_engines": {
+		"message": "Wyszukiwarki"
 	},
-    "options.Close": {
-        "message": "Zamknij"
+	"options.Note_All_changes_are_temporary_until_you_store_them": {
+		"message": "Uwaga! Wszystkie zmiany są tymczasowe do czasu zachowania zmian."
+	},
+	"options.New_engine": {
+		"message": "Nowa wyszukiwarka"
+	},
+	"options.Store_changes_permanently": {
+		"message": "Trwale zachowaj zmiany"
+	},
+	"options.Undo_changes": {
+		"message": "Wycofaj zmiany"
+	},
+	"options.Save": {
+		"message": "Zapisz"
+	},
+	"options.Save_a_copy": {
+		"message": "Zapisz kopię"
+	},
+	"options.Title_name": {
+		"message": "Tytuł (nazwa)"
+	},
+	"options.Keyword_s": {
+		"message": "Słowo kluczowe"
+	},
+	"options.Base_URL": {
+		"message": "Bazowy URL"
+	},
+	"options.URL": {
+		"message": "URL"
+	},
+	"options.Method": {
+		"message": "Metoda"
+	},
+	"options.MIME_type": {
+		"message": "Typ MIME"
+	},
+	"options.Data_key_value": {
+		"message": "Dane (nazwa:wartość)"
+	},
+	"options.Add": {
+		"message": "Dodaj"
+	},
+	"options.Cancel": {
+		"message": "Anuluj"
+	},
+	"options.Close": {
+		"message": "Zamknij"
 	},
 	"options.Note_No_validation_is_provided_Data_corruption_may_require_reset": {
-        "message": "Uwaga! Importowane dane nie są sprawdzane. W wypadku wprowadzenia nieprawidłowych danych może być konieczny reset ustawień tego dodatku."
+		"message": "Uwaga! Importowane dane nie są sprawdzane. W wypadku wprowadzenia nieprawidłowych danych może być konieczny reset ustawień tego dodatku."
 	},
 	"options.Import_failure": {
-        "message": "Import nie powiódł się. Sprawdź poprawność składni."
-    },
+		"message": "Import nie powiódł się. Sprawdź poprawność składni."
+	},
 	"options.Export_engines": {
-        "message": "Eksport wyszukiwarek"
+		"message": "Eksport wyszukiwarek"
 	},
 	"options.Import_engines": {
-        "message": "Import wyszukiwarek"
-    },
-    "options.Import": {
-        "message": "Importuj"
+		"message": "Import wyszukiwarek"
+	},
+	"options.Import": {
+		"message": "Importuj"
+	},
+	"options.Uses_credentials": {
+		"message": "Używa uwierzytelniania"
+	},
+	"options.Credentials": {
+		"message": "Uwierzytelnianie"
+	},
+	"options.Use_credentials": {
+		"message": "Używaj uwierzytelniania"
+	},
+	"options.Credentials_information": {
+		"message": "Dane uwierzytelniające mogą być użyte jeśli do użycia usługi autouzupełniania konieczne jest podanie loginu i hasła (tzw. uwierzytelnianie HTTP, ang. HTTP basic authentication). Twoje dane są przechowywane lokalnie i są niezależne od danych wyszukiwarek. Przy eksporcie wyszukiwarek tylko nazwa danych (id) zostanie dodana do eksportu."
+	},
+	"options.New_credential": {
+		"message": "Nowe dane"
+	},
+	"options.Code_name": {
+		"message": "Nazwa danych (id)"
+	},
+	"options.Username": {
+		"message": "Login"
+	},
+	"options.Password": {
+		"message": "Hasło"
 	}
 }
