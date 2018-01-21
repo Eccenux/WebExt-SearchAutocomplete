@@ -1,116 +1,98 @@
 'use strict';
 
-import SearchEngine from './SearchEngine.js';
-import SearchEngineModel from './SearchEngineModel.js';
+import SearchCredential from './SearchCredential.js';
+import SearchCredentialModel from './SearchCredentialModel.js';
 
-import wikiTemplateEngine from '../engines/wiki-template';
-import enWikiEngine from '../engines/wiki-en';
-import plWikiEngine from '../engines/wiki-pl';
-Object.assign(enWikiEngine, wikiTemplateEngine);
-Object.assign(plWikiEngine, wikiTemplateEngine);
-
-const engineEditor = document.getElementById('engine-editor');
-const exportImportEditor = document.getElementById('export-import');
+const credentialEditor = document.getElementById('credential-editor');
 
 import {getI18n} from '../inc/I18nHelper';
 
 /**
- * Load engines from storage.
+ * Load credentials from storage.
  */
-function loadEngines() {
+function loadCredentials() {
 	if (typeof browser != 'undefined') {
-		browser.storage.local.get('engines')
+		browser.storage.local.get('credentials')
 		.then(function(result){
-			if (!('engines' in result) || !Array.isArray(result.engines)) {
-				console.warn('Engines are not an array!', result);
+			if (!('credentials' in result) || !Array.isArray(result.credentials)) {
+				console.warn('Credentials are not an array!', result);
 			} else {
-				prepareEngines(result.engines);
+				prepareCredentials(result.credentials);
 			}
 			// seem to be required here (probably due to using promises when loading data)
-			app.EngineController.$apply();
+			app.CredentialController.$apply();
 		}, function(failReason) {
 			console.log('failReason', failReason);
 		})
 	// in-browser testing examples
 	} else {
-		prepareEngines([enWikiEngine, plWikiEngine, {
-			title : 'Just a test',
-			keyword : 't',
-			baseUrl : 'http://test.localhost/'
+		prepareCredentials([{
+			codename : 'Just a test',
+			username : 'tester',
+			password : '123'
 		}]);
 	}
 }
 
 /**
- * Prepare a list of engines.
+ * Prepare a list of credentials.
  */
-function prepareEngines(engines) {
-	console.log('prepareEngines: ', engines);
-	engineEditor.style.display = 'none';
-	app.EngineController.engines.length = 0;
-	for (let e = 0; e < engines.length; e++) {
-		let engine = new SearchEngine(engines[e]);
-		app.EngineController.engines.push(engine);
+function prepareCredentials(credentials) {
+	console.log('prepareCredentials: ', credentials);
+	credentialEditor.style.display = 'none';
+	app.CredentialController.credentials.length = 0;
+	for (let e = 0; e < credentials.length; e++) {
+		let credential = new SearchCredential(credentials[e]);
+		app.CredentialController.credentials.push(credential);
 	}
 }
 
 /**
- * Load engine for editing.
- * @param {SearchEngine} engine 
+ * Load credential for editing.
+ * @param {SearchCredential} credential
  */
-function editEngine(engine, index) {
-	console.log('editEngine: ', engine, index);
-	engine.id = index;
-	app.EngineController.currentEngine.update(engine);
-	//app.EngineController.$apply();
-	engineEditor.style.display = 'block';
+function editCredential(credential, index) {
+	console.log('editCredential: ', credential, index);
+	credential.id = index;
+	app.CredentialController.currentCredential.update(credential);
+	//app.CredentialController.$apply();
+	credentialEditor.style.display = 'block';
 }
 /**
- * Prepare new engine editor.
+ * Prepare new credential editor.
  */
-function addEngine() {
-	let engine = new SearchEngine({
-		title : '',
-		baseUrl : 'http://',
-		openAction : {
-			url : '{baseUrl}',
-			data : {}
-		},
-		autocompleteAction : {
-			url : '{baseUrl}',
-			data : {}
-		}
-	});
-	app.EngineController.currentEngine.update(engine);
-	engineEditor.style.display = 'block';
+function addCredential() {
+	let credential = new SearchCredential();
+	app.CredentialController.currentCredential.update(credential);
+	credentialEditor.style.display = 'block';
 };
 
 /**
- * Save changes to engine.
- * @param {SearchEngineModel} currentEngine 
+ * Save changes to credential.
+ * @param {SearchCredentialModel} currentCredential
  */
-function saveEngine(currentEngine) {
-	console.log('saved:', currentEngine.id, currentEngine);
-	let engine = new SearchEngine(currentEngine.getEngine());
-	if (typeof currentEngine.id === 'number') {
-		engine.id = currentEngine.id;
-		app.EngineController.engines[engine.id] = engine;
+function saveCredential(currentCredential) {
+	console.log('saved:', currentCredential.id, currentCredential);
+	let credential = new SearchCredential(currentCredential.getCredential());
+	if (typeof currentCredential.id === 'number') {
+		credential.id = currentCredential.id;
+		app.CredentialController.credentials[credential.id] = credential;
 	} else {
-		engine.id = app.EngineController.engines.length;
-		app.EngineController.engines.push(engine);
+		credential.id = app.CredentialController.credentials.length;
+		app.CredentialController.credentials.push(credential);
 	}
-	//app.EngineController.$apply();
-	engineEditor.style.display = 'none';
+	//app.CredentialController.$apply();
+	credentialEditor.style.display = 'none';
 }
 
 /**
- * Force saving as a new engine.
- * @param {SearchEngineModel} currentEngine 
+ * Force saving as a new credential.
+ * @param {SearchCredentialModel} currentCredential
  */
-function saveEngineCopy(currentEngine) {
-	currentEngine.id = null;
-	saveEngine(currentEngine);
-	engineEditor.style.display = 'none';
+function saveCredentialCopy(currentCredential) {
+	currentCredential.id = null;
+	saveCredential(currentCredential);
+	credentialEditor.style.display = 'none';
 }
 
 /**
@@ -119,7 +101,7 @@ function saveEngineCopy(currentEngine) {
 function storeChanges() {
 	if (confirm(getI18n('options.confirmPermanentStorage'))) {
 		browser.storage.local.set({
-			'engines': app.EngineController.engines
+			'credentials': app.CredentialController.credentials
 		});
 	}
 }
@@ -128,19 +110,19 @@ function storeChanges() {
  */
 function undoChanges() {
 	if (confirm(getI18n('options.confirmReloadFromStorage'))) {
-		loadEngines();
+		loadCredentials();
 	}
 }
 
-function initEngineController($scope) {
-	app.EngineController = $scope;
+function initCredentialController($scope) {
+	app.CredentialController = $scope;
 
-	$scope.currentEngine = new SearchEngineModel();
-	$scope.engines = [];
+	$scope.currentCredential = new SearchCredentialModel();
+	$scope.credentials = [];
 
-	$scope.editEngine = editEngine;
-	$scope.saveEngine = saveEngine;
-	$scope.saveEngineCopy = saveEngineCopy;
+	$scope.editCredential = editCredential;
+	$scope.saveCredential = saveCredential;
+	$scope.saveCredentialCopy = saveCredentialCopy;
 
 	$scope.storeChanges = storeChanges;
 	$scope.undoChanges = undoChanges;
@@ -152,50 +134,17 @@ function initEngineController($scope) {
 		action.data.splice(index, 1);
 	};
 
-	$scope.addEngine = addEngine;
-	$scope.removeEngine = function(engine, index){
-		$scope.engines.splice(index, 1);
+	$scope.addCredential = addCredential;
+	$scope.removeCredential = function(credential, index){
+		$scope.credentials.splice(index, 1);
 	};
-	$scope.undoEngineChanges = function(){
-		engineEditor.style.display = 'none';
+	$scope.undoCredentialChanges = function(){
+		credentialEditor.style.display = 'none';
 	};
 	
-	function exportFilter(key, value) {
-		// Filtering out properties
-		if (key.startsWith('$$')) {
-		  return undefined;
-		}
-		return value;
-	}
-	$scope.exportEngines = function(){
-		$scope.enginesDump = JSON.stringify($scope.engines, exportFilter, '\t');
-		exportImportEditor.style.display = 'block';
-	};
-	$scope.prepareImport = function(){
-		$scope.enginesDump = '';
-		exportImportEditor.style.display = 'block';
-	};
-	$scope.importEngines = function(){
-		if (confirm(getI18n('options.confirmImport'))) {
-			let engines;
-			try {
-				engines = JSON.parse($scope.enginesDump);
-			} catch (error) {
-				console.warn('Import failure:', error.message);
-				alert(getI18n('options.Import_failure'));
-				return;
-			}
-			prepareEngines(engines);
-			exportImportEditor.style.display = 'none';
-		}
-	};
-	$scope.closeExportImport = function(){
-		exportImportEditor.style.display = 'none';
-	};
-
-	loadEngines();
+	loadCredentials();
 }
 
 export {
-	initEngineController,
+	initCredentialController,
 };

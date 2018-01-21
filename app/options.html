@@ -135,7 +135,7 @@
 			
 			<ul id="credentials-container">
 				<li ng-repeat="credential in credentials">
-					{{ credential.title }}
+					{{ credential.codename }}
 					<button ng-click="editCredential(credential, $index)">✏️</button>
 					<button ng-click="removeCredential(credential, $index)">❌</button>
 				</li>
@@ -144,6 +144,14 @@
 				<button ng-click="addCredential()">
 					<i class="fas fa-plus"></i>
 					{{ "options.New_credential" | i18n }}
+				</button>
+				<button ng-click="storeChanges()">
+					<i class="fas fa-archive"></i>
+					{{ "options.Store_changes_permanently" | i18n }}
+				</button>
+				<button ng-click="undoChanges()">
+					<i class="fas fa-undo"></i>
+					{{ "options.Undo_changes" | i18n }}
 				</button>
 			</p>
 
@@ -164,8 +172,8 @@
 				</p>
 				<p>
 					<label>
-						{{ "options.Title_name" | i18n }}
-						<input type="text" ng-model="currentCredential.title" style="width:20em; max-width:100%">
+						{{ "options.Code_name" | i18n }}
+						<input type="text" ng-model="currentCredential.codename" style="width:20em; max-width:100%">
 					</label>
 				</p>
 				<p>

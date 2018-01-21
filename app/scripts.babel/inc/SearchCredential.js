@@ -1,34 +1,17 @@
-import SearchEngineAction from './SearchEngineAction.js';
-
-function SearchEngine(engine) {
-	this.keywords = [];
-	if (typeof engine.keyword === 'string') {
-		this.keywords.push(engine.keyword);
-	} else if (typeof engine.keywords === 'string') {
-		if (engine.keywords.search(',')) {
-			let keywords = engine.keywords.replace(/\s+/g, '');
-			this.keywords = keywords.split(',');
-		} else {
-			this.keywords.push(engine.keywords);
+function SearchCredential(credential) {
+	this.codename = '';
+	this.username = '';
+	this.password = '';
+	// set fields
+	if (typeof credential === 'object') {
+		const fields = ['codename', 'username', 'password'];
+		for (let index = 0; index < fields.length; index++) {
+			const key = fields[index];
+			if (typeof credential[key] === 'string') {
+				this[key] = credential[key];
+			}
 		}
-	} else {
-		this.keywords = [].concat(engine.keywords);
 	}
-
-	this.baseUrl = '';
-	if (typeof engine.baseUrl === 'string') {
-		this.baseUrl = engine.baseUrl;
-	}
-
-	this.title = '';
-	if (typeof engine.title === 'string') {
-		this.title = engine.title;
-	} else {
-		this.title = engine.baseUrl;
-	}
-
-	this.openAction = new SearchEngineAction(engine.openAction || {});
-	this.autocompleteAction = new SearchEngineAction(engine.autocompleteAction || {});
 }
 
-export default SearchEngine;
+export default SearchCredential;
