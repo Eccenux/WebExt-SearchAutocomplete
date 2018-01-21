@@ -18,6 +18,7 @@
 			
 			<ul id="engines-container">
 				<li ng-repeat="engine in engines">
+					<span ng-if="engine.credential.length" title="{{ 'options.Uses_credentials' | i18n }}">🔑</span>
 					[{{ engine.keywords.join(',') }}] {{ engine.title }}
 					<button ng-click="editEngine(engine, $index)">✏️</button>
 					<button ng-click="removeEngine(engine, $index)">❌</button>

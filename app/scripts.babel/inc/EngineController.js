@@ -36,6 +36,7 @@ function loadEngines() {
 	} else {
 		prepareEngines([enWikiEngine, plWikiEngine, {
 			title : 'Just a test',
+			credential : 'test',
 			keyword : 't',
 			baseUrl : 'http://test.localhost/'
 		}]);

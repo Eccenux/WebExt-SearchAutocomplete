@@ -25,13 +25,13 @@ document.querySelectorAll('*[data-i18n-key]').forEach(function(el)
 // maybe later...
 /*
 // atributes (note - for input button data-i18n-key is automatically put in it's value)
-$('*[data-i18n-key-attribute]').each(function()
+document.querySelectorAll('*[data-i18n-key-attribute]').forEach(function()
 {
 	var mapping = el.getAttribute('data-i18n-key-attribute').split(':');
 	var key = mapping[0];
 	var attribute = mapping[1];
 
-	var content = $mJ.i18n.get(key);
+	var content = getI18n(key);
 	el.setAttribute(attribute, content);
 });
 */
