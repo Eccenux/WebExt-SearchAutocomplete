@@ -1,27 +1,89 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var _SearchEngine = require('./inc/SearchEngine.js');
+var _I18nHelper = require('./inc/I18nHelper');
+
+var _EngineController = require('./inc/EngineController');
+
+window.app = {};
+window.angularApp = angular.module('app', []);
+window.angularApp.filter('i18n', function () {
+	return function (input) {
+		return (0, _I18nHelper.getI18n)(input);
+	};
+});
+
+window.angularApp.controller('EngineController', _EngineController.initEngineController);
+
+/*
+import {initCredentialController} from './inc/CredentialController'
+window.angularApp.controller('CredentialController', initCredentialController);
+*/
+
+},{"./inc/EngineController":5,"./inc/I18nHelper":6}],2:[function(require,module,exports){
+module.exports={
+	"title" : "English Wikipedia",
+	"keywords" : ["en"],
+	"baseUrl" : "https://en.wikipedia.org/"
+}
+
+},{}],3:[function(require,module,exports){
+module.exports={
+	"title" : "Polska Wikipedia",
+	"keywords" : ["pl"],
+	"baseUrl" : "https://pl.wikipedia.org/"
+}
+
+},{}],4:[function(require,module,exports){
+module.exports={
+	"openAction" : {
+		"url" : "{baseUrl}",
+		"method" : "GET",
+		"data" : {
+			"search" : "{searchTerms}",
+			"sourceid": "Mozilla-search"
+		}
+	},
+	"autocompleteAction": {
+		"url" : "{baseUrl}w/api.php",
+		"method" : "GET",
+		"type" : "application/x-suggestions+json",
+		"data" : {
+			"action" : "opensearch",
+			"search" : "{searchTerms}"
+		}
+	}
+}
+
+},{}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.initEngineController = undefined;
+
+var _SearchEngine = require('./SearchEngine.js');
 
 var _SearchEngine2 = _interopRequireDefault(_SearchEngine);
 
-var _SearchEngineModel = require('./inc/SearchEngineModel.js');
+var _SearchEngineModel = require('./SearchEngineModel.js');
 
 var _SearchEngineModel2 = _interopRequireDefault(_SearchEngineModel);
 
-var _wikiTemplate = require('./engines/wiki-template');
+var _wikiTemplate = require('../engines/wiki-template');
 
 var _wikiTemplate2 = _interopRequireDefault(_wikiTemplate);
 
-var _wikiEn = require('./engines/wiki-en');
+var _wikiEn = require('../engines/wiki-en');
 
 var _wikiEn2 = _interopRequireDefault(_wikiEn);
 
-var _wikiPl = require('./engines/wiki-pl');
+var _wikiPl = require('../engines/wiki-pl');
 
 var _wikiPl2 = _interopRequireDefault(_wikiPl);
 
-var _I18nHelper = require('./inc/I18nHelper');
+var _I18nHelper = require('../inc/I18nHelper');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -148,12 +210,7 @@ function undoChanges() {
 	}
 }
 
-window.app = {};
-angular.module('app', []).filter('i18n', function () {
-	return function (input) {
-		return (0, _I18nHelper.getI18n)(input);
-	};
-}).controller('EngineController', function ($scope) {
+function initEngineController($scope) {
 	app.EngineController = $scope;
 
 	$scope.currentEngine = new _SearchEngineModel2.default();
@@ -215,44 +272,11 @@ angular.module('app', []).filter('i18n', function () {
 	};
 
 	loadEngines();
-});
-
-},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/I18nHelper":5,"./inc/SearchEngine.js":6,"./inc/SearchEngineModel.js":8}],2:[function(require,module,exports){
-module.exports={
-	"title" : "English Wikipedia",
-	"keywords" : ["en"],
-	"baseUrl" : "https://en.wikipedia.org/"
 }
 
-},{}],3:[function(require,module,exports){
-module.exports={
-	"title" : "Polska Wikipedia",
-	"keywords" : ["pl"],
-	"baseUrl" : "https://pl.wikipedia.org/"
-}
+exports.initEngineController = initEngineController;
 
-},{}],4:[function(require,module,exports){
-module.exports={
-	"openAction" : {
-		"url" : "{baseUrl}",
-		"method" : "GET",
-		"data" : {
-			"search" : "{searchTerms}",
-			"sourceid": "Mozilla-search"
-		}
-	},
-	"autocompleteAction": {
-		"url" : "{baseUrl}w/api.php",
-		"method" : "GET",
-		"type" : "application/x-suggestions+json",
-		"data" : {
-			"action" : "opensearch",
-			"search" : "{searchTerms}"
-		}
-	}
-}
-
-},{}],5:[function(require,module,exports){
+},{"../engines/wiki-en":2,"../engines/wiki-pl":3,"../engines/wiki-template":4,"../inc/I18nHelper":6,"./SearchEngine.js":7,"./SearchEngineModel.js":9}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -270,7 +294,7 @@ let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function
 
 exports.getI18n = getI18n;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -316,7 +340,7 @@ function SearchEngine(engine) {
 
 exports.default = SearchEngine;
 
-},{"./SearchEngineAction.js":7}],7:[function(require,module,exports){
+},{"./SearchEngineAction.js":8}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -343,7 +367,7 @@ function SearchEngineAction(action) {
 
 exports.default = SearchEngineAction;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
