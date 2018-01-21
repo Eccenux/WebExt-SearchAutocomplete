@@ -11,8 +11,8 @@ window.angularApp.filter('i18n', function() {
 	})
 ;
 
-import {initEngineController} from './inc/EngineController'
+import {initEngineController} from './inc/EngineController';
 window.angularApp.controller('EngineController', initEngineController);
 
-import {initCredentialController} from './inc/CredentialController'
+import {initCredentialController} from './inc/CredentialController';
 window.angularApp.controller('CredentialController', initCredentialController);

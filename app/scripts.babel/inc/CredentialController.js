@@ -27,7 +27,7 @@ function loadCredentials() {
 	// in-browser testing examples
 	} else {
 		prepareCredentials([{
-			codename : 'Just a test',
+			codename : 'test',
 			username : 'tester',
 			password : '123'
 		}]);
@@ -45,6 +45,17 @@ function prepareCredentials(credentials) {
 		let credential = new SearchCredential(credentials[e]);
 		app.CredentialController.credentials.push(credential);
 	}
+	fireReadyEvent();
+}
+
+/**
+ * Fire `credentialsReady` event.
+ */
+function fireReadyEvent() {
+	var event = new CustomEvent('credentialsReady', {
+		detail: app.CredentialController.credentials
+	});
+	document.body.dispatchEvent(event);
 }
 
 /**
@@ -100,9 +111,12 @@ function saveCredentialCopy(currentCredential) {
  */
 function storeChanges() {
 	if (confirm(getI18n('options.confirmPermanentStorage'))) {
-		browser.storage.local.set({
-			'credentials': app.CredentialController.credentials
-		});
+		fireReadyEvent();
+		if (typeof browser != 'undefined') {
+			browser.storage.local.set({
+				'credentials': app.CredentialController.credentials
+			});
+		}
 	}
 }
 /**

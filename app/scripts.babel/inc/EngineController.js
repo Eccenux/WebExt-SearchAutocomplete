@@ -2,6 +2,7 @@
 
 import SearchEngine from './SearchEngine.js';
 import SearchEngineModel from './SearchEngineModel.js';
+import SearchCredential from './SearchCredential.js';
 
 import wikiTemplateEngine from '../engines/wiki-template';
 import enWikiEngine from '../engines/wiki-en';
@@ -118,9 +119,15 @@ function saveEngineCopy(currentEngine) {
  */
 function storeChanges() {
 	if (confirm(getI18n('options.confirmPermanentStorage'))) {
-		browser.storage.local.set({
-			'engines': app.EngineController.engines
-		});
+		if (typeof browser != 'undefined') {
+			browser.storage.local.set({
+				'engines': app.EngineController.engines
+			});
+		} else {
+			console.log('storeChanges', {
+				'engines': app.EngineController.engines
+			});
+		}
 	}
 }
 /**
@@ -137,6 +144,18 @@ function initEngineController($scope) {
 
 	$scope.currentEngine = new SearchEngineModel();
 	$scope.engines = [];
+	$scope.credentials = [];
+	document.body.addEventListener('credentialsReady',
+		function (event) {
+			let credentials = event.detail;
+			console.log('credentials: ', credentials);
+			$scope.credentials.length = 0;
+			for (let c = 0; c < credentials.length; c++) {
+				let credential = new SearchCredential(credentials[c]);
+				$scope.credentials.push(credential);
+			}
+		}, false
+	);
 
 	$scope.editEngine = editEngine;
 	$scope.saveEngine = saveEngine;

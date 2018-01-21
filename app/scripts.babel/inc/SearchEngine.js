@@ -27,6 +27,11 @@ function SearchEngine(engine) {
 		this.title = engine.baseUrl;
 	}
 
+	this.credential = '';
+	if (typeof engine.credential === 'string') {
+		this.credential = engine.credential;
+	}
+	
 	this.openAction = new SearchEngineAction(engine.openAction || {});
 	this.autocompleteAction = new SearchEngineAction(engine.autocompleteAction || {});
 }

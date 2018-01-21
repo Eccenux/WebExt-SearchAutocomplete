@@ -69,6 +69,20 @@
 						<input type="text" ng-model="currentEngine.baseUrl" style="width:25em; max-width:100%">
 					</label>
 				</p>
+				<fieldset>
+					<legend>{{ "options.Credentials" | i18n }}</legend>
+					<p>
+						<label>
+							{{ "options.Use_credentials" | i18n }}
+							<input type="checkbox" ng-model="currentEngine.useCredentials" >
+						</label>
+					</p>
+					<div ng-if="currentEngine.useCredentials">
+						<select ng-model="currentEngine.credential" >
+							<option data-ng-repeat="credential in credentials" value="{{ credential.codename }}">{{ credential.codename }} ({{ credential.username }})</option>
+						</select>
+					</div>
+				</fieldset>
 				<div ng-repeat="action in currentEngine.actions">
 					<fieldset>
 						<legend>{{ action.name }}</legend>
@@ -185,7 +199,7 @@
 				<p>
 					<label>
 						{{ "options.Password" | i18n }}
-						<input type="text" ng-model="currentCredential.password" style="width:15em; max-width:100%">
+						<input type="password" ng-model="currentCredential.password" style="width:15em; max-width:100%">
 					</label>
 				</p>
 			</form>
