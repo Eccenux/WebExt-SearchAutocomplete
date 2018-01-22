@@ -1,4 +1,5 @@
 import SearchEngine from './SearchEngine.js';
+import SearchCredential from './SearchCredential.js';
 import { getI18n } from './I18nHelper';
 //import SearchEngineAction from './SearchEngineAction.js';
 
@@ -8,12 +9,14 @@ import { getI18n } from './I18nHelper';
  * @TODO Maybe support engines array later? Would allow support of mulitple keywords.
  * 
  * @param {Object} SETTINGS General settings object.
- * @param {Object|Array} engines Keyword-based search engines map
+ * @param {Object|Array} engines Keyword-based search engines map.
+ * @param {Array} credentials Array of credentials for autocomplete.
  * OR an array of search engines with `keywords` property.
  */
-function SearchHelper (SETTINGS, engines) {
+function SearchHelper (SETTINGS, engines, credentials) {
 	this.SETTINGS = SETTINGS;
 	this.updateEngines(engines);
+	this.updateCredentials(credentials);
 }
 
 /**
@@ -26,7 +29,13 @@ SearchHelper.prototype.updateEngines = function (engines) {
 	if (Array.isArray(engines)) {
 		this.engineMap = this.buildEngineMap(engines);
 	} else {
-		this.engineMap = engines;
+		// must rebuild to have `SearchEngine` objects in the `engineMap`.
+		this.engineMap = {};
+		for (const key in engines) {
+			if (engines.hasOwnProperty(key)) {
+				this.engineMap[key] = new SearchEngine(engines[key]);
+			}
+		}
 	}
 	// figure out default (unless explictly defined)
 	if (typeof this.engineMap.default !== 'object') {
@@ -50,6 +59,32 @@ SearchHelper.prototype.buildEngineMap = function (engines) {
 		}
 	}
 	return engineMap;
+}
+
+/**
+ * (Re)parse credential settings.
+ * 
+ * @param {Object|Array} credentials Keyword-based search credentials map
+ */
+SearchHelper.prototype.updateCredentials = function (credentials) {
+	// parse credentials to credential map
+	if (Array.isArray(credentials)) {
+		this.credentialMap = this.buildCredentialMap(credentials);
+	}
+}
+
+/**
+ * Builds a keyword-based search credentials map.
+ * @param {Array} credentials An array of search credentials with `codename` property.
+ */
+SearchHelper.prototype.buildCredentialMap = function (credentials) {
+	let credentialMap = {};
+	for (let i = 0; i < credentials.length; i++) {
+		var credential = new SearchCredential(credentials[i]);
+		var key = credential.codename;
+		credentialMap[key] = credential;
+	}
+	return credentialMap;
 }
 
 /**
@@ -99,14 +134,21 @@ SearchHelper.prototype.getEngine = function (text) {
 			text = rest;
 		}
 	});
-	let engine;
+	let engine, credentials;
 	if (keyword === null) {
 		engine = null;
 	} else {
 		engine = this.engineMap[keyword];
+		credentials = null;
+		if (engine.credential.length) {
+			if (engine.credential in this.credentialMap) {
+				credentials = this.credentialMap[engine.credential];
+			}
+		}
 	}
 	return {
 		engine : engine,
+		credentials : credentials,
 		text : text
 	};
 }

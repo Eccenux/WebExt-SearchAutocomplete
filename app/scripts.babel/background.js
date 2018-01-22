@@ -34,8 +34,15 @@ browser.storage.local.get('engines')
 	} else {
 		engines = result.engines;
 	}
-	prepareOmnibox(engines);
-})
+	browser.storage.local.get('credentials')
+	.then(function(result){
+		let credentials = [];
+		if (('credentials' in result) && Array.isArray(result.credentials)) {
+			credentials = result.credentials;
+		} 
+		prepareOmnibox(engines, credentials);
+	});
+});
 
 //
 // Omnibox setup
@@ -45,17 +52,21 @@ import SearchHelper from './inc/SearchHelper.js';
 /**
  * Prepare omnibox for autocomplete.
  */
-function prepareOmnibox(engines) {
-	let searchHelper = new SearchHelper(SETTINGS, engines);
+function prepareOmnibox(engines, credentials) {
+	let searchHelper = new SearchHelper(SETTINGS, engines, credentials);
 
 	//
 	// Reload settings when storage changes
 	//
 	browser.storage.onChanged.addListener(function(values, storageType) {
-		console.log('storage.onChanged:', storageType, values);
+		console.log('storage.onChanged:', storageType, Object.keys(values));
 		if (storageType === 'local' && 'engines' in values) {
 			let engines = values.engines.newValue;
 			searchHelper.updateEngines(engines);
+		}
+		if (storageType === 'local' && 'credentials' in values) {
+			let credentials = values.credentials.newValue;
+			searchHelper.updateCredentials(credentials);
 		}
 	})
 	
@@ -73,6 +84,7 @@ function prepareOmnibox(engines) {
 		let engineWithTerm = searchHelper.getEngine(text);
 		let searchTerm = engineWithTerm.text;
 		let engine = engineWithTerm.engine;
+		let credentials = engineWithTerm.credentials;
 		// no keyword matched yet - running search engines autocomplete
 		if (engine === null) {
 			console.log('no keyword matched');
@@ -85,12 +97,13 @@ function prepareOmnibox(engines) {
 			return;
 		}
 		let action = engine.autocompleteAction;
-		let username = 'tester';
-		let password = '123';
 		let headers = new Headers({
-			'Accept': action.type,
-			'Authorization': 'Basic ' + btoa(username + ':' + password)
+			'Accept': action.type
 		});
+		if (credentials) {
+			console.log(`adding credentials: ${credentials.codename} (${credentials.username})`);
+			headers.append('Authorization', 'Basic ' + btoa(credentials.username + ':' + credentials.password));
+		}
 		let init = {
 			method: action.method,
 			headers: headers

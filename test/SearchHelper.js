@@ -323,4 +323,60 @@ describe('SearchHelper', function () {
 			assert.equal(engines.length, expectedAbcEngines);
 		});	
 	});	
+	
+	describe('Test credentials pairing', function () {
+		let engineSingle = JSON.parse(JSON.stringify(engineExample));	// clone
+		engineSingle.baseUrl = 'http://single.localhost/';
+		engineSingle.keyword = 'single';
+		let engineAuth = JSON.parse(JSON.stringify(engineExample));	// clone
+		engineAuth.baseUrl = 'http://auth.localhost/';
+		engineAuth.keyword = 'auth';
+		engineAuth.credential = 'authtest';
+		let engineAuthCredentials = {
+			codename : 'authtest',
+			username : 'tester',
+			password : '123'
+		};
+		let engineNoCredentials = JSON.parse(JSON.stringify(engineExample));	// clone
+		engineNoCredentials.baseUrl = 'http://NoCredentials.localhost/';
+		engineNoCredentials.keyword = 'nc';
+		engineNoCredentials.credential = 'missing credential';
+
+		let searchHelper = new SearchHelper(SETTINGS,
+			[
+				engineAuth,
+				engineNoCredentials,
+				engineSingle
+			],
+			[
+				engineAuthCredentials
+			]
+		);
+				
+		it('Should get engine with auth', function () {
+			let engineWithTerm;
+
+			engineWithTerm = searchHelper.getEngine('auth abc');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineAuth.baseUrl, 'Should choose the Auth engine');
+			assert.isObject(engineWithTerm.credentials, 'Should have a credential object');
+			assert.deepEqual(engineWithTerm.credentials, engineAuthCredentials, 'Should return all credentials');
+		});
+		it('Should be null when no credentials choosen', function () {
+			let engineWithTerm;
+
+			engineWithTerm = searchHelper.getEngine('single abc');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineSingle.baseUrl, 'Should choose the Single engine');
+			assert.isNull(engineWithTerm.credentials);
+		});
+		it('Should be null when no credentials are matched', function () {
+			let engineWithTerm;
+
+			engineWithTerm = searchHelper.getEngine('nc abc');
+			assert.isNotNull(engineWithTerm.engine);
+			assert.equal(engineWithTerm.engine.baseUrl, engineNoCredentials.baseUrl, 'Should choose the NoCredentials engine');
+			assert.isNull(engineWithTerm.credentials);
+		});
+	});
 });
