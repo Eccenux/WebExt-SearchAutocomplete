@@ -15,6 +15,7 @@
 			
 			<ul id="engines-container">
 				<li ng-repeat="engine in engines">
+					<span ng-if="engine.credential.length" title="{{ 'options.Uses_credentials' | i18n }}">🔑</span>
 					[{{ engine.keywords.join(',') }}] {{ engine.title }}
 					<button ng-click="editEngine(engine, $index)">✏️</button>
 					<button ng-click="removeEngine(engine, $index)">❌</button>
@@ -66,6 +67,20 @@
 						<input type="text" ng-model="currentEngine.baseUrl" style="width:25em; max-width:100%">
 					</label>
 				</p>
+				<fieldset>
+					<legend>{{ "options.Credentials" | i18n }}</legend>
+					<p>
+						<label>
+							{{ "options.Use_credentials" | i18n }}
+							<input type="checkbox" ng-model="currentEngine.useCredentials" >
+						</label>
+					</p>
+					<div ng-if="currentEngine.useCredentials">
+						<select ng-model="currentEngine.credential" >
+							<option data-ng-repeat="credential in credentials" value="{{ credential.codename }}">{{ credential.codename }} ({{ credential.username }})</option>
+						</select>
+					</div>
+				</fieldset>
 				<div ng-repeat="action in currentEngine.actions">
 					<fieldset>
 						<legend>{{ action.name }}</legend>
@@ -132,7 +147,7 @@
 			
 			<ul id="credentials-container">
 				<li ng-repeat="credential in credentials">
-					{{ credential.title }}
+					{{ credential.codename }}
 					<button ng-click="editCredential(credential, $index)">✏️</button>
 					<button ng-click="removeCredential(credential, $index)">❌</button>
 				</li>
@@ -141,6 +156,14 @@
 				<button ng-click="addCredential()">
 					<i class="fas fa-plus"></i>
 					{{ "options.New_credential" | i18n }}
+				</button>
+				<button ng-click="storeChanges()">
+					<i class="fas fa-archive"></i>
+					{{ "options.Store_changes_permanently" | i18n }}
+				</button>
+				<button ng-click="undoChanges()">
+					<i class="fas fa-undo"></i>
+					{{ "options.Undo_changes" | i18n }}
 				</button>
 			</p>
 
@@ -161,8 +184,8 @@
 				</p>
 				<p>
 					<label>
-						{{ "options.Title_name" | i18n }}
-						<input type="text" ng-model="currentCredential.title" style="width:20em; max-width:100%">
+						{{ "options.Code_name" | i18n }}
+						<input type="text" ng-model="currentCredential.codename" style="width:20em; max-width:100%">
 					</label>
 				</p>
 				<p>
@@ -174,7 +197,7 @@
 				<p>
 					<label>
 						{{ "options.Password" | i18n }}
-						<input type="text" ng-model="currentCredential.password" style="width:15em; max-width:100%">
+						<input type="password" ng-model="currentCredential.password" style="width:15em; max-width:100%">
 					</label>
 				</p>
 			</form>

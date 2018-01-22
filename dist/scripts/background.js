@@ -47,7 +47,13 @@ browser.storage.local.get('engines').then(function (result) {
 	} else {
 		engines = result.engines;
 	}
-	prepareOmnibox(engines);
+	browser.storage.local.get('credentials').then(function (result) {
+		let credentials = [];
+		if ('credentials' in result && Array.isArray(result.credentials)) {
+			credentials = result.credentials;
+		}
+		prepareOmnibox(engines, credentials);
+	});
 });
 
 //
@@ -58,17 +64,21 @@ browser.storage.local.get('engines').then(function (result) {
 /**
  * Prepare omnibox for autocomplete.
  */
-function prepareOmnibox(engines) {
-	let searchHelper = new _SearchHelper2.default(SETTINGS, engines);
+function prepareOmnibox(engines, credentials) {
+	let searchHelper = new _SearchHelper2.default(SETTINGS, engines, credentials);
 
 	//
 	// Reload settings when storage changes
 	//
 	browser.storage.onChanged.addListener(function (values, storageType) {
-		console.log('storage.onChanged:', storageType, values);
+		console.log('storage.onChanged:', storageType, Object.keys(values));
 		if (storageType === 'local' && 'engines' in values) {
 			let engines = values.engines.newValue;
 			searchHelper.updateEngines(engines);
+		}
+		if (storageType === 'local' && 'credentials' in values) {
+			let credentials = values.credentials.newValue;
+			searchHelper.updateCredentials(credentials);
 		}
 	});
 
@@ -86,6 +96,7 @@ function prepareOmnibox(engines) {
 		let engineWithTerm = searchHelper.getEngine(text);
 		let searchTerm = engineWithTerm.text;
 		let engine = engineWithTerm.engine;
+		let credentials = engineWithTerm.credentials;
 		// no keyword matched yet - running search engines autocomplete
 		if (engine === null) {
 			console.log('no keyword matched');
@@ -98,12 +109,13 @@ function prepareOmnibox(engines) {
 			return;
 		}
 		let action = engine.autocompleteAction;
-		let username = 'tester';
-		let password = '123';
 		let headers = new Headers({
-			'Accept': action.type,
-			'Authorization': 'Basic ' + btoa(username + ':' + password)
+			'Accept': action.type
 		});
+		if (credentials) {
+			console.log(`adding credentials: ${credentials.codename} (${credentials.username})`);
+			headers.append('Authorization', 'Basic ' + btoa(credentials.username + ':' + credentials.password));
+		}
 		let init = {
 			method: action.method,
 			headers: headers
@@ -186,7 +198,7 @@ function openOptions() {
 	opening.then(onOpened, onError);
 }
 
-},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":8}],2:[function(require,module,exports){
+},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":9}],2:[function(require,module,exports){
 module.exports={
 	"title" : "English Wikipedia",
 	"keywords" : ["en"],
@@ -245,6 +257,30 @@ exports.getI18n = getI18n;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+function SearchCredential(credential) {
+	this.codename = '';
+	this.username = '';
+	this.password = '';
+	// set fields
+	if (typeof credential === 'object') {
+		const fields = ['codename', 'username', 'password'];
+		for (let index = 0; index < fields.length; index++) {
+			const key = fields[index];
+			if (typeof credential[key] === 'string') {
+				this[key] = credential[key];
+			}
+		}
+	}
+}
+
+exports.default = SearchCredential;
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
 var _SearchEngineAction = require('./SearchEngineAction.js');
 
@@ -279,13 +315,18 @@ function SearchEngine(engine) {
 		this.title = engine.baseUrl;
 	}
 
+	this.credential = '';
+	if (typeof engine.credential === 'string') {
+		this.credential = engine.credential;
+	}
+
 	this.openAction = new _SearchEngineAction2.default(engine.openAction || {});
 	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction || {});
 }
 
 exports.default = SearchEngine;
 
-},{"./SearchEngineAction.js":7}],7:[function(require,module,exports){
+},{"./SearchEngineAction.js":8}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -312,7 +353,7 @@ function SearchEngineAction(action) {
 
 exports.default = SearchEngineAction;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -322,6 +363,10 @@ Object.defineProperty(exports, "__esModule", {
 var _SearchEngine = require('./SearchEngine.js');
 
 var _SearchEngine2 = _interopRequireDefault(_SearchEngine);
+
+var _SearchCredential = require('./SearchCredential.js');
+
+var _SearchCredential2 = _interopRequireDefault(_SearchCredential);
 
 var _I18nHelper = require('./I18nHelper');
 
@@ -335,12 +380,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @TODO Maybe support engines array later? Would allow support of mulitple keywords.
  * 
  * @param {Object} SETTINGS General settings object.
- * @param {Object|Array} engines Keyword-based search engines map
+ * @param {Object|Array} engines Keyword-based search engines map.
+ * @param {Array} credentials Array of credentials for autocomplete.
  * OR an array of search engines with `keywords` property.
  */
-function SearchHelper(SETTINGS, engines) {
+function SearchHelper(SETTINGS, engines, credentials) {
 	this.SETTINGS = SETTINGS;
 	this.updateEngines(engines);
+	this.updateCredentials(credentials);
 }
 
 /**
@@ -353,7 +400,13 @@ SearchHelper.prototype.updateEngines = function (engines) {
 	if (Array.isArray(engines)) {
 		this.engineMap = this.buildEngineMap(engines);
 	} else {
-		this.engineMap = engines;
+		// must rebuild to have `SearchEngine` objects in the `engineMap`.
+		this.engineMap = {};
+		for (const key in engines) {
+			if (engines.hasOwnProperty(key)) {
+				this.engineMap[key] = new _SearchEngine2.default(engines[key]);
+			}
+		}
 	}
 	// figure out default (unless explictly defined)
 	if (typeof this.engineMap.default !== 'object') {
@@ -377,6 +430,32 @@ SearchHelper.prototype.buildEngineMap = function (engines) {
 		}
 	}
 	return engineMap;
+};
+
+/**
+ * (Re)parse credential settings.
+ * 
+ * @param {Object|Array} credentials Keyword-based search credentials map
+ */
+SearchHelper.prototype.updateCredentials = function (credentials) {
+	// parse credentials to credential map
+	if (Array.isArray(credentials)) {
+		this.credentialMap = this.buildCredentialMap(credentials);
+	}
+};
+
+/**
+ * Builds a keyword-based search credentials map.
+ * @param {Array} credentials An array of search credentials with `codename` property.
+ */
+SearchHelper.prototype.buildCredentialMap = function (credentials) {
+	let credentialMap = {};
+	for (let i = 0; i < credentials.length; i++) {
+		var credential = new _SearchCredential2.default(credentials[i]);
+		var key = credential.codename;
+		credentialMap[key] = credential;
+	}
+	return credentialMap;
 };
 
 /**
@@ -426,14 +505,21 @@ SearchHelper.prototype.getEngine = function (text) {
 			text = rest;
 		}
 	});
-	let engine;
+	let engine, credentials;
 	if (keyword === null) {
 		engine = null;
 	} else {
 		engine = this.engineMap[keyword];
+		credentials = null;
+		if (engine.credential.length) {
+			if (engine.credential in this.credentialMap) {
+				credentials = this.credentialMap[engine.credential];
+			}
+		}
 	}
 	return {
 		engine: engine,
+		credentials: credentials,
 		text: text
 	};
 };
@@ -563,5 +649,5 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 
 exports.default = SearchHelper;
 
-},{"./I18nHelper":5,"./SearchEngine.js":6}]},{},[1])
+},{"./I18nHelper":5,"./SearchCredential.js":6,"./SearchEngine.js":7}]},{},[1])
 
