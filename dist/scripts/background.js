@@ -565,7 +565,7 @@ SearchHelper.prototype.createEnginesSuggestions = function (text) {
 	}];
 
 	let engines = me.getEngines(text);
-	console.log('engines:', engines);
+	//console.log('engines:', engines);
 	if (engines.length < 1) {
 		return suggestionsOnEmptyResults;
 	}

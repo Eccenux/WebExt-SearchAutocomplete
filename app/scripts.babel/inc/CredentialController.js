@@ -38,7 +38,7 @@ function loadCredentials() {
  * Prepare a list of credentials.
  */
 function prepareCredentials(credentials) {
-	console.log('prepareCredentials: ', credentials);
+	//console.log('prepareCredentials: ', credentials);
 	credentialEditor.style.display = 'none';
 	app.CredentialController.credentials.length = 0;
 	for (let e = 0; e < credentials.length; e++) {

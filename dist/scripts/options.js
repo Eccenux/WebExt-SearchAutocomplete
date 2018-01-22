@@ -85,7 +85,7 @@ function loadCredentials() {
  * Prepare a list of credentials.
  */
 function prepareCredentials(credentials) {
-	console.log('prepareCredentials: ', credentials);
+	//console.log('prepareCredentials: ', credentials);
 	credentialEditor.style.display = 'none';
 	app.CredentialController.credentials.length = 0;
 	for (let e = 0; e < credentials.length; e++) {
@@ -382,7 +382,7 @@ function initEngineController($scope) {
 	$scope.credentials = [];
 	document.body.addEventListener('credentialsReady', function (event) {
 		let credentials = event.detail;
-		console.log('credentials: ', credentials);
+		//console.log('credentials: ', credentials);
 		$scope.credentials.length = 0;
 		for (let c = 0; c < credentials.length; c++) {
 			let credential = new _SearchCredential2.default(credentials[c]);

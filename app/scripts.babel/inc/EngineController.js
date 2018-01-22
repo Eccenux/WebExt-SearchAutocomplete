@@ -149,7 +149,7 @@ function initEngineController($scope) {
 	document.body.addEventListener('credentialsReady',
 		function (event) {
 			let credentials = event.detail;
-			console.log('credentials: ', credentials);
+			//console.log('credentials: ', credentials);
 			$scope.credentials.length = 0;
 			for (let c = 0; c < credentials.length; c++) {
 				let credential = new SearchCredential(credentials[c]);
