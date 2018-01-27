@@ -37,11 +37,29 @@ SearchHelper.prototype.updateEngines = function (engines) {
 			}
 		}
 	}
+	this.restructureEngineMap();
+}
+
+/**
+ * Adds some extras to search engines map.
+ */
+SearchHelper.prototype.restructureEngineMap = function () {
 	// figure out default (unless explictly defined)
 	if (typeof this.engineMap.default !== 'object') {
 		var firstKeyword = Object.keys(this.engineMap)[0];
 		this.engineMap.default = this.engineMap[firstKeyword];
 	}
+
+	// options (to show up as autocomplete)
+	const optionsTemplate = {
+		keyword: getI18n('optionsKeyword'),
+		title: getI18n('optionsKeywordShortInformation')
+	};
+	if (optionsTemplate.keyword.length < 1) {
+		console.warn('optionsKeyword is invalid!', optionsTemplate.keyword);
+		optionsTemplate.keyword = 'options';
+	}
+	this.engineMap[optionsTemplate.keyword] = new SearchEngine(optionsTemplate);
 }
 
 /**
@@ -95,7 +113,7 @@ SearchHelper.prototype.buildCredentialMap = function (credentials) {
  * @param {String} text Search term.
  */
 SearchHelper.prototype.buildSearchUrl = function (engine, action, text) {
-	let url = action.url.replace('{baseUrl}', engine.baseUrl);
+	let url = engine.getActionBaseUrl(action);
 	let first = true;
 	for (let key in action.data) {
 		let value =	action.data[key].replace('{searchTerms}', text);

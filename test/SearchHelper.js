@@ -30,6 +30,7 @@ engineEg.baseUrl = 'http://eg.localhost/';
  * Init basic search helper for testing
  */
 import SearchHelper from '../app/scripts.babel/inc/SearchHelper.js';
+import SearchEngine from '../app/scripts.babel/inc/SearchEngine';
 let searchHelper = new SearchHelper(SETTINGS,
 	{
 		example : engineExample,
@@ -40,6 +41,8 @@ let searchHelper = new SearchHelper(SETTINGS,
 describe('SearchHelper', function () {
 	
 	describe('Test building URLs', function () {
+		let engine = new SearchEngine(engineExample);
+
 		it('Should replace a search term', function () {
 			var action = {
 				url : '{baseUrl}',
@@ -48,7 +51,7 @@ describe('SearchHelper', function () {
 				}
 			};
 			var text = 'def';
-			var url = searchHelper.buildSearchUrl(engineExample, action, text);
+			var url = searchHelper.buildSearchUrl(engine, action, text);
 			assert.equal(url, 'http://localhost/?abc=' + text);
 		});
 		it('Should work without params', function () {
@@ -58,7 +61,7 @@ describe('SearchHelper', function () {
 				}
 			};
 			var text = 'def';
-			var url = searchHelper.buildSearchUrl(engineExample, action, text);
+			var url = searchHelper.buildSearchUrl(engine, action, text);
 			assert.equal(url, 'http://localhost/');
 		});
 		it('Should append a second parameter', function () {
@@ -70,7 +73,7 @@ describe('SearchHelper', function () {
 				}
 			};
 			var text = 'nothing';
-			var url = searchHelper.buildSearchUrl(engineExample, action, text);
+			var url = searchHelper.buildSearchUrl(engine, action, text);
 			assert.equal(url, 'http://localhost/?abc=test&def=test2');
 		});
 		it('Should escape values', function () {
@@ -82,7 +85,7 @@ describe('SearchHelper', function () {
 				}
 			};
 			var text = 'nothing';
-			var url = searchHelper.buildSearchUrl(engineExample, action, text);
+			var url = searchHelper.buildSearchUrl(engine, action, text);
 			url.replace(/testValue=(.+)$/, function(a, transformedValue) {
 				assert.notEqual(transformedValue, testValue, 'Should not match unescaped value');
 				assert.equal(decodeURIComponent(transformedValue), testValue, 'Should decode to original');
@@ -98,7 +101,7 @@ describe('SearchHelper', function () {
 				}
 			};
 			var text = 'nothing';
-			var url = searchHelper.buildSearchUrl(engineExample, action, text);
+			var url = searchHelper.buildSearchUrl(engine, action, text);
 			var parts = url.split('?');
 			assert.equal(parts.length - 1, 1);
 		});
@@ -112,7 +115,7 @@ describe('SearchHelper', function () {
 				}
 			};
 			var text = 'nothing';
-			var url = searchHelper.buildSearchUrl(engineExample, action, text);
+			var url = searchHelper.buildSearchUrl(engine, action, text);
 			var parts = url.split('&');
 			assert.equal(parts.length - 1, Object.keys(action.data).length - 1);
 		});
@@ -251,6 +254,7 @@ describe('SearchHelper', function () {
 			'defabc',
 		];
 		let expectedAbcEngines = 3;
+		let expectedSpecialEngines = 1;	// `sa options`
 
 		// prepare engines
 		function createEngine(keyword) {
@@ -280,17 +284,17 @@ describe('SearchHelper', function () {
 		it('Should list all engines for empty term', function () {
 			let engines = searchHelper.getEngines('');
 			assert.isArray(engines);
-			assert.equal(engines.length, keywords.length);
+			assert.equal(engines.length, keywords.length + expectedSpecialEngines);
 		});
 		it('Should list all engines for a star', function () {
 			let engines = searchHelper.getEngines('*');
 			assert.isArray(engines);
-			assert.equal(engines.length, keywords.length);
+			assert.equal(engines.length, keywords.length + expectedSpecialEngines);
 		});
 		it('Should list all engines by default', function () {
 			let engines = searchHelper.getEngines();
 			assert.isArray(engines);
-			assert.equal(engines.length, keywords.length);
+			assert.equal(engines.length, keywords.length + expectedSpecialEngines);
 		});
 		it('Should find engine by letter', function () {
 			// `xyz` is special beacuse no other engine keyword contains `x`.

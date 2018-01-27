@@ -48,6 +48,7 @@ browser.storage.local.get('engines')
 // Omnibox setup
 //
 import SearchHelper from './inc/SearchHelper.js';
+import { getI18n } from './inc/I18nHelper';
 
 /**
  * Prepare omnibox for autocomplete.
@@ -89,6 +90,11 @@ function prepareOmnibox(engines, credentials) {
 		if (engine === null) {
 			console.log('no keyword matched');
 			addSuggestions(searchHelper.createEnginesSuggestions(searchTerm));
+			return;
+		}
+		// check if autocomplete is available
+		if (engine.disabledAutocomplete) {
+			console.log('disabled autocomplete');
 			return;
 		}
 		// no phrase typed in yet after the keyword
@@ -141,9 +147,9 @@ function prepareOmnibox(engines, credentials) {
 			let searchTerm = engineWithTerm.text;
 			let engine = engineWithTerm.engine;
 			// no valid search to go to
-			if (engine === null) {
-				// open options for `sa ` and `sa options`
-				if (!searchTerm.length || searchTerm==='options') {
+			if (engine === null || engine.disabledAutocomplete) {
+				// open options for `sa ` and `sa options` and for localized keyword for it
+				if (!searchTerm.length || searchTerm==='options' || searchTerm===getI18n('optionsKeyword')) {
 					openOptions();
 				} else {
 					console.log('no valid search to go to', {
@@ -155,6 +161,11 @@ function prepareOmnibox(engines, credentials) {
 				return;
 			}
 			url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
+		}
+		// invalid/unacceptable URL
+		if (url.search(/^https?:/) !== 0) {
+			console.log('invalid url: ', url);
+			return;
 		}
 		// debug
 		console.log('onInputEntered: ', {
