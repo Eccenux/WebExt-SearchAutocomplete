@@ -76,11 +76,17 @@ function addEngine() {
 		baseUrl : 'http://',
 		openAction : {
 			url : '{baseUrl}',
-			data : {}
+			data : {
+				'...' : '{searchTerms}'
+			}
 		},
 		autocompleteAction : {
 			url : '{baseUrl}',
-			data : {}
+			method : 'GET',
+			type : 'application/x-suggestions+json',
+			data : {
+				'...' : '{searchTerms}'
+			}
 		}
 	});
 	app.EngineController.currentEngine.update(engine);
