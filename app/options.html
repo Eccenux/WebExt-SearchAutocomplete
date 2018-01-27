@@ -91,14 +91,16 @@
 							{{ "options.URL" | i18n }}
 							<input type="text" ng-model="action.url" style="width:20em; max-width:100%">
 						</label>
-						<label>
-							{{ "options.Method" | i18n }}
-							<input type="text" ng-model="action.method" style="width:5em">
-						</label>
-						<label>
-							{{ "options.MIME_type" | i18n }}
-							<input type="text" ng-model="action.type" style="width:20em; max-width:100%">
-						</label>
+						<div ng-if="action.name == 'autocomplete'">
+							<label>
+								{{ "options.Method" | i18n }}
+								<input type="text" ng-model="action.method" style="width:5em">
+							</label>
+							<label>
+								{{ "options.MIME_type" | i18n }}
+								<input type="text" ng-model="action.type" style="width:20em; max-width:100%">
+							</label>
+						</div>
 						<p>
 							{{ "options.Data_key_value" | i18n }}
 						</p>
