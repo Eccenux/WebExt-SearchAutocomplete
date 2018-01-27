@@ -13,6 +13,14 @@
 	"searchHelper.No_Results_Found": {
 		"message": "No results found."
 	},
+	"optionsKeyword": {
+		"message": "options",
+		"description": "Keyword used to open this add-on options (settings). Note! Keep in sync. with the `popup.html` text."
+	},
+	"optionsKeywordShortInformation": {
+		"message": "Open search autocomplete options (settings) in current tab.",
+		"description": "Short description shown in the address bar for the keyword."
+	},
 	"options.confirmPermanentStorage": {
 		"message": "Are you sure you want to save all changes? This is a permanent change."
 	},

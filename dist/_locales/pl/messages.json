@@ -13,6 +13,14 @@
 	"searchHelper.No_Results_Found": {
 		"message": "Brak wyników wyszukiwania."
 	},
+	"optionsKeyword": {
+		"message": "opcje",
+		"description": "Słowo kluczowe używane do otwierania opcji (ustawień). Uwaga! Słowo kluczowe należy wpisać w treści `popup.html`."
+	},
+	"optionsKeywordShortInformation": {
+		"message": "Otwórz opcje (ustawienia wyszukiwarek) w bieżącej karcie.",
+		"description": "Short description shown in the address bar for the keyword."
+	},
 	"options.confirmPermanentStorage": {
 		"message": "Czy na pewno chcesz zachować zmian? Zapis zmian będzie trwały."
 	},

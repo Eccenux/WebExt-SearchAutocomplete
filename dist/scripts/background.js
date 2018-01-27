@@ -21,6 +21,8 @@ var _SearchHelper = require('./inc/SearchHelper.js');
 
 var _SearchHelper2 = _interopRequireDefault(_SearchHelper);
 
+var _I18nHelper = require('./inc/I18nHelper');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const SETTINGS = {
@@ -103,6 +105,11 @@ function prepareOmnibox(engines, credentials) {
 			addSuggestions(searchHelper.createEnginesSuggestions(searchTerm));
 			return;
 		}
+		// check if autocomplete is available
+		if (engine.disabledAutocomplete) {
+			console.log('disabled autocomplete');
+			return;
+		}
 		// no phrase typed in yet after the keyword
 		if (!searchTerm.length) {
 			console.log('no phrase typed in yet after the keyword');
@@ -146,9 +153,9 @@ function prepareOmnibox(engines, credentials) {
 			let searchTerm = engineWithTerm.text;
 			let engine = engineWithTerm.engine;
 			// no valid search to go to
-			if (engine === null) {
-				// open options for `sa ` and `sa options`
-				if (!searchTerm.length || searchTerm === 'options') {
+			if (engine === null || engine.disabledAutocomplete) {
+				// open options for `sa ` and `sa options` and for localized keyword for it
+				if (!searchTerm.length || searchTerm === 'options' || searchTerm === (0, _I18nHelper.getI18n)('optionsKeyword')) {
 					openOptions();
 				} else {
 					console.log('no valid search to go to', {
@@ -160,6 +167,11 @@ function prepareOmnibox(engines, credentials) {
 				return;
 			}
 			url = searchHelper.buildSearchUrl(engine, engine.openAction, searchTerm);
+		}
+		// invalid/unacceptable URL
+		if (url.search(/^https?:/) !== 0) {
+			console.log('invalid url: ', url);
+			return;
 		}
 		// debug
 		console.log('onInputEntered: ', {
@@ -198,7 +210,7 @@ function openOptions() {
 	opening.then(onOpened, onError);
 }
 
-},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/SearchHelper.js":9}],2:[function(require,module,exports){
+},{"./engines/wiki-en":2,"./engines/wiki-pl":3,"./engines/wiki-template":4,"./inc/I18nHelper":5,"./inc/SearchHelper.js":9}],2:[function(require,module,exports){
 module.exports={
 	"title" : "English Wikipedia",
 	"keywords" : ["en"],
@@ -322,7 +334,33 @@ function SearchEngine(engine) {
 
 	this.openAction = new _SearchEngineAction2.default(engine.openAction || {});
 	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction || {});
+
+	// this checks both for user-typed invalid URLs and for special engines (e.g. `sa options`)
+	this.disabledAutocomplete = false;
+	if (!this.hasValidUrl(this.autocompleteAction)) {
+		this.disabledAutocomplete = true;
+	}
 }
+
+/**
+ * Check base URL for the action.
+ * @param {SearchEngineAction} action
+ */
+SearchEngine.prototype.hasValidUrl = function (action) {
+	if (action.url.length === 0 || this.getActionBaseUrl(action).search(/^https?:/i) !== 0) {
+		return false;
+	}
+	return true;
+};
+
+/**
+ * Build base URL for the action.
+ * @param {SearchEngineAction} action
+ */
+SearchEngine.prototype.getActionBaseUrl = function (action) {
+	let url = action.url.replace('{baseUrl}', this.baseUrl);
+	return url;
+};
 
 exports.default = SearchEngine;
 
@@ -408,11 +446,29 @@ SearchHelper.prototype.updateEngines = function (engines) {
 			}
 		}
 	}
+	this.restructureEngineMap();
+};
+
+/**
+ * Adds some extras to search engines map.
+ */
+SearchHelper.prototype.restructureEngineMap = function () {
 	// figure out default (unless explictly defined)
 	if (typeof this.engineMap.default !== 'object') {
 		var firstKeyword = Object.keys(this.engineMap)[0];
 		this.engineMap.default = this.engineMap[firstKeyword];
 	}
+
+	// options (to show up as autocomplete)
+	const optionsTemplate = {
+		keyword: (0, _I18nHelper.getI18n)('optionsKeyword'),
+		title: (0, _I18nHelper.getI18n)('optionsKeywordShortInformation')
+	};
+	if (optionsTemplate.keyword.length < 1) {
+		console.warn('optionsKeyword is invalid!', optionsTemplate.keyword);
+		optionsTemplate.keyword = 'options';
+	}
+	this.engineMap[optionsTemplate.keyword] = new _SearchEngine2.default(optionsTemplate);
 };
 
 /**
@@ -466,7 +522,7 @@ SearchHelper.prototype.buildCredentialMap = function (credentials) {
  * @param {String} text Search term.
  */
 SearchHelper.prototype.buildSearchUrl = function (engine, action, text) {
-	let url = action.url.replace('{baseUrl}', engine.baseUrl);
+	let url = engine.getActionBaseUrl(action);
 	let first = true;
 	for (let key in action.data) {
 		let value = action.data[key].replace('{searchTerms}', text);

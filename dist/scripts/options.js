@@ -585,7 +585,33 @@ function SearchEngine(engine) {
 
 	this.openAction = new _SearchEngineAction2.default(engine.openAction || {});
 	this.autocompleteAction = new _SearchEngineAction2.default(engine.autocompleteAction || {});
+
+	// this checks both for user-typed invalid URLs and for special engines (e.g. `sa options`)
+	this.disabledAutocomplete = false;
+	if (!this.hasValidUrl(this.autocompleteAction)) {
+		this.disabledAutocomplete = true;
+	}
 }
+
+/**
+ * Check base URL for the action.
+ * @param {SearchEngineAction} action
+ */
+SearchEngine.prototype.hasValidUrl = function (action) {
+	if (action.url.length === 0 || this.getActionBaseUrl(action).search(/^https?:/i) !== 0) {
+		return false;
+	}
+	return true;
+};
+
+/**
+ * Build base URL for the action.
+ * @param {SearchEngineAction} action
+ */
+SearchEngine.prototype.getActionBaseUrl = function (action) {
+	let url = action.url.replace('{baseUrl}', this.baseUrl);
+	return url;
+};
 
 exports.default = SearchEngine;
 
