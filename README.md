@@ -1,4 +1,5 @@
-#  WebExtension: SearchAutocomplete
+WebExtension: SearchAutocomplete
+================================
 
 This WebExtension aims to give you quick, keyword based autocomplete for your search engines. Making your address bar an effective tool again ;-). Should be a good replacement for Omnibar add-on (that worked until FF 56).
 
@@ -18,7 +19,7 @@ Custom search engines
 
 ### Wikipedia and similar ###
 
-Currently I support any search engine that is roughly similar to Wikipedia API. Wikipedia is using `application/x-suggestions+json` format (MIME).
+Currently I support any search engine that is roughly similar to Wikipedia API. Wikipedia uses the [OpenSearch Suggestions standard](http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0#Response_Content).
 
 For this format the server returns something like this:
 ```
@@ -50,9 +51,13 @@ This extension was initially created with [Chrome Extension Generator (Yeoman)](
 
 ### Prepare for building ###
 
-1. You will need [Node.js](https://nodejs.org/en/) for building. I used 8.9, but not sure if any specific version is required. It does need to support ES2015 modules.
+1. You will need [Node.js](https://nodejs.org/en/) for building the extension and downloading modules. I used Node.js 8.9, but version 4.0 (or higher) should be fine(*).
 2. You need to install modules (`npm install`).
 3. (Optional) Install [Visual Studio Code](https://code.visualstudio.com/). Not required, but makes running tasks a bit easier.
+
+(*) Version 4.0 is required e.g. by Mocha and it's also the first Node.js version with ES6 / ES2015 support.
+
+If you need to use older Node.js for other projects then install [nvm](https://github.com/creationix/nvm) (Linux and Mac) or [nvm-windows](https://github.com/coreybutler/nvm-windows). Note! Do *not* install `nvm-windows` in `C:\Program Files`. In fact you should *not* use any directories with a space character for `nvm-windows` installation.  
 
 ### Important tasks ###
 
