@@ -196,8 +196,8 @@ function initEngineController($scope) {
 	
 	function exportFilter(key, value) {
 		// Filtering out properties
-		if (key.startsWith('$$')) {
-		  return undefined;
+		if (key.startsWith('$$') || key === 'disabledAutocomplete') {
+			return undefined;
 		}
 		return value;
 	}
