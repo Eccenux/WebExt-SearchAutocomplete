@@ -205,6 +205,10 @@ function initEngineController($scope) {
 		$scope.enginesDump = JSON.stringify($scope.engines, exportFilter, '\t');
 		exportImportEditor.style.display = 'block';
 	};
+	$scope.exportEngine = function(engine){
+		$scope.enginesDump = JSON.stringify(engine, exportFilter, '\t');
+		exportImportEditor.style.display = 'block';
+	};
 	$scope.prepareImport = function(){
 		$scope.enginesDump = '';
 		exportImportEditor.style.display = 'block';

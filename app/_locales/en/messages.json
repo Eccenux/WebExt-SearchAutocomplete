@@ -99,6 +99,18 @@
 	"options.Close": {
 		"message": "Close"
 	},
+	"options.Edit": {
+		"message": "Edit"
+	},
+	"options.Remove": {
+		"message": "Remove"
+	},
+	"options.Export": {
+		"message": "Export"
+	},
+	"options.Actions": {
+		"message": "Actions"
+	},
 	"options.ImportInformation": {
 		"message": "Loose validation is provided when importing. You might still need to e.g. change keywords to make sure you don't have duplicates."
 	},

@@ -99,6 +99,18 @@
 	"options.Close": {
 		"message": "Zamknij"
 	},
+	"options.Edit": {
+		"message": "Edytuj"
+	},
+	"options.Remove": {
+		"message": "Usuń"
+	},
+	"options.Export": {
+		"message": "Eksportuj"
+	},
+	"options.Actions": {
+		"message": "Akcje"
+	},
 	"options.ImportInformation": {
 		"message": "Przy imporcie wykonywana jest podstawowa walidacja danych. Musisz jednak samemu sprawdzić, czy np. słowa kluczowe się nie powtarzają."
 	},
