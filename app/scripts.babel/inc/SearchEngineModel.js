@@ -82,6 +82,8 @@ SearchEngineModel.prototype.addAction = function(name, action) {
 	}
 	this.actions.push({
 		name: name,
+		title: `options.Action.${name}`,
+		description: `options.Action.${name}.information`,
 		url: action.url,
 		method: action.method,
 		type: action.type,

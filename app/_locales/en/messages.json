@@ -69,8 +69,26 @@
 	"options.MIME_type": {
 		"message": "MIME type"
 	},
-	"options.Data_key_value": {
-		"message": "Data (key:value)"
+	"options.Action.open": {
+		"message": "Open action (search)"
+	},
+	"options.Action.open.information": {
+		"message": "This information will be used if the server will not return a specific URL to open. Use `{searchTerms}` text in a value (it will be replace with entered search terms)."
+	},
+	"options.Action.autocomplete": {
+		"message": "Autocomplete service (suggestions)"
+	},
+	"options.Action.autocomplete.information": {
+		"message": "This service is used for the auto-complete (generating search suggestions). This service must at least return titles, but should also return descriptions, and URLs to open. The format should conform with the OpenSearch Suggestions standard."
+	},
+	"options.Parameters": {
+		"message": "Parametrs"
+	},
+	"options.Parameter.Name": {
+		"message": "Name"
+	},
+	"options.Parameter.Value": {
+		"message": "Value"
 	},
 	"options.Add": {
 		"message": "Add"

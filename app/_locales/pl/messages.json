@@ -69,8 +69,26 @@
 	"options.MIME_type": {
 		"message": "Typ MIME"
 	},
-	"options.Data_key_value": {
-		"message": "Dane (nazwa:wartość)"
+	"options.Action.open": {
+		"message": "Otwarcie wyszukiwania"
+	},
+	"options.Action.open.information": {
+		"message": "Te dane będą używane jeśli dla danej frazy serwer nie zwróci adresu URL oraz jeśli serwer nie zwraca adresów URL. Użyj `{searchTerms}` w parametrach (zostanie zamienione na wpisaną frazę)."
+	},
+	"options.Action.autocomplete": {
+		"message": "Usługa do podpowiedzi (auto-uzupełniania)"
+	},
+	"options.Action.autocomplete.information": {
+		"message": "Usługa zwracająca tytuły dla wpisanej frazy (fragmentu). Usługa powinna również zwracać opis i URL do otwarcia. Format zwracanych danych powinien być zgodny ze standardem OpenSearch Suggestions."
+	},
+	"options.Parameters": {
+		"message": "Parametry"
+	},
+	"options.Parameter.Name": {
+		"message": "Nazwa"
+	},
+	"options.Parameter.Value": {
+		"message": "Wartość"
 	},
 	"options.Add": {
 		"message": "Dodaj"

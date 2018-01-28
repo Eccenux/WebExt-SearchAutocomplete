@@ -86,7 +86,8 @@
 				</fieldset>
 				<div ng-repeat="action in currentEngine.actions">
 					<fieldset>
-						<legend>{{ action.name }}</legend>
+						<legend>{{ action.title | i18n }}</legend>
+						<p>{{ action.description | i18n }}</p>
 						<label>
 							{{ "options.URL" | i18n }}
 							<input type="text" ng-model="action.url" style="width:20em; max-width:100%">
@@ -101,20 +102,26 @@
 								<input type="text" ng-model="action.type" style="width:20em; max-width:100%">
 							</label>
 						</div>
-						<p>
-							{{ "options.Data_key_value" | i18n }}
-						</p>
-						<div>
-							<p ng-repeat="data in action.data">
-								<input type="text" ng-model="data.key">
-								<input type="text" ng-model="data.value">
+						<fieldset>
+							<legend>
+								{{ "options.Parameters" | i18n }}
+							</legend>
+							<p ng-repeat="data in action.data" style="margin:0">
+								<label>
+									{{ "options.Parameter.Name" | i18n }}
+									<input type="text" ng-model="data.key">
+								</label>
+								<label>
+									{{ "options.Parameter.Value" | i18n }}
+									<input type="text" ng-model="data.value">
+								</label>
 								<button ng-click="removeData(action, $index)">❌</button>
 							</p>
-							<button ng-click="addData(action)">
+							<button ng-click="addData(action)" style="margin-top:1em">
 								<i class="fas fa-plus"></i>
 								{{ "options.Add" | i18n }}
 							</button>
-						</div>
+						</fieldset>
 					</fieldset>
 				</div>
 			</form>
