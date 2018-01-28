@@ -99,8 +99,8 @@
 	"options.Close": {
 		"message": "Close"
 	},
-	"options.Note_No_validation_is_provided_Data_corruption_may_require_reset": {
-		"message": "Note! No validation is provided. When data is corrupted you may be forced to reset all options."
+	"options.ImportInformation": {
+		"message": "Loose validation is provided when importing. You might still need to e.g. change keywords to make sure you don't have duplicates."
 	},
 	"options.Import_failure": {
 		"message": "Import failed. Make sure syntax is correct."

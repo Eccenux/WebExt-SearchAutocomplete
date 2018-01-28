@@ -46,10 +46,12 @@ function loadEngines() {
 /**
  * Prepare a list of engines.
  */
-function prepareEngines(engines) {
+function prepareEngines(engines, append) {
 	console.log('prepareEngines: ', engines);
 	engineEditor.style.display = 'none';
-	app.EngineController.engines.length = 0;
+	if (!append) {
+		app.EngineController.engines.length = 0;
+	}
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
 		app.EngineController.engines.push(engine);
@@ -203,18 +205,28 @@ function initEngineController($scope) {
 	};
 	$scope.importEngines = function(append){
 		if (append || confirm(getI18n('options.confirmImport'))) {
-			let engines;
+			let engines = null;
 			try {
 				engines = JSON.parse($scope.enginesDump);
 			} catch (error) {
 				console.warn('Import failure:', error.message);
+				engines = null;
+			}
+			// something went wrong
+			if (engines === null || typeof engines !== 'object') {
 				alert(getI18n('options.Import_failure'));
 				return;
 			}
-			if (append) {
-				engines = $scope.engines.concat(engines);
+			// single engine
+			if (!Array.isArray(engines)) {
+				if (!engines.autocompleteAction) {
+					alert(getI18n('options.Import_failure'));
+					return;
+				} else {
+					engines = [engines];
+				}
 			}
-			prepareEngines(engines);
+			prepareEngines(engines, append);
 			exportImportEditor.style.display = 'none';
 		}
 	};
