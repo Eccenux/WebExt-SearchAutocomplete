@@ -99,8 +99,23 @@
 	"options.Close": {
 		"message": "Close"
 	},
-	"options.Note_No_validation_is_provided_Data_corruption_may_require_reset": {
-		"message": "Note! No validation is provided. When data is corrupted you may be forced to reset all options."
+	"options.Edit": {
+		"message": "Edit"
+	},
+	"options.Remove": {
+		"message": "Remove"
+	},
+	"options.Export": {
+		"message": "Export"
+	},
+	"options.Actions": {
+		"message": "Actions"
+	},
+	"options.ImportInformation": {
+		"message": "Loose validation is provided when importing. You might still need to e.g. change keywords to make sure you don't have duplicates."
+	},
+	"options.Import_contains_credentials": {
+		"message": "Note! There are credentials in your import. Make sure this is as inteaded. Check the autocomplete URL."
 	},
 	"options.Import_failure": {
 		"message": "Import failed. Make sure syntax is correct."
@@ -112,7 +127,10 @@
 		"message": "Import engines"
 	},
 	"options.Import": {
-		"message": "Import"
+		"message": "Import (replace)"
+	},
+	"options.ImportAppend": {
+		"message": "Append engines"
 	},
 	"options.Uses_credentials": {
 		"message": "Uses credentials"

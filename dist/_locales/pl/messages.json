@@ -99,8 +99,23 @@
 	"options.Close": {
 		"message": "Zamknij"
 	},
-	"options.Note_No_validation_is_provided_Data_corruption_may_require_reset": {
-		"message": "Uwaga! Importowane dane nie są sprawdzane. W wypadku wprowadzenia nieprawidłowych danych może być konieczny reset ustawień tego dodatku."
+	"options.Edit": {
+		"message": "Edytuj"
+	},
+	"options.Remove": {
+		"message": "Usuń"
+	},
+	"options.Export": {
+		"message": "Eksportuj"
+	},
+	"options.Actions": {
+		"message": "Akcje"
+	},
+	"options.ImportInformation": {
+		"message": "Przy imporcie wykonywana jest podstawowa walidacja danych. Musisz jednak samemu sprawdzić, czy np. słowa kluczowe się nie powtarzają."
+	},
+	"options.Import_contains_credentials": {
+		"message": "Uwaga! Do nowych danych przypisane jest uwierzytelnianie. Upewnij się, że przypisanie jest prawidłowe. Sprawdź adres URL usługi podpowiedzi."
 	},
 	"options.Import_failure": {
 		"message": "Import nie powiódł się. Sprawdź poprawność składni."
@@ -112,7 +127,10 @@
 		"message": "Import wyszukiwarek"
 	},
 	"options.Import": {
-		"message": "Importuj"
+		"message": "Importuj (zamiana)"
+	},
+	"options.ImportAppend": {
+		"message": "Dodaj wyszukiwarki"
 	},
 	"options.Uses_credentials": {
 		"message": "Używa uwierzytelniania"

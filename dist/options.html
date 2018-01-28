@@ -13,25 +13,47 @@
 
 			<p data-i18n-key="options.Note_All_changes_are_temporary_until_you_store_them"></p>
 			
-			<ul id="engines-container">
-				<li ng-repeat="engine in engines">
-					<span ng-if="engine.credential.length" title="{{ 'options.Uses_credentials' | i18n }}">🔑</span>
-					[{{ engine.keywords.join(',') }}] {{ engine.title }}
-					<button ng-click="editEngine(engine, $index)">✏️</button>
-					<button ng-click="removeEngine(engine, $index)">❌</button>
-				</li>
-			</ul>
+			<table class="actions" ng-if="engines.length">
+				<tr>
+					<th>{{ "options.Password" | i18n }}</th>
+					<th>{{ "options.Keyword_s" | i18n }}</th>
+					<th style="min-width:10em">{{ "options.Title_name" | i18n }}</th>
+					<th>{{ "options.Actions" | i18n }}</th>
+				</tr>
+				<tr ng-repeat="engine in engines">
+					<td>
+						<span ng-if="engine.credential.length" title="{{ 'options.Uses_credentials' | i18n }}">🔑</span>
+						<span ng-if="!engine.credential.length">&ndash;</span>
+					</td>
+					<td>{{ engine.keywords.join(',') }}</td>
+					<td>{{ engine.title }}</td>
+					<td>
+						<button ng-click="editEngine(engine, $index)">
+							<span class="fas fa-edit"></span>
+							{{ "options.Edit" | i18n }}
+						</button>
+						<button ng-click="removeEngine(engine, $index)">
+							<span class="fas fa-trash-alt"></span>
+							{{ "options.Remove" | i18n }}
+						</button>
+						<button ng-click="exportEngine(engine, $index)">
+							<span class="fas fa-sign-out-alt"></span> 
+							{{ "options.Export" | i18n }}
+						</button>
+					</td>
+				</tr>
+			</table>
 			<p class="buttons">
 				<button ng-click="addEngine()">
-					<i class="fas fa-plus"></i>
+					<span class="fas fa-plus"></span>
 					{{ "options.New_engine" | i18n }}
 				</button>
 				<button ng-click="storeChanges()">
-					<i class="fas fa-archive"></i>
+					<span class="fas fa-archive"></span>
 					{{ "options.Store_changes_permanently" | i18n }}
 				</button>
 				<button ng-click="undoChanges()">
-					<i class="fas fa-undo"></i>
+					<span class="fas fa-undo"></span>
 					{{ "options.Undo_changes" | i18n }}
 				</button>
 			</p>
@@ -39,15 +61,15 @@
 			<form id="engine-editor" class="editor-container">
 				<p class="buttons">
 					<button ng-click="saveEngine(currentEngine)">
-						<i class="far fa-save"></i>
+						<span class="far fa-save"></span>
 						{{ "options.Save" | i18n }}
 					</button>
 					<button ng-click="saveEngineCopy(currentEngine)">
-						<i class="far fa-copy"></i>
+						<span class="far fa-copy"></span>
 						{{ "options.Save_a_copy" | i18n }}
 					</button>
 					<button ng-click="undoEngineChanges()">
-						<i class="fas fa-undo"></i>
+						<span class="fas fa-undo"></span>
 						{{ "options.Cancel" | i18n }}
 					</button>
 				</p>
@@ -115,7 +137,7 @@
 								<button ng-click="removeData(action, $index)">❌</button>
 							</p>
 							<button ng-click="addData(action)" style="margin-top:1em">
-								<i class="fas fa-plus"></i>
+								<span class="fas fa-plus"></span>
 								{{ "options.Add" | i18n }}
 							</button>
 						</fieldset>
@@ -125,26 +147,30 @@
 
 			<p class="buttons">
 				<button ng-click="exportEngines()">
-					<i class="fas fa-sign-out-alt"></i>
+					<span class="fas fa-sign-out-alt"></span>
 					{{ "options.Export_engines" | i18n }}
 				</button>
 				<button ng-click="prepareImport()">
-					<i class="fas fa-sign-in-alt"></i>
+					<span class="fas fa-sign-in-alt"></span>
 					{{ "options.Import_engines" | i18n }}
 				</button>
 			</p>
 			<form id="export-import" class="editor-container">
 				<p class="buttons">
 					<button ng-click="importEngines()">
-						<i class="fas fa-sign-in-alt"></i>
+						<span class="fas fa-sign-in-alt"></span>
 						{{ "options.Import" | i18n }}
 					</button>
+					<button ng-click="importEngines(true)">
+						<span class="fas fa-sign-in-alt"></span>
+						{{ "options.ImportAppend" | i18n }}
+					</button>
 					<button ng-click="closeExportImport()">
-						<i class="fas fa-undo"></i>
+						<span class="fas fa-undo"></span>
 						{{ "options.Close" | i18n }}
 					</button>
 				</p>
-				<p data-i18n-key="options.Note_No_validation_is_provided_Data_corruption_may_require_reset"></p>
+				<p data-i18n-key="options.ImportInformation"></p>
 				<textarea ng-model="enginesDump"></textarea>
 			</form>
 		</div>
@@ -154,24 +180,38 @@
 
 			<p data-i18n-key="options.Credentials_information"></p>
 			
-			<ul id="credentials-container">
-				<li ng-repeat="credential in credentials">
-					{{ credential.codename }}
-					<button ng-click="editCredential(credential, $index)">✏️</button>
-					<button ng-click="removeCredential(credential, $index)">❌</button>
-				</li>
-			</ul>
+			<table class="actions" ng-if="credentials.length">
+				<tr>
+					<th>{{ "options.Code_name" | i18n }}</th>
+					<th>{{ "options.Actions" | i18n }}</th>
+				</tr>
+				<tr ng-repeat="credential in credentials">
+					<td>
+						{{ credential.codename }}
+					</td>
+					<td>
+						<button ng-click="editCredential(credential, $index)">
+							<span class="fas fa-edit"></span>
+							{{ "options.Edit" | i18n }}
+						</button>
+						<button ng-click="removeCredential(credential, $index)">
+							<span class="fas fa-trash-alt"></span>
+							{{ "options.Remove" | i18n }}
+						</button>
+					</td>
+				</tr>
+			</table>
 			<p class="buttons">
 				<button ng-click="addCredential()">
-					<i class="fas fa-plus"></i>
+					<span class="fas fa-plus"></span>
 					{{ "options.New_credential" | i18n }}
 				</button>
 				<button ng-click="storeChanges()">
-					<i class="fas fa-archive"></i>
+					<span class="fas fa-archive"></span>
 					{{ "options.Store_changes_permanently" | i18n }}
 				</button>
 				<button ng-click="undoChanges()">
-					<i class="fas fa-undo"></i>
+					<span class="fas fa-undo"></span>
 					{{ "options.Undo_changes" | i18n }}
 				</button>
 			</p>
@@ -179,15 +219,15 @@
 			<form id="credential-editor" class="editor-container">
 				<p class="buttons">
 					<button ng-click="saveCredential(currentCredential)">
-						<i class="far fa-save"></i>
+						<span class="far fa-save"></span>
 						{{ "options.Save" | i18n }}
 					</button>
 					<button ng-click="saveCredentialCopy(currentCredential)">
-						<i class="far fa-copy"></i>
+						<span class="far fa-copy"></span>
 						{{ "options.Save_a_copy" | i18n }}
 					</button>
 					<button ng-click="undoCredentialChanges()">
-						<i class="fas fa-undo"></i>
+						<span class="fas fa-undo"></span>
 						{{ "options.Cancel" | i18n }}
 					</button>
 				</p>

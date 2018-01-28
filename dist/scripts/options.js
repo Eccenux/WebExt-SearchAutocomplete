@@ -280,14 +280,22 @@ function loadEngines() {
 /**
  * Prepare a list of engines.
  */
-function prepareEngines(engines) {
+function prepareEngines(engines, append) {
 	console.log('prepareEngines: ', engines);
-	engineEditor.style.display = 'none';
-	app.EngineController.engines.length = 0;
+	let validation = {
+		hasCredentials: false
+	};
+	if (!append) {
+		app.EngineController.engines.length = 0;
+	}
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new _SearchEngine2.default(engines[e]);
+		if (engine.credential.length) {
+			validation.hasCredentials = true;
+		}
 		app.EngineController.engines.push(engine);
 	}
+	return validation;
 }
 
 /**
@@ -420,7 +428,7 @@ function initEngineController($scope) {
 
 	function exportFilter(key, value) {
 		// Filtering out properties
-		if (key.startsWith('$$')) {
+		if (key.startsWith('$$') || key === 'disabledAutocomplete') {
 			return undefined;
 		}
 		return value;
@@ -429,22 +437,42 @@ function initEngineController($scope) {
 		$scope.enginesDump = JSON.stringify($scope.engines, exportFilter, '\t');
 		exportImportEditor.style.display = 'block';
 	};
+	$scope.exportEngine = function (engine) {
+		$scope.enginesDump = JSON.stringify(engine, exportFilter, '\t');
+		exportImportEditor.style.display = 'block';
+	};
 	$scope.prepareImport = function () {
 		$scope.enginesDump = '';
 		exportImportEditor.style.display = 'block';
 	};
-	$scope.importEngines = function () {
-		if (confirm((0, _I18nHelper.getI18n)('options.confirmImport'))) {
-			let engines;
+	$scope.importEngines = function (append) {
+		if (append || confirm((0, _I18nHelper.getI18n)('options.confirmImport'))) {
+			let engines = null;
 			try {
 				engines = JSON.parse($scope.enginesDump);
 			} catch (error) {
 				console.warn('Import failure:', error.message);
+				engines = null;
+			}
+			// something went wrong
+			if (engines === null || typeof engines !== 'object') {
 				alert((0, _I18nHelper.getI18n)('options.Import_failure'));
 				return;
 			}
-			prepareEngines(engines);
+			// single engine
+			if (!Array.isArray(engines)) {
+				if (!engines.autocompleteAction) {
+					alert((0, _I18nHelper.getI18n)('options.Import_failure'));
+					return;
+				} else {
+					engines = [engines];
+				}
+			}
+			let validation = prepareEngines(engines, append);
 			exportImportEditor.style.display = 'none';
+			if (validation.hasCredentials) {
+				alert((0, _I18nHelper.getI18n)('options.Import_contains_credentials'));
+			}
 		}
 	};
 	$scope.closeExportImport = function () {
