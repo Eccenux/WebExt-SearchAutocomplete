@@ -310,11 +310,17 @@ function addEngine() {
 		baseUrl: 'http://',
 		openAction: {
 			url: '{baseUrl}',
-			data: {}
+			data: {
+				'...': '{searchTerms}'
+			}
 		},
 		autocompleteAction: {
 			url: '{baseUrl}',
-			data: {}
+			method: 'GET',
+			type: 'application/x-suggestions+json',
+			data: {
+				'...': '{searchTerms}'
+			}
 		}
 	});
 	app.EngineController.currentEngine.update(engine);
@@ -732,6 +738,8 @@ SearchEngineModel.prototype.addAction = function (name, action) {
 	}
 	this.actions.push({
 		name: name,
+		title: `options.Action.${name}`,
+		description: `options.Action.${name}.information`,
 		url: action.url,
 		method: action.method,
 		type: action.type,
