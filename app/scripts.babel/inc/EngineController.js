@@ -48,14 +48,20 @@ function loadEngines() {
  */
 function prepareEngines(engines, append) {
 	console.log('prepareEngines: ', engines);
-	engineEditor.style.display = 'none';
+	let validation = {
+		hasCredentials : false
+	};
 	if (!append) {
 		app.EngineController.engines.length = 0;
 	}
 	for (let e = 0; e < engines.length; e++) {
 		let engine = new SearchEngine(engines[e]);
+		if (engine.credential.length) {
+			validation.hasCredentials = true;
+		}
 		app.EngineController.engines.push(engine);
 	}
+	return validation;
 }
 
 /**
@@ -226,8 +232,11 @@ function initEngineController($scope) {
 					engines = [engines];
 				}
 			}
-			prepareEngines(engines, append);
+			let validation = prepareEngines(engines, append);
 			exportImportEditor.style.display = 'none';
+			if (validation.hasCredentials) {
+				alert(getI18n('options.Import_contains_credentials'));
+			}
 		}
 	};
 	$scope.closeExportImport = function(){

@@ -102,6 +102,9 @@
 	"options.ImportInformation": {
 		"message": "Loose validation is provided when importing. You might still need to e.g. change keywords to make sure you don't have duplicates."
 	},
+	"options.Import_contains_credentials": {
+		"message": "Note! There are credentials in your import. Make sure this is as inteaded. Check the autocomplete URL."
+	},
 	"options.Import_failure": {
 		"message": "Import failed. Make sure syntax is correct."
 	},
