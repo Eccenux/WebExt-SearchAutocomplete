@@ -201,8 +201,8 @@ function initEngineController($scope) {
 		$scope.enginesDump = '';
 		exportImportEditor.style.display = 'block';
 	};
-	$scope.importEngines = function(){
-		if (confirm(getI18n('options.confirmImport'))) {
+	$scope.importEngines = function(append){
+		if (append || confirm(getI18n('options.confirmImport'))) {
 			let engines;
 			try {
 				engines = JSON.parse($scope.enginesDump);
@@ -210,6 +210,9 @@ function initEngineController($scope) {
 				console.warn('Import failure:', error.message);
 				alert(getI18n('options.Import_failure'));
 				return;
+			}
+			if (append) {
+				engines = $scope.engines.concat(engines);
 			}
 			prepareEngines(engines);
 			exportImportEditor.style.display = 'none';

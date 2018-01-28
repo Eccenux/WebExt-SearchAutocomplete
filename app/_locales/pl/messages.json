@@ -112,7 +112,10 @@
 		"message": "Import wyszukiwarek"
 	},
 	"options.Import": {
-		"message": "Importuj"
+		"message": "Importuj (zamiana)"
+	},
+	"options.ImportAppend": {
+		"message": "Dodaj wyszukiwarki"
 	},
 	"options.Uses_credentials": {
 		"message": "Używa uwierzytelniania"

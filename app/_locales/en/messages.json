@@ -112,7 +112,10 @@
 		"message": "Import engines"
 	},
 	"options.Import": {
-		"message": "Import"
+		"message": "Import (replace)"
+	},
+	"options.ImportAppend": {
+		"message": "Append engines"
 	},
 	"options.Uses_credentials": {
 		"message": "Uses credentials"
