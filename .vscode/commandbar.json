@@ -1,0 +1,55 @@
+// Requires `vscode-commandbar` that can run tasks.
+// https://github.com/Eccenux/vscode-commandbar
+{
+	"skipTerminateQuickPick": true,
+	"skipSwitchToOutput": false,
+	"skipErrorMessage": true,
+	"commands": [
+		{
+			"text": "Project: build",
+			"color": "lightgreen",
+			"commandType": "palette",
+			"command": "workbench.action.tasks.runTask:gulp build",
+			"priority": 0
+		},
+		{
+			"text": "Project: build watch",
+			"color": "lightgreen",
+			"commandType": "palette",
+			"command": "workbench.action.tasks.runTask:gulp watch",
+			"priority": 0
+		},
+		{
+			"text": "Run tests",
+			"color": "lightgreen",
+			"commandType": "palette",
+			"command": "workbench.action.tasks.runTask:Run tests",
+			"priority": 0
+		},
+		{
+			"text": "Run publishing script",
+			"color": "lightgreen",
+			"commandType": "palette",
+			"command": "workbench.action.tasks.runTask:Publish",
+			"priority": 0
+		},
+		{
+			"text": "☯",
+			"tooltip": "ESLint: Fix All",
+			"color": "yellow",
+			"commandType": "palette",
+			"command": "eslint.executeAutofix",
+			"alignment": "right",
+			"priority": 3
+		},
+		{
+			"text": "🌼",
+			"tooltip": "Beautify selection",
+			"color": "white",
+			"commandType": "palette",
+			"command": "HookyQR.beautify",
+			"alignment": "right",
+			"priority": 3
+		}
+	]
+}

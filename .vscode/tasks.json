@@ -4,6 +4,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "gulp build",
 			"group": "build",
 			"type": "gulp",
 			"task": "build",
@@ -12,6 +13,7 @@
 			]
 		},
 		{
+			"label": "gulp watch",
 			"group": "build",
 			"type": "gulp",
 			"task": "watch",
@@ -20,6 +22,7 @@
 			]
 		},
 		{
+			"label": "gulp package",
 			"group": "build",
 			"type": "gulp",
 			"task": "package",
@@ -28,6 +31,7 @@
 			]
 		},
 		{
+			"label": "gulp clean",
 			"group": "build",
 			"type": "gulp",
 			"task": "clean",
@@ -35,12 +39,19 @@
 				"$eslint-stylish"
 			]
 		},
-		// Adding a shortcut:
+		// Adding a shortcut for any test task:
 		// 1. Preferences -> Keyboard Shortcuts (CTRL+K,S)
 		// 2. Find: Run Test Task
 		// 3. ALT+F6 (or whatever you want)
+		//
+		// Or to run a specific task you need to edit `%APPDATA%\Code\User\keybindings.json` and add something like:
+		// {
+		// 	"key": "alt+f6",
+		// 	"command": "workbench.action.tasks.runTask",
+		// 	"args": "Run tests"
+		// }		
 		{
-			"label": "run tests",
+			"label": "Run tests",
 			"type": "shell",
 			"command": "./scripts/test.sh",
 			"windows": {
@@ -51,6 +62,19 @@
 				"reveal": "always",
 				"panel": "new"
 			}
-		}
+		},
+		{
+			"label": "Publish",
+			"type": "shell",
+			"command": "./scripts/publish.sh",
+			"windows": {
+				"command": ".\\scripts\\publish.cmd"
+			},
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
 	]
 }
