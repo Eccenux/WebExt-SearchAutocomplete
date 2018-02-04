@@ -1,1 +1,1 @@
-node .\node_modules\mocha\bin\mocha --compilers js:babel-core/register
+node .\node_modules\mocha\bin\mocha --require babel-core/register
