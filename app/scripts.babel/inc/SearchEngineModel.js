@@ -60,6 +60,8 @@ SearchEngineModel.prototype.getEngine = function() {
 			url: action.url,
 			method: action.method,
 			type: action.type,
+			autocompleteType: action.autocompleteType,
+			paths: JSON.parse(JSON.stringify(action.paths)),
 			data: data
 		};
 	}
@@ -87,6 +89,8 @@ SearchEngineModel.prototype.addAction = function(name, action) {
 		url: action.url,
 		method: action.method,
 		type: action.type,
+		autocompleteType: action.autocompleteType,
+		paths: JSON.parse(JSON.stringify(action.paths)),
 		data: data
     });
 }

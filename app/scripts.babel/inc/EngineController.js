@@ -39,6 +39,19 @@ function loadEngines() {
 			credential : 'test',
 			keyword : 't',
 			baseUrl : 'http://test.localhost/'
+		},{
+			title : 'Object autoc.',
+			keyword : 'oa',
+			baseUrl : 'http://oa.localhost/',
+			autocompleteAction : {
+				autocompleteType: 'objects',
+				paths: {
+					root: 'results',
+					titles: 'name',
+					descriptions: '',
+					urls: 'url',
+				},
+			}
 		}]);
 	}
 }
@@ -91,7 +104,8 @@ function addEngine() {
 		autocompleteAction : {
 			url : '{baseUrl}',
 			method : 'GET',
-			type : 'application/x-suggestions+json',
+			//type : 'application/x-suggestions+json',
+			autocompleteType : 'OpenSearch',
 			data : {
 				'...' : '{searchTerms}'
 			}
