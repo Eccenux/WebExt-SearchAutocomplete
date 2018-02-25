@@ -90,6 +90,30 @@
 	"options.Parameter.Value": {
 		"message": "Wartość"
 	},
+	"options.Autocomplete_type": {
+		"message": "Typ usługi podpowiedzi"
+	},
+	"options.Autocomplete.OpenSearch": {
+		"message": "OpenSearch"
+	},
+	"options.Autocomplete.Object_array": {
+		"message": "Tablica obiektów"
+	},
+	"options.Autocomplete_Path_description": {
+		"message": "W najprostszym przypadku ścieżki są nazwami kluczy w obiekcie. Dla korzenia ścieżka musi być bezwzględna i wskazywać na tablicę obiektów. Pozostałe ścieżki należy podać względem obiektu z głównej tablicy."
+	},
+	"options.Path.root": {
+		"message": "Korzeń (główna tablica)"
+	},
+	"options.Path.titles": {
+		"message": "Tytuł"
+	},
+	"options.Path.descriptions": {
+		"message": "Opis"
+	},
+	"options.Path.urls": {
+		"message": "Adres URL"
+	},
 	"options.Add": {
 		"message": "Dodaj"
 	},

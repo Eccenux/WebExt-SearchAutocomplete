@@ -90,6 +90,30 @@
 	"options.Parameter.Value": {
 		"message": "Value"
 	},
+	"options.Autocomplete_type": {
+		"message": "Autocomplete type"
+	},
+	"options.Autocomplete.OpenSearch": {
+		"message": "OpenSearch"
+	},
+	"options.Autocomplete.Object_array": {
+		"message": "Objects' array"
+	},
+	"options.Autocomplete_Path_description": {
+		"message": "Paths can simply be key names. For root path is absolute and must point to a results array, other paths are relative to an item in the array."
+	},
+	"options.Path.root": {
+		"message": "Root (main array)"
+	},
+	"options.Path.titles": {
+		"message": "Title (required)"
+	},
+	"options.Path.descriptions": {
+		"message": "Description"
+	},
+	"options.Path.urls": {
+		"message": "URL"
+	},
 	"options.Add": {
 		"message": "Add"
 	},
