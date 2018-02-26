@@ -273,6 +273,19 @@ function loadEngines() {
 			credential: 'test',
 			keyword: 't',
 			baseUrl: 'http://test.localhost/'
+		}, {
+			title: 'Object autoc.',
+			keyword: 'oa',
+			baseUrl: 'http://oa.localhost/',
+			autocompleteAction: {
+				autocompleteType: 'objects',
+				paths: {
+					root: 'results',
+					titles: 'name',
+					descriptions: '',
+					urls: 'url'
+				}
+			}
 		}]);
 	}
 }
@@ -325,7 +338,8 @@ function addEngine() {
 		autocompleteAction: {
 			url: '{baseUrl}',
 			method: 'GET',
-			type: 'application/x-suggestions+json',
+			//type : 'application/x-suggestions+json',
+			autocompleteType: 'OpenSearch',
 			data: {
 				'...': '{searchTerms}'
 			}
@@ -488,8 +502,42 @@ exports.initEngineController = initEngineController;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
+// dummy
+function addMessage() {}
+
+// uncomment below to allow in-browser building of missing i18n list
+// format and copy with:
+// copy(JSON.stringify(_i18nMessages.missing, null, '\t'))
+// Note! Messages that are hidden might not show up. Move around the app to get more messages.
+/**
+import messagesPl from '../../_locales/pl/messages';
+import messagesEn from '../../_locales/en/messages';
+//console.log('i18nhelper', messagesPl, messagesEn, wikiTemplateEngine);
+if (typeof window._i18nMessages !== 'object') {
+	window._i18nMessages = {
+		missing: {
+			pl: {},
+			en: {},
+		}
+	};
+}
+function addMessage(messageName, message) {
+	let obj = {
+		'message' : message
+	};
+	if (!(messageName in messagesPl)) {
+		console.log('pl: ', messageName)
+		_i18nMessages.missing.pl[messageName] = obj;
+	}
+	if (!(messageName in messagesEn)) {
+		console.log('en: ', messageName)
+		_i18nMessages.missing.en[messageName] = obj;
+	}
+}
+/**/
+
 /**
  * Get I18n string.
  * 
@@ -497,7 +545,9 @@ Object.defineProperty(exports, "__esModule", {
  * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
  */
 let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
-  return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+	let message = messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+	addMessage(messageName, message);
+	return message;
 };
 
 exports.getI18n = getI18n;
@@ -668,6 +718,14 @@ function SearchEngineAction(action) {
 	if (typeof action.type === 'string') {
 		this.type = action.type;
 	}
+	this.autocompleteType = '';
+	if (typeof action.autocompleteType === 'string') {
+		this.autocompleteType = action.autocompleteType;
+	}
+	this.paths = {};
+	if (typeof action.paths === 'object') {
+		this.paths = action.paths;
+	}
 	this.data = {};
 	if (typeof action.data === 'object') {
 		this.data = action.data;
@@ -744,6 +802,8 @@ SearchEngineModel.prototype.getEngine = function () {
 			url: action.url,
 			method: action.method,
 			type: action.type,
+			autocompleteType: action.autocompleteType,
+			paths: JSON.parse(JSON.stringify(action.paths)),
 			data: data
 		};
 	}
@@ -771,6 +831,8 @@ SearchEngineModel.prototype.addAction = function (name, action) {
 		url: action.url,
 		method: action.method,
 		type: action.type,
+		autocompleteType: action.autocompleteType,
+		paths: JSON.parse(JSON.stringify(action.paths)),
 		data: data
 	});
 };

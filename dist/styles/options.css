@@ -48,7 +48,7 @@ button span {
 	padding: 1em;
 	display: none;
 }
-.editor-container p:first-child {
+.editor-container > p:first-child {
 	margin-top: 0;
 }
 

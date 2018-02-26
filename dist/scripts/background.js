@@ -116,20 +116,16 @@ function prepareOmnibox(engines, credentials) {
 			return;
 		}
 		let action = engine.autocompleteAction;
-		let headers = new Headers({
-			'Accept': action.type
-		});
 		if (credentials) {
 			console.log(`adding credentials: ${credentials.codename} (${credentials.username})`);
 			headers.append('Authorization', 'Basic ' + btoa(credentials.username + ':' + credentials.password));
 		}
-		let init = {
-			method: action.method,
-			headers: headers
+		let requestData = {
+			method: action.method
 		};
 		let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
 		console.log('searchTerm:', searchTerm, 'url:', url, 'engine:', engine);
-		let request = new Request(url, init);
+		let request = new Request(url, requestData);
 
 		fetch(request).then(function (response) {
 			if (response.status === 200) {
@@ -249,8 +245,42 @@ module.exports={
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
+// dummy
+function addMessage() {}
+
+// uncomment below to allow in-browser building of missing i18n list
+// format and copy with:
+// copy(JSON.stringify(_i18nMessages.missing, null, '\t'))
+// Note! Messages that are hidden might not show up. Move around the app to get more messages.
+/**
+import messagesPl from '../../_locales/pl/messages';
+import messagesEn from '../../_locales/en/messages';
+//console.log('i18nhelper', messagesPl, messagesEn, wikiTemplateEngine);
+if (typeof window._i18nMessages !== 'object') {
+	window._i18nMessages = {
+		missing: {
+			pl: {},
+			en: {},
+		}
+	};
+}
+function addMessage(messageName, message) {
+	let obj = {
+		'message' : message
+	};
+	if (!(messageName in messagesPl)) {
+		console.log('pl: ', messageName)
+		_i18nMessages.missing.pl[messageName] = obj;
+	}
+	if (!(messageName in messagesEn)) {
+		console.log('en: ', messageName)
+		_i18nMessages.missing.en[messageName] = obj;
+	}
+}
+/**/
+
 /**
  * Get I18n string.
  * 
@@ -258,7 +288,9 @@ Object.defineProperty(exports, "__esModule", {
  * @sa https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/i18n/getMessage
  */
 let getI18n = typeof browser != 'undefined' ? browser.i18n.getMessage : function (messageName) {
-  return messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+	let message = messageName.replace(/_/g, ' ').replace(/^.+\./, '');
+	addMessage(messageName, message);
+	return message;
 };
 
 exports.getI18n = getI18n;
@@ -383,6 +415,14 @@ function SearchEngineAction(action) {
 	if (typeof action.type === 'string') {
 		this.type = action.type;
 	}
+	this.autocompleteType = '';
+	if (typeof action.autocompleteType === 'string') {
+		this.autocompleteType = action.autocompleteType;
+	}
+	this.paths = {};
+	if (typeof action.paths === 'object') {
+		this.paths = action.paths;
+	}
 	this.data = {};
 	if (typeof action.data === 'object') {
 		this.data = action.data;
@@ -407,6 +447,14 @@ var _SearchCredential = require('./SearchCredential.js');
 var _SearchCredential2 = _interopRequireDefault(_SearchCredential);
 
 var _I18nHelper = require('./I18nHelper');
+
+var _OpenSearchParser = require('./resultParsers/OpenSearchParser.js');
+
+var _OpenSearchParser2 = _interopRequireDefault(_OpenSearchParser);
+
+var _ObjectsArrayParser = require('./resultParsers/ObjectsArrayParser.js');
+
+var _ObjectsArrayParser2 = _interopRequireDefault(_ObjectsArrayParser);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -651,6 +699,18 @@ SearchHelper.prototype.createEnginesSuggestions = function (text) {
  */
 SearchHelper.prototype.createSuggestionsFromResponse = function (engine, response) {
 	let me = this;
+
+	let parser;
+	switch (engine.autocompleteAction.autocompleteType) {
+		default:
+			parser = new _OpenSearchParser2.default();
+			break;
+		case 'objects':
+			parser = new _ObjectsArrayParser2.default();
+			break;
+	}
+	parser.init(engine);
+
 	return new Promise(resolve => {
 		let suggestions = [];
 		let suggestionsOnEmptyResults = [{
@@ -658,21 +718,15 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 			description: (0, _I18nHelper.getI18n)('searchHelper.No_Results_Found')
 		}];
 		response.json().then(json => {
-			console.log('response:', json);
-			if (!json.length) {
-				return resolve(suggestionsOnEmptyResults);
-			}
+			console.log('response: ', json);
 
 			let max = me.SETTINGS.MAX_SUGGESTIONS;
 
-			// for Wikipedia:
-			// json[0] = search term
-			// json[1] = [...titles...]
-			// json[2] = [...descriptions...]
-			// json[3] = [...direct urls...]
-			let titles = json[1];
-			let descriptions = json[2];
-			let urls = json[3];
+			let data = parser.parse(json);
+			let titles = data.titles;
+			let descriptions = data.descriptions;
+			let urls = data.urls;
+			console.log('suggestion data: ', data);
 
 			if (titles.length < 1) {
 				return resolve(suggestionsOnEmptyResults);
@@ -705,5 +759,220 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 
 exports.default = SearchHelper;
 
-},{"./I18nHelper":5,"./SearchCredential.js":6,"./SearchEngine.js":7}]},{},[1])
+},{"./I18nHelper":5,"./SearchCredential.js":6,"./SearchEngine.js":7,"./resultParsers/ObjectsArrayParser.js":11,"./resultParsers/OpenSearchParser.js":12}],10:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+/**
+ * Suggestions parser.
+ * 
+ * Minimum parser results are below. For maxium see `OpenSearch`.
+ */
+class BaseParser {
+	constructor() {
+		this.valid = true;
+	}
+
+	/**
+  * (Re)Init with engine settings.
+  * @param {SearchEngine} engine Settings of the engine.
+  */
+	init(engine) {
+		return this.valid;
+	}
+
+	/**
+  * Parse results json.
+  * @param {Object} json Results from server.
+  */
+	parse(json) {
+		return {
+			titles: []
+		};
+	}
+}
+
+exports.default = BaseParser;
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _BaseParser = require('./BaseParser');
+
+var _BaseParser2 = _interopRequireDefault(_BaseParser);
+
+var _SearchEngine = require('../SearchEngine');
+
+var _SearchEngine2 = _interopRequireDefault(_SearchEngine);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Objects' array parser.
+ * 
+ * AMO example
+ * https://addons.mozilla.org/api/v3/addons/autocomplete/?app=firefox&platform=windows&lang=en-US&q=search
+ * 
+	{
+		"results": [
+			{
+				"id": 689182,
+				"icon_url": "https://addons.cdn.mozilla.net/user-media/addon_icons/689/689182-64.png?modified=1510633221",
+				"name": "Search and New Tab by Yahoo",
+				"url": "https://addons.mozilla.org/en-US/firefox/addon/search-and-new-tab-by-yahoo/"
+			},
+			{
+				"id": 455926,
+				"icon_url": "https://addons.cdn.mozilla.net/user-media/addon_icons/455/455926-64.png?modified=1505062686",
+				"name": "Search image",
+				"url": "https://addons.mozilla.org/en-US/firefox/addon/search-image/"
+			}
+		]
+	}
+ * 
+ */
+class ObjectsArrayParser extends _BaseParser2.default {
+	constructor() {
+		super();
+		this.valid = false;
+	}
+
+	/**
+  * (Re)Init with engine settings.
+  * 
+  * @param {SearchEngine} engine Settings of the engine.
+  */
+	init(engine) {
+		this.valid = false;
+		this.paths = {
+			root: '',
+			titles: '',
+			descriptions: '',
+			urls: ''
+		};
+		console.log('this.paths, engine.paths', this.paths, engine.autocompleteAction.paths);
+		if (typeof engine.autocompleteAction.paths === 'object') {
+			for (const key in this.paths) {
+				if (this.paths.hasOwnProperty(key)) {
+					if (key in engine.autocompleteAction.paths) {
+						console.log('key: ', key);
+						this.paths[key] = engine.autocompleteAction.paths[key];
+					}
+				}
+			}
+			if (this.paths.titles.length) {
+				this.valid = true;
+			}
+		}
+		return this.valid;
+	}
+	/**
+  * Parse results json.
+  * 
+  * @param {Object} json Results from server.
+  */
+	parse(json) {
+		let results = {
+			titles: [],
+			descriptions: [],
+			urls: []
+		};
+		// unitialized (or init failed)
+		if (!this.valid) {
+			return results;
+		}
+		// root
+		let root = this.paths.root;
+		if (!root.length || !(root in json)) {
+			return results;
+		}
+		// setup result
+		if (!this.paths.descriptions.length) {
+			results.descriptions = null;
+		}
+		if (!this.paths.urls.length) {
+			results.urls = null;
+		}
+		// traverse results array
+		let records = json[root];
+		for (let i = 0; i < records.length; i++) {
+			const record = records[i];
+
+			results.titles.push(this.getByPath(record, this.paths.titles));
+			if (results.descriptions !== null) {
+				results.descriptions.push(this.getByPath(record, this.paths.descriptions));
+			}
+			if (results.urls !== null) {
+				results.urls.push(this.getByPath(record, this.paths.urls));
+			}
+		}
+		return results;
+	}
+	/**
+  * Get value from record by path.
+  * @param {Object} record Data.
+  * @param {String} path Key name for now.
+  */
+	getByPath(record, path) {
+		if (!path.length && !(path in record)) {
+			console.warn(`${path} not in record`);
+			return '';
+		}
+		return record[path];
+	}
+}
+
+exports.default = ObjectsArrayParser;
+
+},{"../SearchEngine":7,"./BaseParser":10}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _BaseParser = require('./BaseParser');
+
+var _BaseParser2 = _interopRequireDefault(_BaseParser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * OpenSearch suggestions parser.
+ * 
+ * OpenSearch Suggestions standard:
+ * http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0#Response_Content
+ */
+class OpenSearchParser extends _BaseParser2.default {
+	/**
+  * Parse results json.
+  * 
+  * For Wikipedia results are:
+  * json[0] = search term
+  * json[1] = [...titles...]
+  * json[2] = [...descriptions...]
+  * json[3] = [...direct urls...]
+  * 
+  * Standard only requires `titles` (and the search term).
+  * 
+  * @param {Object} json Results from server.
+  */
+	parse(json) {
+		return {
+			titles: json[1],
+			descriptions: json[2],
+			urls: json[3]
+		};
+	}
+}
+
+exports.default = OpenSearchParser;
+
+},{"./BaseParser":10}]},{},[1])
 

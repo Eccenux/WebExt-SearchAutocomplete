@@ -116,10 +116,6 @@
 								{{ "options.Method" | i18n }}
 								<input type="text" ng-model="action.method" style="width:5em">
 							</label>
-							<label>
-								{{ "options.MIME_type" | i18n }}
-								<input type="text" ng-model="action.type" style="width:20em; max-width:100%">
-							</label>
 						</div>
 						<fieldset>
 							<legend>
@@ -141,6 +137,33 @@
 								{{ "options.Add" | i18n }}
 							</button>
 						</fieldset>
+						<div ng-if="action.name == 'autocomplete'">
+							<p>
+								{{ "options.Autocomplete_type" | i18n }}
+								<label>
+									<input type="radio" ng-model="action.autocompleteType" value="OpenSearch">
+									{{ "options.Autocomplete.OpenSearch" | i18n }}
+								</label>
+								<label>
+									<input type="radio" ng-model="action.autocompleteType" value="objects">
+									{{ "options.Autocomplete.Object_array" | i18n }}
+								</label>
+							</p>
+						</div>
+						<div ng-if="action.autocompleteType == 'objects'">
+							<fieldset>
+								<legend>
+									{{ "options.Autocomplete.Object_array" | i18n }}
+								</legend>
+								<p>{{ "options.Autocomplete_Path_description" | i18n }}</p>
+								<p ng-repeat="pathName in ['root', 'titles', 'descriptions', 'urls']" style="margin:0">
+									<label>
+										{{ "options.Path." + pathName | i18n }}
+										<input type="text" ng-model="action.paths[pathName]">
+									</label>
+								</p>
+							</fieldset>
+						</div>
 					</fieldset>
 				</div>
 			</form>
