@@ -1,6 +1,8 @@
 import SearchEngine from './SearchEngine.js';
 import SearchCredential from './SearchCredential.js';
 import { getI18n } from './I18nHelper';
+import OpenSearchParser from './resultParsers/OpenSearchParser.js';
+import ObjectsArrayParser from './resultParsers/ObjectsArrayParser.js';
 //import SearchEngineAction from './SearchEngineAction.js';
 
 /**
@@ -242,6 +244,18 @@ SearchHelper.prototype.createEnginesSuggestions = function (text) {
  */
 SearchHelper.prototype.createSuggestionsFromResponse = function (engine, response) {
 	let me = this;
+
+	let parser;
+	switch (engine.autocompleteAction.autocompleteType) {
+		default:
+			parser = new OpenSearchParser();
+		break;
+		case 'objects':
+			parser = new ObjectsArrayParser();
+		break;
+	}
+	parser.init(engine);
+
 	return new Promise(resolve => {
 		let suggestions = [];
 		let suggestionsOnEmptyResults = [{
@@ -249,21 +263,15 @@ SearchHelper.prototype.createSuggestionsFromResponse = function (engine, respons
 			description: getI18n('searchHelper.No_Results_Found')
 		}];
 		response.json().then(json => {
-			console.log('response:', json);
-			if (!json.length) {
-				return resolve(suggestionsOnEmptyResults);
-			}
+			console.log('response: ', json);
 			
 			let max = me.SETTINGS.MAX_SUGGESTIONS;
 
-			// for Wikipedia:
-			// json[0] = search term
-			// json[1] = [...titles...]
-			// json[2] = [...descriptions...]
-			// json[3] = [...direct urls...]
-			let titles = json[1];
-			let descriptions = json[2];
-			let urls = json[3];
+			let data = parser.parse(json);
+			let titles = data.titles;
+			let descriptions = data.descriptions;
+			let urls = data.urls;
+			console.log('suggestion data: ', data);
 
 			if (titles.length < 1) {
 				return resolve(suggestionsOnEmptyResults);

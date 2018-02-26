@@ -103,16 +103,12 @@ function prepareOmnibox(engines, credentials) {
 			return;
 		}
 		let action = engine.autocompleteAction;
-		let headers = new Headers({
-			'Accept': action.type
-		});
 		if (credentials) {
 			console.log(`adding credentials: ${credentials.codename} (${credentials.username})`);
 			headers.append('Authorization', 'Basic ' + btoa(credentials.username + ':' + credentials.password));
 		}
-		let init = {
+		let requestData = {
 			method: action.method,
-			headers: headers
 		};
 		let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
 		console.log(
@@ -120,7 +116,7 @@ function prepareOmnibox(engines, credentials) {
 			'url:', url,
 			'engine:', engine
 		);
-		let request = new Request(url, init);
+		let request = new Request(url, requestData);
 		
 		fetch(request)
 			.then(function (response){
