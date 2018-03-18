@@ -204,11 +204,11 @@ You might see something more complicate though. I got you coverd ☺️. I suppo
 }
 ```
 
-Note that arrays are have 0-based indexes. If you want to get to the 2nd item ("sub title" in example above) use `meta.titles[1]`.
+Note that arrays have 0-based indexes. If you want to get to the 2nd item ("sub title" in example above) use `meta.titles[1]`.
 
 #### More complicated arrays ####
 
-`meta.titles[0].en` will work for items like:
+`meta.titles[0].main` will work for items like:
 ```
 {
 	"meta":{
@@ -224,7 +224,7 @@ Note that arrays are have 0-based indexes. If you want to get to the 2nd item ("
 Other formats
 -------------
 
-If you still need something else let me know. Please add an issue and specify the format you need.
+If you still need something else let me know. Please add an issue and specify the format you need (or simply URL of the autocomplete request).
 
 If you are interested how parsing responses is currently working have a look at `OpenSearchParser` class (`app\scripts.babel\inc\resultParsers\OpenSearchParser.js`) and compare with `ObjectsArrayParser` class in the same folder.
 
