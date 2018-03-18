@@ -106,11 +106,30 @@ class ObjectsArrayParser extends BaseParser {
 	 * @param {String} path Key name for now.
 	 */
 	getByPath(record, path) {
-		if (!path.length || !(path in record)) {
-			console.warn(`${path} not in record`);
+		if (!path.length) {
+			console.warn('path is empty');
 			return '';
 		}
-		return record[path];
+		let parts = path.split('.');
+		if (parts.length === 1) {
+			if (!(path in record)) {
+				console.warn(`${path} not in record`);
+				return '';
+			}
+			return record[path];
+		} else {
+			var node = record;
+			for (let i = 0; i < parts.length; i++) {
+				const key = parts[i];
+				if (key in node) {
+					node = node[key];
+				} else {
+					console.warn(`${path} not in record`);
+					return '';
+				}
+			}
+			return node;
+		}
 	}
 }
 

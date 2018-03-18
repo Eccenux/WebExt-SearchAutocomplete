@@ -44,6 +44,13 @@ describe('ObjectsArrayParser', function () {
 			var result = parser.getByPath({'abc': 1}, '');
 			assert.strictEqual(result, '');
 		});
+		it('Should find sub-object by path', function () {
+			var expected = 'some title';
+			var result = parser.getByPath({meta:{title:expected}, description:{}}, 'meta.title');
+			assert.strictEqual(result, expected, 'Should find meta.title');
+			var result = parser.getByPath({meta:{title_not:expected}, description:{}}, 'meta.title');
+			assert.notStrictEqual(result, expected, 'Should not find unexistent title');
+		});
 	});
 
 	describe('init', function () {
@@ -132,8 +139,7 @@ describe('ObjectsArrayParser', function () {
 						'url': 'https://addons.mozilla.org/en-US/firefox/addon/search-image/'
 					},
 					{
-						'id': 455926,
-						'icon_url': 'https://addons.cdn.mozilla.net/user-media/addon_icons/455/455926-64.png?modified=1505062686',
+						'id': 123,
 						'name': '',
 						'url': ''
 					},
