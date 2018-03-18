@@ -1,5 +1,5 @@
-WebExtension: SearchAutocomplete
-================================
+WebExtension: Search Autocomplete
+=================================
 
 This WebExtension aims to give you quick, keyword based autocomplete for your search engines. Making your address bar an effective tool again ;-). Should be a good replacement for Omnibar add-on (that worked until FF 56).
 
@@ -72,7 +72,7 @@ I'll give you an example of how to configure search autocompletefor AMO (Addons 
 #### Import single engine (AMO) ####
 
 Here is how you can simply import it:
-1. Install the [SearchAutocomplete](https://addons.mozilla.org/firefox/addon/searchautocomplete/) extenstion. Obviously ;-).
+1. Install the [Search Autocomplete](https://addons.mozilla.org/firefox/addon/searchautocomplete/) extenstion. Obviously ;-).
 2. Type in `sa options` in the address bar.
 3. Click on "Import engines" button.
 4. Copy the code below.
@@ -169,7 +169,7 @@ You'll also notice each item is pretty much the same and something like:
 {
 	"id":914462,
 	"icon_url":"https://addons.cdn.mozilla.net/user-media/addon_icons/914/914462-64.png?modified=1517152823",
-	"name":"SearchAutocomplete",
+	"name":"Search Autocomplete",
 	"url":"https://addons.mozilla.org/en-US/firefox/addon/searchautocomplete/"
 }
 ```
