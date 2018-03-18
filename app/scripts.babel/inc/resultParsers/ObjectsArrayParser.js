@@ -110,7 +110,7 @@ class ObjectsArrayParser extends BaseParser {
 			console.warn('path is empty');
 			return '';
 		}
-		let parts = path.split(/[\.\[\]]/);
+		let parts = path.split(/(\.|\[["']?|["']?\])/);
 		if (parts.length === 1) {
 			if (!(path in record)) {
 				console.warn(`${path} not in record`);
@@ -118,14 +118,46 @@ class ObjectsArrayParser extends BaseParser {
 			}
 			return record[path];
 		} else {
-			var node = record;
+			let node = record;
+			const states = {
+				START: 0,
+				IN_PARENTHESES: 1,
+			}
+			let state = states.START;
+			let partialKey = '';
+			//console.log('[getByPath] ', record, path);
 			for (let i = 0; i < parts.length; i++) {
-				const key = parts[i];
-				// skip empty keys
-				if (key.length < 1) {
+				let key = parts[i];
+				/*
+				console.log({
+					key: key,
+					partialKey: partialKey,
+					state: state,
+				});
+				*/
+				// combine parts depending on state
+				if (key.search(/^\[/) >= 0) {
+					//console.log('-> states.IN_PARENTHESES');
+					state = states.IN_PARENTHESES;
 					continue;
 				}
+				if (state === states.IN_PARENTHESES && key.search(/\]$/) >= 0) {
+					//console.log('-> states.START');
+					state = states.START;
+					key = partialKey;
+					partialKey = '';
+				}
+				if (state === states.IN_PARENTHESES) {
+					partialKey += key;
+					//console.log('-> new partial:', partialKey);
+					continue;
+				} else if (key === '.' || key === '') {
+					//console.log('-> dot/empty-skip');
+					continue;
+				}
+				// resolve part
 				if (key in node) {
+					//console.log('-> key in node');
 					node = node[key];
 				} else {
 					console.warn(`${path} not in record`);

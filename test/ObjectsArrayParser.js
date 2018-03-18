@@ -63,6 +63,29 @@ describe('ObjectsArrayParser', function () {
 			var result = parser.getByPath({meta:{titles:[{main:expected}, {}]}, description:{}}, 'meta.titles[0].main');
 			assert.strictEqual(result, expected);
 		});
+		it('Should support spaces and dots', function () {
+			var expected = 'some title';
+			var result = parser.getByPath({meta:{'original title':expected}, description:{}}, 'meta[\'original title\']');
+			assert.strictEqual(result, expected, 'single quotes');
+			var result = parser.getByPath({meta:{'original title':expected}, description:{}}, 'meta["original title"]');
+			assert.strictEqual(result, expected, 'double quotes');
+			var result = parser.getByPath({meta:{'original.title':expected}, description:{}}, 'meta["original.title"]');
+			assert.strictEqual(result, expected, 'dot');
+		});
+		it('Should support combo-killer path', function () {
+			var expected = 'some title';
+			var killerPath = 'meta.titles[0]["original.title"]';
+			var result = parser.getByPath(
+				{
+					meta:{
+						titles: [
+							{'original.title':expected}
+						]
+					},
+					description:{},
+				}, killerPath);
+			assert.strictEqual(result, expected, `Should work with: ${killerPath}`);
+		});
 	});
 
 	describe('init', function () {
