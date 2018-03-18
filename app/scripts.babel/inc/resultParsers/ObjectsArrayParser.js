@@ -110,7 +110,7 @@ class ObjectsArrayParser extends BaseParser {
 			console.warn('path is empty');
 			return '';
 		}
-		let parts = path.split('.');
+		let parts = path.split(/[\.\[\]]/);
 		if (parts.length === 1) {
 			if (!(path in record)) {
 				console.warn(`${path} not in record`);
@@ -121,6 +121,10 @@ class ObjectsArrayParser extends BaseParser {
 			var node = record;
 			for (let i = 0; i < parts.length; i++) {
 				const key = parts[i];
+				// skip empty keys
+				if (key.length < 1) {
+					continue;
+				}
 				if (key in node) {
 					node = node[key];
 				} else {

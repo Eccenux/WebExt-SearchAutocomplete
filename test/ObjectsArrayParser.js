@@ -51,6 +51,18 @@ describe('ObjectsArrayParser', function () {
 			var result = parser.getByPath({meta:{title_not:expected}, description:{}}, 'meta.title');
 			assert.notStrictEqual(result, expected, 'Should not find unexistent title');
 		});
+		it('Should support simple arrays', function () {
+			var expected = 'some title';
+			var result = parser.getByPath({meta:{titles:[expected, 'not']}, description:{}}, 'meta.titles[0]');
+			assert.strictEqual(result, expected, 'meta.titles[0]');
+			var result = parser.getByPath({meta:{titles:['not', expected]}, description:{}}, 'meta.titles[1]');
+			assert.strictEqual(result, expected, 'meta.titles[1]');
+		});
+		it('Should support middle arrays', function () {
+			var expected = 'some title';
+			var result = parser.getByPath({meta:{titles:[{main:expected}, {}]}, description:{}}, 'meta.titles[0].main');
+			assert.strictEqual(result, expected);
+		});
 	});
 
 	describe('init', function () {
