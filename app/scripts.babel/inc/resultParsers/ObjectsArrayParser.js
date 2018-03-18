@@ -44,12 +44,10 @@ class ObjectsArrayParser extends BaseParser {
 			descriptions: '',
 			urls: '',
 		};
-		console.log('this.paths, engine.paths', this.paths, engine.autocompleteAction.paths);
 		if (typeof engine.autocompleteAction.paths === 'object') {
 			for (const key in this.paths) {
 				if (this.paths.hasOwnProperty(key)) {
 					if (key in engine.autocompleteAction.paths) {
-						console.log('key: ', key);
 						this.paths[key] = engine.autocompleteAction.paths[key];
 					}
 				}
@@ -108,7 +106,7 @@ class ObjectsArrayParser extends BaseParser {
 	 * @param {String} path Key name for now.
 	 */
 	getByPath(record, path) {
-		if (!path.length && !(path in record)) {
+		if (!path.length || !(path in record)) {
 			console.warn(`${path} not in record`);
 			return '';
 		}
