@@ -97,22 +97,22 @@
 		"message": "OpenSearch"
 	},
 	"options.Autocomplete.Object_array": {
-		"message": "Objects' array"
+		"message": "Objects' array paths"
 	},
 	"options.Autocomplete_Path_description": {
-		"message": "Paths can simply be key names. For \"root\" the path is absolute and must point to an array with results, other paths are relative to an item in the array. For example if the server return something like `{data:[{article:\"abc\"}, {article:\"Your first abc\"}]}`, then `data` is the root path, `article` is the title path and other paths should remain empty."
+		"message": "Paths can simply be key names in the response object. For \"root\" the path is absolute and must point to an array with results, other paths are relative to an item in the array. For example if the server return something like `{data:[{article:\"abc\"}, {article:\"Your first abc\"}]}`, then `data` is the root path, `article` is the title path and other paths should remain empty."
 	},
 	"options.Path.root": {
 		"message": "Root (main array)"
 	},
 	"options.Path.titles": {
-		"message": "Title path [required]"
+		"message": "Title [required]"
 	},
 	"options.Path.descriptions": {
-		"message": "Description path"
+		"message": "Description"
 	},
 	"options.Path.urls": {
-		"message": "URL path"
+		"message": "URL"
 	},
 	"options.Add": {
 		"message": "Add"

@@ -116,12 +116,14 @@ function prepareOmnibox(engines, credentials) {
 			return;
 		}
 		let action = engine.autocompleteAction;
+		let headers = new Headers();
 		if (credentials) {
 			console.log(`adding credentials: ${credentials.codename} (${credentials.username})`);
 			headers.append('Authorization', 'Basic ' + btoa(credentials.username + ':' + credentials.password));
 		}
 		let requestData = {
-			method: action.method
+			method: action.method,
+			headers: headers
 		};
 		let url = searchHelper.buildSearchUrl(engine, action, searchTerm);
 		console.log('searchTerm:', searchTerm, 'url:', url, 'engine:', engine);
@@ -856,12 +858,10 @@ class ObjectsArrayParser extends _BaseParser2.default {
 			descriptions: '',
 			urls: ''
 		};
-		console.log('this.paths, engine.paths', this.paths, engine.autocompleteAction.paths);
 		if (typeof engine.autocompleteAction.paths === 'object') {
 			for (const key in this.paths) {
 				if (this.paths.hasOwnProperty(key)) {
 					if (key in engine.autocompleteAction.paths) {
-						console.log('key: ', key);
 						this.paths[key] = engine.autocompleteAction.paths[key];
 					}
 				}
@@ -920,11 +920,66 @@ class ObjectsArrayParser extends _BaseParser2.default {
   * @param {String} path Key name for now.
   */
 	getByPath(record, path) {
-		if (!path.length && !(path in record)) {
-			console.warn(`${path} not in record`);
+		if (!path.length) {
+			console.warn('path is empty');
 			return '';
 		}
-		return record[path];
+		let parts = path.split(/(\.|\[["']?|["']?\])/);
+		if (parts.length === 1) {
+			if (!(path in record)) {
+				console.warn(`${path} not in record`);
+				return '';
+			}
+			return record[path];
+		} else {
+			let node = record;
+			const states = {
+				START: 0,
+				IN_PARENTHESES: 1
+			};
+			let state = states.START;
+			let partialKey = '';
+			//console.log('[getByPath] ', record, path);
+			for (let i = 0; i < parts.length; i++) {
+				let key = parts[i];
+				/*
+    console.log({
+    	key: key,
+    	partialKey: partialKey,
+    	state: state,
+    });
+    */
+				// combine parts depending on state
+				if (key.search(/^\[/) >= 0) {
+					//console.log('-> states.IN_PARENTHESES');
+					state = states.IN_PARENTHESES;
+					continue;
+				}
+				if (state === states.IN_PARENTHESES && key.search(/\]$/) >= 0) {
+					//console.log('-> states.START');
+					state = states.START;
+					key = partialKey;
+					partialKey = '';
+				}
+				if (state === states.IN_PARENTHESES) {
+					partialKey += key;
+					//console.log('-> new partial:', partialKey);
+					continue;
+				} else if (key === '.' || key === '') {
+					//console.log('-> dot/empty-skip');
+					continue;
+				}
+				// resolve part
+				if (key in node) {
+					//console.log('-> key in node');
+					node = node[key];
+				} else {
+					console.warn(`${path} not in record`);
+					return '';
+				}
+			}
+			return node;
+		}
 	}
 }
 
