@@ -1,7 +1,7 @@
 WebExtension: Search Autocomplete
 =================================
 
-This WebExtension aims to give you quick, keyword based autocomplete for your search engines. Making your address bar an effective tool again ;-). Should be a good replacement for Omnibar add-on (that worked until FF 56).
+This WebExtension aims to give you quick, keyword based autocomplete for your search engines. Making your address bar an effective tool again 😉. Should be a good replacement for Omnibar add-on (that worked until FF 56).
 
 Installation through AMO page: https://addons.mozilla.org/pl/firefox/addon/searchautocomplete/
 
@@ -72,7 +72,7 @@ I'll give you an example of how to configure search autocompletefor AMO (Addons 
 #### Import single engine (AMO) ####
 
 Here is how you can simply import it:
-1. Install the [Search Autocomplete](https://addons.mozilla.org/firefox/addon/searchautocomplete/) extenstion. Obviously ;-).
+1. Install the [Search Autocomplete](https://addons.mozilla.org/firefox/addon/searchautocomplete/) extenstion. Obviously 😉.
 2. Type in `sa options` in the address bar.
 3. Click on "Import engines" button.
 4. Copy the code below.
@@ -180,7 +180,7 @@ So, a path for titles is `name` and for URLs it's `url`. Easy.
 
 Right, so AMO has relatively simple results. And most of the autocomplete API should be similar.
 
-You might see something more complicate though. I got you coverd :-). I support much more path formats.
+You might see something more complicate though. I got you coverd ☺️. I support much more path formats.
 
 #### Subobject path ####
 
