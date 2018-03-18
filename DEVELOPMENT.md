@@ -1,9 +1,10 @@
-DEVELOPMENT
+Development
 ===========
 
 This extension was initially created with [Chrome Extension Generator (Yeoman)](https://github.com/yeoman/generator-chrome-extension#user-content-getting-started). Some changes were required in the build process to support ES2015 modules (`import` syntax). But the generator does give a decent starting point for a first extension.
 
-### Prepare for building ###
+Prepare for building
+--------------------
 
 1. You will need [Node.js](https://nodejs.org/en/) for building the extension and downloading modules. I used Node.js 8.9, but version 4.0 (or higher) should be fine(*).
 2. You need to install modules (`npm install`).
@@ -13,7 +14,8 @@ This extension was initially created with [Chrome Extension Generator (Yeoman)](
 
 If you need to use older Node.js for other projects then install [nvm](https://github.com/creationix/nvm) (Linux and Mac) or [nvm-windows](https://github.com/coreybutler/nvm-windows). Note! Do *not* install `nvm-windows` in `C:\Program Files`. In fact you should *not* use any directories with a space character for `nvm-windows` installation.  
 
-### Important tasks ###
+Important tasks
+---------------
 
 All important tasks are defined in `.vscode/tasks.json` and can be run in VS Code (menu Tasks → Run Task...).
 
@@ -24,7 +26,8 @@ All important tasks are defined in `.vscode/tasks.json` and can be run in VS Cod
 
 Note! You also need to run one of the build tasks to e.g. test `options.html` in browser. This is because files in `scripts.babel` are not used directly.
 
-### Notes ###
+Notes
+-----
  
 * **Localization** -- most strings for translation are available in `app/_locales`. Some translations are directly incorporated into `popup.html`.
 * **Add-on version** -- `dist/manifest` is always +1 from `app/manifest`. This is automatic. And so in `app/manifest` minor version should always be an odd number (`dist/manifest` will have an even number then).
