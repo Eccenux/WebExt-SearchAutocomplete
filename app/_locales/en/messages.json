@@ -100,19 +100,19 @@
 		"message": "Objects' array"
 	},
 	"options.Autocomplete_Path_description": {
-		"message": "Paths can simply be key names. For root path is absolute and must point to a results array, other paths are relative to an item in the array."
+		"message": "Paths can simply be key names. For \"root\" the path is absolute and must point to an array with results, other paths are relative to an item in the array. For example if the server return something like `{data:[{article:\"abc\"}, {article:\"Your first abc\"}]}`, then `data` is the root path, `article` is the title path and other paths should remain empty."
 	},
 	"options.Path.root": {
 		"message": "Root (main array)"
 	},
 	"options.Path.titles": {
-		"message": "Title (required)"
+		"message": "Title path [required]"
 	},
 	"options.Path.descriptions": {
-		"message": "Description"
+		"message": "Description path"
 	},
 	"options.Path.urls": {
-		"message": "URL"
+		"message": "URL path"
 	},
 	"options.Add": {
 		"message": "Add"

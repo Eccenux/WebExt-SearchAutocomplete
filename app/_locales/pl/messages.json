@@ -100,7 +100,7 @@
 		"message": "Tablica obiektów"
 	},
 	"options.Autocomplete_Path_description": {
-		"message": "W najprostszym przypadku ścieżki są nazwami kluczy w obiekcie. Dla korzenia ścieżka musi być bezwzględna i wskazywać na tablicę obiektów. Pozostałe ścieżki należy podać względem obiektu z głównej tablicy."
+		"message": "W najprostszym przypadku ścieżki są nazwami kluczy w obiekcie. Dla korzenia ścieżka musi być bezwzględna i wskazywać na tablicę obiektów. Pozostałe ścieżki należy podać względem obiektu z głównej tablicy. Np. jeśli serwer zwraca `{dane:[{tytul:\"abc\"}, {tytul:\"abcdało\"}]}`, to `dane` to ścieżka korzenia, ścieżka dla tytułu, to \"abc\", a pozostałe ścieżki powinny być puste."
 	},
 	"options.Path.root": {
 		"message": "Korzeń (główna tablica)"
