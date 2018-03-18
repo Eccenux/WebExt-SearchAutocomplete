@@ -94,9 +94,12 @@
 		"message": "Autocomplete type"
 	},
 	"options.Autocomplete.OpenSearch": {
-		"message": "OpenSearch"
+		"message": "OpenSearch (wiki)"
 	},
 	"options.Autocomplete.Object_array": {
+		"message": "Objects' array (other)"
+	},
+	"options.Autocomplete.Object_array_paths": {
 		"message": "Objects' array paths"
 	},
 	"options.Autocomplete_Path_description": {

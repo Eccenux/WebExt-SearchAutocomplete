@@ -94,9 +94,12 @@
 		"message": "Typ usługi podpowiedzi"
 	},
 	"options.Autocomplete.OpenSearch": {
-		"message": "OpenSearch"
+		"message": "OpenSearch (wiki)"
 	},
 	"options.Autocomplete.Object_array": {
+		"message": "Tablica obiektów (inne)"
+	},
+	"options.Autocomplete.Object_array_paths": {
 		"message": "Ścieżki dla tablicy obiektów"
 	},
 	"options.Autocomplete_Path_description": {
