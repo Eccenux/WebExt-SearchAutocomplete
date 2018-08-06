@@ -1,5 +1,4 @@
-// Requires `vscode-commandbar` that can run tasks.
-// https://github.com/Eccenux/vscode-commandbar
+// requires gsppvo.vscode-commandbar
 {
 	"skipTerminateQuickPick": true,
 	"skipSwitchToOutput": false,
@@ -9,28 +8,28 @@
 			"text": "Project: build",
 			"color": "lightgreen",
 			"commandType": "palette",
-			"command": "workbench.action.tasks.runTask:gulp build",
+			"command": "workbench.action.tasks.runTask|gulp build",
 			"priority": 0
 		},
 		{
 			"text": "Project: build watch",
 			"color": "lightgreen",
 			"commandType": "palette",
-			"command": "workbench.action.tasks.runTask:gulp watch",
+			"command": "workbench.action.tasks.runTask|gulp watch",
 			"priority": 0
 		},
 		{
 			"text": "Run tests",
 			"color": "lightgreen",
 			"commandType": "palette",
-			"command": "workbench.action.tasks.runTask:Run tests",
+			"command": "workbench.action.tasks.runTask|Run tests",
 			"priority": 0
 		},
 		{
 			"text": "Run publishing script",
 			"color": "lightgreen",
 			"commandType": "palette",
-			"command": "workbench.action.tasks.runTask:Publish",
+			"command": "workbench.action.tasks.runTask|Publish",
 			"priority": 0
 		},
 		{
