@@ -7,12 +7,25 @@ Prepare for building
 --------------------
 
 1. You will need [Node.js](https://nodejs.org/en/) for building the extension and downloading modules. I used Node.js 8.9, but version 4.0 (or higher) should be fine(*).
-2. You need to install modules (`npm install`).
-3. (Optional) Install [Visual Studio Code](https://code.visualstudio.com/). Not required, but makes running tasks a bit easier.
+2. You will also need Gulp `npm install --global gulp-cli`. See also [Gulp Quickstart](https://gulpjs.com/docs/en/getting-started/quick-start).
+3. You need to install modules for the project (`npm install`).
+4. (Optional) Install [Visual Studio Code](https://code.visualstudio.com/). Not required, but makes running tasks a bit easier.
 
 (*) Version 4.0 is required e.g. by Mocha and it's also the first Node.js version with ES6 / ES2015 support.
 
-If you need to use older Node.js for other projects then install [nvm](https://github.com/creationix/nvm) (Linux and Mac) or [nvm-windows](https://github.com/coreybutler/nvm-windows). Note! Do *not* install `nvm-windows` in `C:\Program Files`. In fact you should *not* use any directories with a space character for `nvm-windows` installation.  
+If you need to use older Node.js for other projects then install [nvm](https://github.com/creationix/nvm) (Linux and Mac) or [nvm-windows](https://github.com/coreybutler/nvm-windows). Note! Do *not* install `nvm-windows` in `C:\Program Files`. In fact you should *not* use any directories with a space character for `nvm-windows` installation.
+
+Quick testing
+-------------
+
+So to quickly test if the project works I recomend using [web-ext](https://hacks.mozilla.org/2019/10/developing-cross-browser-extensions-with-web-ext-3-2-0/).
+
+1. Install web-ext: `npm install --global web-ext`.
+2. Build the project: `gulp build`.
+3. Open dist dir created when building: `cd dist`.
+4. Run in FF: `web-ext run -t firefox-desktop`.
+
+No worries. Separate FF instance will be opened. So you don't have to worry about closing FF first or anything like that.
 
 Important tasks
 ---------------
